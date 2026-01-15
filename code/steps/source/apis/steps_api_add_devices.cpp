@@ -404,7 +404,7 @@ void api_scale_ac_line_length_and_related_parameters(unsigned int ibus, unsigned
     DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
     line->scale_length_and_related_parameters(scale);
 }
 
@@ -413,7 +413,7 @@ void api_scale_transformer_winding_capacity(unsigned int ibus, unsigned int jbus
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    TRANSFORMER* trans = psdb.get_transformer(did);
+    TRANSFORMER* trans = psdb.get_pointer_to_transformer(did);
     trans->scale_transformer_winding_capacity(scale);
 }
 

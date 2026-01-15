@@ -9,7 +9,7 @@ const char* api_get_pv_unit_related_model_name(unsigned int bus, char* identifie
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     DEVICE_ID did = get_pv_unit_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    PV_UNIT* pv_unit = psdb.get_pv_unit(did);
+    PV_UNIT* pv_unit = psdb.get_pointer_to_pv_unit(did);
     if(pv_unit==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -75,7 +75,7 @@ double api_get_pv_unit_related_model_float_parameter(unsigned int bus, char* ide
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_pv_unit_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    PV_UNIT* pv_unit = psdb.get_pv_unit(did);
+    PV_UNIT* pv_unit = psdb.get_pointer_to_pv_unit(did);
     if(pv_unit==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -150,7 +150,7 @@ void api_set_pv_unit_related_model_float_parameter(unsigned int bus, char* ident
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_pv_unit_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    PV_UNIT* pv_unit = psdb.get_pv_unit(did);
+    PV_UNIT* pv_unit = psdb.get_pointer_to_pv_unit(did);
     if(pv_unit==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -223,7 +223,7 @@ unsigned int api_get_pv_unit_related_model_float_parameter_count(unsigned int bu
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_pv_unit_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    PV_UNIT* pv_unit = psdb.get_pv_unit(did);
+    PV_UNIT* pv_unit = psdb.get_pointer_to_pv_unit(did);
     if(pv_unit==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -296,7 +296,7 @@ const char* api_get_pv_unit_related_model_float_parameter_name(unsigned int bus,
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_pv_unit_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    PV_UNIT* pv_unit = psdb.get_pv_unit(did);
+    PV_UNIT* pv_unit = psdb.get_pointer_to_pv_unit(did);
     string name = "";
     if(pv_unit==NULL)
     {

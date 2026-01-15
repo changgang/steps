@@ -56,7 +56,7 @@ void LOAD_MODEL_TEST::setup()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    load_ptr = psdb.get_load(did);
+    load_ptr = psdb.get_pointer_to_load(did);
 }
 
 void LOAD_MODEL_TEST::tear_down()
@@ -237,7 +237,7 @@ void LOAD_MODEL_TEST::test_run_voltage_ramp_response()
         export_meter_values(TIME);
     }
 
-    BUS* busptr = psdb.get_bus(1);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(1);
     double rate = 0.1;
 
     while(true)
@@ -328,7 +328,7 @@ void LOAD_MODEL_TEST::test_run_frequency_ramp_response()
         export_meter_values(TIME);
     }
 
-    BUS* busptr = psdb.get_bus(1);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(1);
     BUS_FREQUENCY_MODEL* fmodel = busptr->get_bus_frequency_model();
 
     double rate = 0.1;

@@ -1186,25 +1186,25 @@ void LCC_HVDC2T_TEST::test_solve_lcc_hvdc2t()
 
     osstream<<"Test 2: solve with 0.8 AC voltage at rectifier side";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    BUS* busptr = psdb.get_bus(hvdc.get_converter_bus(RECTIFIER));
+    BUS* busptr = psdb.get_pointer_to_ac_bus(hvdc.get_converter_bus(RECTIFIER));
     busptr->set_positive_sequence_voltage_in_pu(0.8);
     hvdc.solve_steady_state();
     hvdc.show_solved_steady_state();
 
     osstream<<"Test 3: solve with 0.8 AC voltage at inverter side";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    busptr = psdb.get_bus(hvdc.get_converter_bus(RECTIFIER));
+    busptr = psdb.get_pointer_to_ac_bus(hvdc.get_converter_bus(RECTIFIER));
     busptr->set_positive_sequence_voltage_in_pu(1.0);
-    busptr = psdb.get_bus(hvdc.get_converter_bus(INVERTER));
+    busptr = psdb.get_pointer_to_ac_bus(hvdc.get_converter_bus(INVERTER));
     busptr->set_positive_sequence_voltage_in_pu(0.8);
     hvdc.solve_steady_state();
     hvdc.show_solved_steady_state();
 
     osstream<<"Test 4: solve with 0.8 AC voltage at both sides";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    busptr = psdb.get_bus(hvdc.get_converter_bus(RECTIFIER));
+    busptr = psdb.get_pointer_to_ac_bus(hvdc.get_converter_bus(RECTIFIER));
     busptr->set_positive_sequence_voltage_in_pu(0.8);
-    busptr = psdb.get_bus(hvdc.get_converter_bus(INVERTER));
+    busptr = psdb.get_pointer_to_ac_bus(hvdc.get_converter_bus(INVERTER));
     busptr->set_positive_sequence_voltage_in_pu(0.8);
     hvdc.solve_steady_state();
     hvdc.show_solved_steady_state();
@@ -1327,7 +1327,7 @@ void LCC_HVDC2T_TEST::test_set_get_lcc_hvdc2t_model()
 
     DEVICE_ID did = hvdc.get_device_id();
 
-    LCC_HVDC2T* hvdcptr = psdb.get_lcc_hvdc2t(did);
+    LCC_HVDC2T* hvdcptr = psdb.get_pointer_to_lcc_hvdc2t(did);
     TEST_ASSERT(hvdcptr!=NULL);
     TEST_ASSERT(hvdcptr->get_lcc_hvdc2t_model()==NULL);
 

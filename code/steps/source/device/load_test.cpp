@@ -319,7 +319,7 @@ void LOAD_TEST::test_get_actual_total_load()
     load.set_nominal_constant_impedance_load_in_MVA(s_Z);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    BUS* bus = psdb.get_bus(load.get_load_bus());
+    BUS* bus = psdb.get_pointer_to_ac_bus(load.get_load_bus());
     bus->set_positive_sequence_voltage_in_pu(0.5);
 
     //complex<double> s_total = s_P/0.7*0.5 + s_I*0.5+s_Z*0.5*0.5;
@@ -338,7 +338,7 @@ void LOAD_TEST::test_get_actual_constant_power_load()
     LOAD::set_voltage_threshold_of_constant_power_load_in_pu(0.7);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    BUS* bus = psdb.get_bus(load.get_load_bus());
+    BUS* bus = psdb.get_pointer_to_ac_bus(load.get_load_bus());
     bus->set_positive_sequence_voltage_in_pu(0.95);
 
     TEST_ASSERT(abs(load.get_actual_constant_power_load_in_MVA()-s_P)<FLOAT_EPSILON);
@@ -360,7 +360,7 @@ void LOAD_TEST::test_get_actual_constant_current_load()
     load.set_nominal_constant_current_load_in_MVA(s_I);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    BUS* bus = psdb.get_bus(load.get_load_bus());
+    BUS* bus = psdb.get_pointer_to_ac_bus(load.get_load_bus());
 
     bus->set_positive_sequence_voltage_in_pu(0.95);
 
@@ -378,7 +378,7 @@ void LOAD_TEST::test_get_actual_constant_impedance_load()
     load.set_nominal_constant_impedance_load_in_MVA(s_Z);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    BUS* bus = psdb.get_bus(load.get_load_bus());
+    BUS* bus = psdb.get_pointer_to_ac_bus(load.get_load_bus());
 
     bus->set_positive_sequence_voltage_in_pu(0.95);
 
@@ -402,7 +402,7 @@ void LOAD_TEST::test_set_get_load_model()
 
     DEVICE_ID did = load.get_device_id();
 
-    LOAD* ld = psdb.get_load(did);
+    LOAD* ld = psdb.get_pointer_to_load(did);
 
     IEEL model(default_toolkit);
     model.set_device_id(did);

@@ -129,7 +129,7 @@ void STEPS_IMEXPORTER::load_source_seq_data()
             case SYNC_GENERATOR_SOURCE:
             {
                 DEVICE_ID did = get_generator_device_id(bus, ID);
-                GENERATOR* generator = psdb.get_generator(did);
+                GENERATOR* generator = psdb.get_pointer_to_generator(did);
                 if(generator == NULL)
                 {
                     osstream<<"Generator "<<ID<<" is not existed on bus "<<bus<<"."<<endl
@@ -156,7 +156,7 @@ void STEPS_IMEXPORTER::load_source_seq_data()
             case WT_GENERATOR_SOURCE:
             {
                 DEVICE_ID did = get_wt_generator_device_id(bus, ID);
-                WT_GENERATOR* wt_generator = psdb.get_wt_generator(did);
+                WT_GENERATOR* wt_generator = psdb.get_pointer_to_wt_generator(did);
                 if(wt_generator == NULL)
                 {
                     osstream<<"WT generator "<<ID<<" is not existed on bus "<<bus<<"."<<endl
@@ -183,7 +183,7 @@ void STEPS_IMEXPORTER::load_source_seq_data()
             case PV_UNIT_SOURCE:
             {
                 DEVICE_ID did = get_pv_unit_device_id(bus, ID);
-                PV_UNIT* pv_unit = psdb.get_pv_unit(did);
+                PV_UNIT* pv_unit = psdb.get_pointer_to_pv_unit(did);
                 if(pv_unit == NULL)
                 {
                     osstream<<"PV unit "<<ID<<" is not existed on bus "<<bus<<"."<<endl
@@ -210,7 +210,7 @@ void STEPS_IMEXPORTER::load_source_seq_data()
             case ENERGY_STORAGE_SOURCE:
             {
                 DEVICE_ID did = get_energy_storage_device_id(bus, ID);
-                ENERGY_STORAGE* estorage = psdb.get_energy_storage(did);
+                ENERGY_STORAGE* estorage = psdb.get_pointer_to_energy_storage(did);
                 if(estorage == NULL)
                 {
                     osstream<<"Energy storage "<<ID<<" is not existed on bus "<<bus<<"."<<endl
@@ -845,7 +845,7 @@ void STEPS_IMEXPORTER::load_load_seq_data()
             data.erase(data.begin());
         }
         DEVICE_ID did = get_load_device_id(bus, ID);
-        LOAD* loadptr = psdb.get_load(did);
+        LOAD* loadptr = psdb.get_pointer_to_load(did);
 
         if(loadptr == NULL)
         {
@@ -1071,7 +1071,7 @@ void STEPS_IMEXPORTER::load_zero_seq_non_transformer_branch_data()
             data.erase(data.begin());
         }
         DEVICE_ID did = get_ac_line_device_id(bus_i, bus_j, ID);
-        AC_LINE* lineptr = psdb.get_ac_line(did);
+        AC_LINE* lineptr = psdb.get_pointer_to_ac_line(did);
 
         if(lineptr == NULL)
         {
@@ -1198,7 +1198,7 @@ void STEPS_IMEXPORTER::load_zero_seq_mutual_impedance_data()
             data.erase(data.begin());
         }
         DEVICE_ID did1 = get_ac_line_device_id(bus_i, bus_j, ICKT1);
-        AC_LINE* lineptr_ij = psdb.get_ac_line(did1);
+        AC_LINE* lineptr_ij = psdb.get_pointer_to_ac_line(did1);
 
         if(lineptr_ij == NULL)
         {
@@ -1224,7 +1224,7 @@ void STEPS_IMEXPORTER::load_zero_seq_mutual_impedance_data()
             data.erase(data.begin());
         }
         DEVICE_ID did2 = get_ac_line_device_id(bus_p, bus_q, ICKT2);
-        AC_LINE* lineptr_pq = psdb.get_ac_line(did2);
+        AC_LINE* lineptr_pq = psdb.get_pointer_to_ac_line(did2);
 
         if(lineptr_pq == NULL)
         {
@@ -1370,7 +1370,7 @@ void STEPS_IMEXPORTER::load_zero_seq_transformer_data()
             data.erase(data.begin());
         }
         DEVICE_ID did = get_transformer_device_id(bus_i, bus_j, bus_k, ID);
-        TRANSFORMER* transptr = psdb.get_transformer(did);
+        TRANSFORMER* transptr = psdb.get_pointer_to_transformer(did);
 
         if(transptr == NULL)
         {
@@ -1772,7 +1772,7 @@ void STEPS_IMEXPORTER::load_zero_seq_fixed_shunt_data()
             data.erase(data.begin());
         }
         DEVICE_ID did = get_fixed_shunt_device_id(bus, ID);
-        FIXED_SHUNT* shuntptr = psdb.get_fixed_shunt(did);
+        FIXED_SHUNT* shuntptr = psdb.get_pointer_to_fixed_shunt(did);
 
         if(shuntptr == NULL)
         {
@@ -1837,7 +1837,7 @@ void STEPS_IMEXPORTER::load_vsc_hvdc_seq_data()
             ID = get_string_data(data[n], "1");
             data.erase(data.begin());
         }
-        VSC_HVDC* vsc_hvdc_ptr = psdb.get_vsc_hvdc(ID);
+        VSC_HVDC* vsc_hvdc_ptr = psdb.get_pointer_to_vsc_hvdc(ID);
         if(vsc_hvdc_ptr == NULL)
         {
             osstream<<"Vsc hvdc ["<<"ID:"<<ID<<"]"<<" is not existed."<<endl

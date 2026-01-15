@@ -408,7 +408,7 @@ void WT_GENERATOR_MODEL_TEST::test_bus_magnitude_step_response_of_wt_generator_m
             export_meter_values(time);
         }
 
-        BUS* bus = psdb.get_bus(get_test_wt_generator()->get_generator_bus());
+        BUS* bus = psdb.get_pointer_to_ac_bus(get_test_wt_generator()->get_generator_bus());
         double vterm = bus->get_positive_sequence_voltage_in_pu();
         bus->set_positive_sequence_voltage_in_pu(vterm*0.99);
 
@@ -471,7 +471,7 @@ void WT_GENERATOR_MODEL_TEST::test_bus_angle_step_response_of_wt_generator_model
             export_meter_values(time);
         }
 
-        BUS* bus = psdb.get_bus(get_test_wt_generator()->get_generator_bus());
+        BUS* bus = psdb.get_pointer_to_ac_bus(get_test_wt_generator()->get_generator_bus());
         double angle = bus->get_positive_sequence_angle_in_deg();
         bus->set_positive_sequence_angle_in_deg(angle+10.0);
 

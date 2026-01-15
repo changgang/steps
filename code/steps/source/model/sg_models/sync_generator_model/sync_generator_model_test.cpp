@@ -379,7 +379,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_bus_step_response_of_sync_generator_model()
             export_meter_values(TIME);
         }
 
-        BUS* bus = psdb.get_bus(1);
+        BUS* bus = psdb.get_pointer_to_ac_bus(1);
         double vterm = bus->get_positive_sequence_voltage_in_pu();
         bus->set_positive_sequence_voltage_in_pu(vterm*0.99);
 

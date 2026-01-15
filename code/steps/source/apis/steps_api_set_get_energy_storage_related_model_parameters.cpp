@@ -9,7 +9,7 @@ const char* api_get_energy_storage_related_model_name(unsigned int bus, char* id
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     DEVICE_ID did = get_energy_storage_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    ENERGY_STORAGE* energy_storage = psdb.get_energy_storage(did);
+    ENERGY_STORAGE* energy_storage = psdb.get_pointer_to_energy_storage(did);
     if(energy_storage==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -82,7 +82,7 @@ double api_get_energy_storage_related_model_float_parameter(unsigned int bus, ch
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_energy_storage_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    ENERGY_STORAGE* energy_storage = psdb.get_energy_storage(did);
+    ENERGY_STORAGE* energy_storage = psdb.get_pointer_to_energy_storage(did);
     if(energy_storage==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -165,7 +165,7 @@ void api_set_energy_storage_related_model_float_parameter(unsigned int bus, char
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_energy_storage_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    ENERGY_STORAGE* energy_storage = psdb.get_energy_storage(did);
+    ENERGY_STORAGE* energy_storage = psdb.get_pointer_to_energy_storage(did);
     if(energy_storage==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -246,7 +246,7 @@ unsigned int api_get_energy_storage_related_model_float_parameter_count(unsigned
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_energy_storage_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    ENERGY_STORAGE* energy_storage = psdb.get_energy_storage(did);
+    ENERGY_STORAGE* energy_storage = psdb.get_pointer_to_energy_storage(did);
     if(energy_storage==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -327,7 +327,7 @@ const char* api_get_energy_storage_related_model_float_parameter_name(unsigned i
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_energy_storage_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    ENERGY_STORAGE* energy_storage = psdb.get_energy_storage(did);
+    ENERGY_STORAGE* energy_storage = psdb.get_pointer_to_energy_storage(did);
     string name = "";
     if(energy_storage==NULL)
     {

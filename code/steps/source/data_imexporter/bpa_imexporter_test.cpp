@@ -145,7 +145,7 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(n==42);
 
     BUS* bus;
-    bus = psdb.get_bus(101);
+    bus = psdb.get_pointer_to_ac_bus(101);
     TEST_ASSERT(bus->get_bus_number()==101);
     TEST_ASSERT(bus->get_bus_name()=="NUC-A");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-21.6)<FLOAT_EPSILON);
@@ -156,7 +156,7 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_zone_number()==1);
     TEST_ASSERT(bus->get_owner_number()==1);
 
-    bus = psdb.get_bus(201);
+    bus = psdb.get_pointer_to_ac_bus(201);
     TEST_ASSERT(bus->get_bus_number()==201);
     TEST_ASSERT(bus->get_bus_name()=="HYDRO");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-500.0)<FLOAT_EPSILON);
@@ -167,7 +167,7 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_zone_number()==7);
     TEST_ASSERT(bus->get_owner_number()==2);
 
-    bus = psdb.get_bus(3001);
+    bus = psdb.get_pointer_to_ac_bus(3001);
     TEST_ASSERT(bus->get_bus_number()==3001);
     TEST_ASSERT(bus->get_bus_name()=="MINE");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-230.0)<FLOAT_EPSILON);
@@ -178,7 +178,7 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_zone_number()==6);
     TEST_ASSERT(bus->get_owner_number()==5);
 
-    bus = psdb.get_bus(93002);
+    bus = psdb.get_pointer_to_ac_bus(93002);
     TEST_ASSERT(bus->get_bus_number()==93002);
     TEST_ASSERT(bus->get_bus_name()=="WINDBUS3");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-0.69)<FLOAT_EPSILON);
@@ -247,7 +247,7 @@ void BPA_IMEXPORTER_TEST::test_load_generator_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    GENERATOR* gen = psdb.get_generator(did);
+    GENERATOR* gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==101);
     TEST_ASSERT(gen->get_identifier()=="1");
     TEST_ASSERT(gen->get_status()==true);
@@ -263,7 +263,7 @@ void BPA_IMEXPORTER_TEST::test_load_generator_data()
     terminal.append_bus(301);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("2"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==301);
     TEST_ASSERT(gen->get_identifier()=="2");
     TEST_ASSERT(gen->get_status()==true);
@@ -279,7 +279,7 @@ void BPA_IMEXPORTER_TEST::test_load_generator_data()
     terminal.append_bus(3018);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("2"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==3018);
     TEST_ASSERT(gen->get_identifier()=="2");
     TEST_ASSERT(gen->get_status()==true);
@@ -312,7 +312,7 @@ void BPA_IMEXPORTER_TEST::test_load_wt_generator_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("W1"));
 
-    WT_GENERATOR* wt_generator = psdb.get_wt_generator(did);
+    WT_GENERATOR* wt_generator = psdb.get_pointer_to_wt_generator(did);
     TEST_ASSERT(wt_generator->get_source_bus()==9154);
     TEST_ASSERT(wt_generator->get_identifier()=="W1");
     TEST_ASSERT(wt_generator->get_status()==true);
@@ -328,7 +328,7 @@ void BPA_IMEXPORTER_TEST::test_load_wt_generator_data()
     terminal.append_bus(93002);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("W3"));
-    wt_generator = psdb.get_wt_generator(did);
+    wt_generator = psdb.get_pointer_to_wt_generator(did);
     TEST_ASSERT(wt_generator->get_source_bus()==93002);
     TEST_ASSERT(wt_generator->get_identifier()=="W3");
     TEST_ASSERT(wt_generator->get_status()==true);
@@ -369,7 +369,7 @@ void BPA_IMEXPORTER_TEST::test_load_ac_line_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==151);
     TEST_ASSERT(line->get_receiving_side_bus()==152);
     TEST_ASSERT(line->get_identifier()=="1");
@@ -386,7 +386,7 @@ void BPA_IMEXPORTER_TEST::test_load_ac_line_data()
     terminal.append_bus(214);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    line = psdb.get_ac_line(did);
+    line = psdb.get_pointer_to_ac_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==213);
     TEST_ASSERT(line->get_receiving_side_bus()==214);
     TEST_ASSERT(line->get_identifier()=="1");
@@ -403,7 +403,7 @@ void BPA_IMEXPORTER_TEST::test_load_ac_line_data()
     terminal.append_bus(3009);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    line = psdb.get_ac_line(did);
+    line = psdb.get_pointer_to_ac_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==3008);
     TEST_ASSERT(line->get_receiving_side_bus()==3009);
     TEST_ASSERT(line->get_identifier()=="1");

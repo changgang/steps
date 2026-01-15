@@ -457,7 +457,7 @@ METER METER_BUILDER::build_one_ac_line_related_meter(const DEVICE_ID& did, strin
     {
         side = string2upper(side);
 
-        AC_LINE* line = psdb.get_ac_line(did);
+        AC_LINE* line = psdb.get_pointer_to_ac_line(did);
         unsigned int bus = 0;
         if(side=="SENDING" or side=="S")
             bus = line->get_sending_side_bus();
@@ -482,7 +482,7 @@ METER METER_BUILDER::build_one_transformer_related_meter(const DEVICE_ID& did, s
     {
         side = string2upper(side);
 
-        TRANSFORMER* trans = psdb.get_transformer(did);
+        TRANSFORMER* trans = psdb.get_pointer_to_transformer(did);
         unsigned int bus = trans->get_winding_bus(transformer_winding_string2winding_side(side));
 
         meter = build_one_transformer_related_meter(did, meter_type, bus, var_name);
@@ -503,7 +503,7 @@ METER METER_BUILDER::build_one_lcc_hvdc2t_related_meter(const DEVICE_ID& did, st
     {
         side = string2upper(side);
 
-        LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(did);
+        LCC_HVDC2T* hvdc = psdb.get_pointer_to_lcc_hvdc2t(did);
         unsigned int bus = hvdc->get_converter_bus(converter_string2side(side));
 
         meter = build_one_lcc_hvdc2t_related_meter(did, meter_type, bus, var_name);
@@ -530,7 +530,7 @@ METER METER_BUILDER::build_one_vsc_hvdc_related_meter(string vsc_name, string me
 {
     METER meter(*toolkit);
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(vsc_name);
     if(vsc_hvdc != NULL)
         meter = build_one_vsc_hvdc_related_meter(vsc_hvdc->get_device_id(), meter_type, side, var_name);
     else
@@ -563,7 +563,7 @@ METER METER_BUILDER::build_one_mt_hvdc_related_meter(string mtdc_name, string su
 {
     METER meter(*toolkit);
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
-    MT_HVDC* mtdc = psdb.get_mt_hvdc(mtdc_name);
+    MT_HVDC* mtdc = psdb.get_pointer_to_mt_hvdc(mtdc_name);
     if(mtdc!=NULL)
         meter = build_one_mt_hvdc_related_meter(mtdc->get_device_id(), sub_device_name, meter_type, var_name);
     else
@@ -678,7 +678,7 @@ vector<METER> METER_BUILDER::build_meters_with_multi_transformers_and_meter_type
                 if(meter.is_valid())
                     meters.push_back(meter);
 
-                TRANSFORMER* trans = psdb.get_transformer(dids[j]);
+                TRANSFORMER* trans = psdb.get_pointer_to_transformer(dids[j]);
                 if(trans->is_three_winding_transformer())
                 {
                     meter = build_one_transformer_related_meter(dids[j], keys[i], "TERTIARY", "");
@@ -728,7 +728,7 @@ vector<METER> METER_BUILDER::build_meters_with_multi_vsc_hvdcs_and_meter_types(c
             for(unsigned int j=0; j!=n; ++j)
             {
                 DEVICE_ID did = dids[j];
-                VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(did);
+                VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(did);
 
                 if(vsc_hvdc != nullptr)
                 {
@@ -791,7 +791,7 @@ vector<METER> METER_BUILDER::build_meters_with_multi_mt_hvdcs_and_meter_types(co
             for(unsigned int j=0; j!=n; ++j)
             {
                 DEVICE_ID did = dids[j];
-                MT_HVDC* mt_hvdc = psdb.get_mt_hvdc(did);
+                MT_HVDC* mt_hvdc = psdb.get_pointer_to_mt_hvdc(did);
 
                 if(mt_hvdc != nullptr)
                 {

@@ -106,7 +106,7 @@ LCC_HVDC2T* LCC_HVDC2T_MODEL_TEST::get_test_lcc_hvdc2t()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("DC"));
 
-    return psdb.get_lcc_hvdc2t(did);
+    return psdb.get_pointer_to_lcc_hvdc2t(did);
 }
 
 LCC_HVDC2T_MODEL* LCC_HVDC2T_MODEL_TEST::get_test_lcc_hvdc2t_model()
@@ -256,7 +256,7 @@ void LCC_HVDC2T_MODEL_TEST::test_rectifier_voltage_ramp_response()
     }
 
     double Vac_rec = psdb.get_bus_positive_sequence_voltage_in_pu(1);
-    BUS* bus = psdb.get_bus(1);
+    BUS* bus = psdb.get_pointer_to_ac_bus(1);
     double rate = 0.2;
 
     while(true)
@@ -422,7 +422,7 @@ void LCC_HVDC2T_MODEL_TEST::test_inverter_voltage_ramp_response()
     }
 
     double Vac_inv = psdb.get_bus_positive_sequence_voltage_in_pu(2);
-    BUS* bus = psdb.get_bus(2);
+    BUS* bus = psdb.get_pointer_to_ac_bus(2);
     double rate = 0.2;
 
     while(true)

@@ -12,7 +12,7 @@ int api_get_transformer_integer_data(unsigned int ibus, unsigned int jbus, unsig
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    TRANSFORMER* transptr = psdb.get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_pointer_to_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -87,7 +87,7 @@ void api_set_transformer_integer_data(unsigned int ibus, unsigned int jbus, unsi
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    TRANSFORMER* transptr = psdb.get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_pointer_to_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -158,7 +158,7 @@ double api_get_transformer_float_data(unsigned int ibus, unsigned int jbus, unsi
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    TRANSFORMER* transptr = psdb.get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_pointer_to_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -342,7 +342,7 @@ void api_set_transformer_float_data(unsigned int ibus, unsigned int jbus, unsign
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    TRANSFORMER* transptr = psdb.get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_pointer_to_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -576,7 +576,7 @@ const char* api_get_transformer_string_data(unsigned int ibus, unsigned int jbus
 
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
-    TRANSFORMER* transptr = psdb.get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_pointer_to_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -618,7 +618,7 @@ void api_set_transformer_string_data(unsigned int ibus, unsigned int jbus, unsig
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    TRANSFORMER* transptr = psdb.get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_pointer_to_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -652,7 +652,7 @@ bool api_get_transformer_boolean_data(unsigned int ibus, unsigned int jbus, unsi
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    TRANSFORMER* transptr = psdb.get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_pointer_to_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -696,7 +696,7 @@ void api_set_transformer_boolean_data(unsigned int ibus, unsigned int jbus, unsi
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    TRANSFORMER* transptr = psdb.get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_pointer_to_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);

@@ -94,7 +94,7 @@ void DYNAMIC_MODEL_DATABASE::add_model(MODEL* model)
         POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
         DEVICE_ID did_new = model->get_device_id();
         string model_type = model->get_model_type();
-        NONBUS_DEVICE* device = psdb.get_nonbus_device(did_new);
+        NONBUS_DEVICE* device = psdb.get_pointer_to_nonbus_device(did_new);
         MODEL* old_model = device->get_model_of_type(model_type);
         if(old_model==NULL)
         {

@@ -55,7 +55,7 @@ void COMPENSATOR_MODEL_TEST::tear_down()
 void COMPENSATOR_MODEL_TEST::apply_voltage_drop_of_10_percent()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    BUS* bus = psdb.get_bus(1);
+    BUS* bus = psdb.get_pointer_to_ac_bus(1);
     bus->set_positive_sequence_voltage_in_pu(bus->get_positive_sequence_voltage_in_pu()-0.1);
 }
 

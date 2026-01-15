@@ -389,11 +389,11 @@ void DYNAMICS_SIMULATOR_TEST::test_get_all_meters_value()
 
     TEST_ASSERT(simulator.get_meter_count()==3);
 
-    BUS* busptr = psdb.get_bus(1);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(1);
     busptr->set_positive_sequence_voltage_in_pu(1.0);
-    busptr = psdb.get_bus(2);
+    busptr = psdb.get_pointer_to_ac_bus(2);
     busptr->set_positive_sequence_voltage_in_pu(1.1);
-    busptr = psdb.get_bus(3);
+    busptr = psdb.get_pointer_to_ac_bus(3);
     busptr->set_positive_sequence_voltage_in_pu(0.9);
 
     vector<double> values = simulator.get_all_meters_value();
@@ -825,7 +825,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     importer.load_dynamic_data("../../../bench/IEEE9_wt3_models.dyr");
 
     DEVICE_ID gendid = get_wt_generator_device_id(3, "1");
-    WT_GENERATOR* gen = psdb.get_wt_generator(gendid);
+    WT_GENERATOR* gen = psdb.get_pointer_to_wt_generator(gendid);
     if(gen->get_wt_generator_model()!=NULL)
         cout<<gen->get_wt_generator_model()->get_standard_psse_string()<<endl;
     if(gen->get_wt_aerodynamic_model()!=NULL)

@@ -339,7 +339,7 @@ bool EQUIVALENT_DEVICE::is_in_area(unsigned int area) const
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(get_equivalent_device_bus());
+    BUS* busptr = psdb.get_pointer_to_ac_bus(get_equivalent_device_bus());
     if(busptr!=NULL)
         return busptr->is_in_area(area);
     else
@@ -351,7 +351,7 @@ bool EQUIVALENT_DEVICE::is_in_zone(unsigned int zone) const
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(get_equivalent_device_bus());
+    BUS* busptr = psdb.get_pointer_to_ac_bus(get_equivalent_device_bus());
     if(busptr!=NULL)
         return busptr->is_in_zone(zone);
     else

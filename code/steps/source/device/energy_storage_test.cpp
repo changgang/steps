@@ -161,7 +161,7 @@ void ENERGY_STORAGE_TEST::test_set_get_energy_storage_model()
 
     DEVICE_ID did = energy_storage.get_device_id();
 
-    ENERGY_STORAGE* estorage = psdb.get_energy_storage(did);
+    ENERGY_STORAGE* estorage = psdb.get_pointer_to_energy_storage(did);
 
     ESTR0 model(default_toolkit);
     model.set_device_id(did);

@@ -770,7 +770,7 @@ complex<double> MTHVDCVSC1::get_converter_dynamic_current_from_ac_bus_to_convert
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     HVSC* vsc = get_hvsc_pointer();
-    BUS* bus = psdb.get_bus(vsc->get_converter_ac_bus());
+    BUS* bus = psdb.get_pointer_to_ac_bus(vsc->get_converter_ac_bus());
 
     double Sbase = psdb.get_system_base_power_in_MVA();
     double Vbase = bus->get_base_voltage_in_kV();

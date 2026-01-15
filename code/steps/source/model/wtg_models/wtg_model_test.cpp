@@ -62,7 +62,7 @@ WT_GENERATOR* WTG_MODEL_TEST::get_test_wt_generator()
     did.set_device_identifier_index(get_index_of_string("#1"));
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    return psdb.get_wt_generator(did);
+    return psdb.get_pointer_to_wt_generator(did);
 }
 
 

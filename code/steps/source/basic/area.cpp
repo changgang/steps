@@ -104,7 +104,7 @@ void AREA::set_area_swing_bus_with_existing_bus(unsigned int bus)
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
 
     BUS_TYPE bus_type = busptr->get_bus_type();
 
@@ -204,7 +204,7 @@ void AREA::report() const
     unsigned int bus = get_area_swing_bus();
     POWER_SYSTEM_DATABASE& psdb = toolkit->get_power_system_database();
     string busname = "";
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         busname = busptr->get_bus_name();
     else

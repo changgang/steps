@@ -637,7 +637,7 @@ void METER_TEST::test_copy_with_operator_equal()
 
     TEST_ASSERT(newmeter.get_device_id()==did);
     TEST_ASSERT(newmeter.get_device_type()==STEPS_BUS);
-    TEST_ASSERT(newmeter.get_device_pointer()==(DEVICE*) psdb.get_bus(1));
+    TEST_ASSERT(newmeter.get_device_pointer()==(DEVICE*) psdb.get_pointer_to_ac_bus(1));
     TEST_ASSERT(newmeter.get_meter_type()=="VOLTAGE IN PU");
 }
 
@@ -694,7 +694,7 @@ void METER_TEST::test_get_bus_meter_value()
     meter.set_meter_type("VOLTAGE IN PU");
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    BUS* busptr = psdb.get_bus(1);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(1);
     busptr->set_positive_sequence_voltage_in_pu(1.05);
     TEST_ASSERT(fabs(meter.get_meter_value()-1.05)<FLOAT_EPSILON);
 }
@@ -745,7 +745,7 @@ void METER_TEST::test_get_equivalent_device_meter_value()
     did.set_device_identifier_index(get_index_of_string("#1"));
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    EQUIVALENT_DEVICE* edevice = psdb.get_equivalent_device(did);
+    EQUIVALENT_DEVICE* edevice = psdb.get_pointer_to_equivalent_device(did);
     TEST_ASSERT(edevice!=NULL);
 
     edevice->set_equivalent_voltage_source_status(true);

@@ -10,7 +10,7 @@ int api_get_owner_integer_data(unsigned int owner, char* parameter_name, unsigne
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    OWNER* ownerptr = psdb.get_owner(owner);
+    OWNER* ownerptr = psdb.get_pointer_to_owner(owner);
     if(ownerptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -32,7 +32,7 @@ void api_set_owner_integer_data(unsigned int owner, char* parameter_name, int va
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    OWNER* ownerptr = psdb.get_owner(owner);
+    OWNER* ownerptr = psdb.get_pointer_to_owner(owner);
     if(ownerptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -50,7 +50,7 @@ double api_get_owner_float_data(unsigned int owner, char* parameter_name, unsign
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    OWNER* ownerptr = psdb.get_owner(owner);
+    OWNER* ownerptr = psdb.get_pointer_to_owner(owner);
     if(ownerptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -82,7 +82,7 @@ const char* api_get_owner_string_data(unsigned int owner, char* parameter_name, 
 
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
-    OWNER* ownerptr = psdb.get_owner(owner);
+    OWNER* ownerptr = psdb.get_pointer_to_owner(owner);
     if(ownerptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -108,7 +108,7 @@ void api_set_owner_string_data(unsigned int owner, char* parameter_name, char* v
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string BLANK = "";
-    OWNER* ownerptr = psdb.get_owner(owner);
+    OWNER* ownerptr = psdb.get_pointer_to_owner(owner);
     if(ownerptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -126,7 +126,7 @@ bool api_get_owner_boolean_data(unsigned int owner, char* parameter_name, unsign
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    OWNER* ownerptr = psdb.get_owner(owner);
+    OWNER* ownerptr = psdb.get_pointer_to_owner(owner);
     if(ownerptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);

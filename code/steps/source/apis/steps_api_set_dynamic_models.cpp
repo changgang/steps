@@ -39,7 +39,7 @@ void api_disable_generator_related_model(unsigned int bus, char* identifier, cha
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     DEVICE_ID did = get_generator_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(did);
+    GENERATOR* generator = psdb.get_pointer_to_generator(did);
     if(generator==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__, toolkit_index);
@@ -85,7 +85,7 @@ void api_enable_generator_related_model(unsigned int bus, char* identifier, char
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     DEVICE_ID did = get_generator_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(did);
+    GENERATOR* generator = psdb.get_pointer_to_generator(did);
     if(generator==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__, toolkit_index);

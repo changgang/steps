@@ -49,7 +49,7 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::test_get_bus_voltage()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     unsigned int bus = load->get_load_bus();
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
 
     busptr->set_positive_sequence_voltage_in_pu(1.0);
     TEST_ASSERT(fabs(model->get_bus_positive_sequence_voltage_in_pu()-1)<FLOAT_EPSILON);
@@ -111,7 +111,7 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
     default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
 
     unsigned int bus = load->get_load_bus();
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
     busptr->set_positive_sequence_voltage_in_pu(1.0);
 
     model->initialize();

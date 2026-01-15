@@ -11,7 +11,7 @@ double api_get_pv_unit_sequence_float_data(unsigned int bus, char* identifier, c
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_pv_unit_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    PV_UNIT* pv_unit = psdb.get_pv_unit(did);
+    PV_UNIT* pv_unit = psdb.get_pointer_to_pv_unit(did);
 
     if(pv_unit==NULL)
     {
@@ -59,7 +59,7 @@ void api_set_pv_unit_sequence_float_data(unsigned int bus, char* identifier, cha
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_pv_unit_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    PV_UNIT* pv_unit = psdb.get_pv_unit(did);
+    PV_UNIT* pv_unit = psdb.get_pointer_to_pv_unit(did);
 
     if(pv_unit==NULL)
     {

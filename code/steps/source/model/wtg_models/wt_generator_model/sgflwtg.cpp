@@ -893,7 +893,7 @@ bool SGFLWTG::setup_model_with_steps_string_vector(vector<string>& data)
             DEVICE_ID did = get_wt_generator_device_id(ibus, id);
             STEPS& toolkit = get_toolkit();
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            WT_GENERATOR* gen = psdb.get_wt_generator(did);
+            WT_GENERATOR* gen = psdb.get_pointer_to_wt_generator(did);
             double mbase = gen->get_mbase_in_MVA();
             unsigned int n_lumped_turbine = round(mbase/1.0); //Default prated is set to 1.0 MVA.
             if(fabs(mbase-n_lumped_turbine*1.0)>1e-2)

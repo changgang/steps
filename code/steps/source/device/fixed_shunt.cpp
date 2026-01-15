@@ -27,7 +27,7 @@ void FIXED_SHUNT::set_shunt_bus(unsigned int shunt_bus)
         if(psdb.is_bus_exist(shunt_bus))
         {
             this->bus = shunt_bus;
-            busptr = psdb.get_bus(shunt_bus);
+            busptr = psdb.get_pointer_to_ac_bus(shunt_bus);
         }
         else
         {
@@ -201,7 +201,7 @@ bool FIXED_SHUNT::is_in_area(unsigned int area) const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* busptr = psdb.get_bus(get_shunt_bus());
+    BUS* busptr = psdb.get_pointer_to_ac_bus(get_shunt_bus());
     if(busptr!=NULL)
     {
         return busptr->is_in_area(area);
@@ -214,7 +214,7 @@ bool FIXED_SHUNT::is_in_zone(unsigned int zone) const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* busptr = psdb.get_bus(get_shunt_bus());
+    BUS* busptr = psdb.get_pointer_to_ac_bus(get_shunt_bus());
     if(busptr!=NULL)
     {
         return busptr->is_in_zone(zone);
@@ -301,7 +301,7 @@ complex<double> FIXED_SHUNT::get_actual_impedance_shunt_in_MVA() const
         STEPS& toolkit = get_toolkit();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-        BUS* busptr = psdb.get_bus(get_shunt_bus());
+        BUS* busptr = psdb.get_pointer_to_ac_bus(get_shunt_bus());
 
         if(busptr!=NULL)
         {

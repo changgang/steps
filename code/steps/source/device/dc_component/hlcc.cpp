@@ -157,7 +157,7 @@ void HLCC::set_converter_ac_bus(const unsigned int bus)
     if (psdb.is_bus_exist(bus))
     {
         converter_ac_bus = bus;
-        lcc_ac_busptr = psdb.get_bus(bus);
+        lcc_ac_busptr = psdb.get_pointer_to_ac_bus(bus);
     }
     else
     {

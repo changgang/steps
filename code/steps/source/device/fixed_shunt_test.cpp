@@ -215,7 +215,7 @@ void FIXED_SHUNT_TEST::test_get_actual_impedance_shunt()
     fixed_shunt.set_nominal_positive_sequence_impedance_shunt_in_MVA(s_Z);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    BUS* bus = psdb.get_bus(fixed_shunt.get_shunt_bus());
+    BUS* bus = psdb.get_pointer_to_ac_bus(fixed_shunt.get_shunt_bus());
 
     bus->set_positive_sequence_voltage_in_pu(0.95);
 

@@ -4436,7 +4436,7 @@ void STEPS_IMEXPORTER::load_bus_powerflow_result(const vector<string>& data)
         unsigned int bus_number = str2int(contents[bus_number_index]);
         double voltage = str2double(contents[voltage_index]);
         double angle = str2double(contents[angle_index]);
-        BUS* bus = psdb.get_bus(bus_number);
+        BUS* bus = psdb.get_pointer_to_ac_bus(bus_number);
         if(bus!=NULL)
         {
             bus->set_positive_sequence_voltage_in_pu(voltage);
@@ -4486,7 +4486,7 @@ void STEPS_IMEXPORTER::load_generator_powerflow_result(const vector<string>& dat
         double P = str2double(contents[P_index]);
         double Q = str2double(contents[Q_index]);
         DEVICE_ID did = get_generator_device_id(bus_number,identifier);
-        GENERATOR* gen = psdb.get_generator(did);
+        GENERATOR* gen = psdb.get_pointer_to_generator(did);
         if(gen!=NULL)
         {
             gen->set_p_generation_in_MW(P);
@@ -4536,7 +4536,7 @@ void STEPS_IMEXPORTER::load_wt_generator_powerflow_result(const vector<string>& 
         double P = str2double(contents[P_index]);
         double Q = str2double(contents[Q_index]);
         DEVICE_ID did = get_wt_generator_device_id(bus_number,identifier);
-        WT_GENERATOR* gen = psdb.get_wt_generator(did);
+        WT_GENERATOR* gen = psdb.get_pointer_to_wt_generator(did);
         if(gen!=NULL)
         {
             gen->set_p_generation_in_MW(P);
@@ -4586,7 +4586,7 @@ void STEPS_IMEXPORTER::load_pv_unit_powerflow_result(const vector<string>& data)
         double P = str2double(contents[P_index]);
         double Q = str2double(contents[Q_index]);
         DEVICE_ID did = get_pv_unit_device_id(bus_number,identifier);
-        PV_UNIT* pv = psdb.get_pv_unit(did);
+        PV_UNIT* pv = psdb.get_pointer_to_pv_unit(did);
         if(pv!=NULL)
         {
             pv->set_p_generation_in_MW(P);
@@ -4636,7 +4636,7 @@ void STEPS_IMEXPORTER::load_energy_storage_powerflow_result(const vector<string>
         double P = str2double(contents[P_index]);
         double Q = str2double(contents[Q_index]);
         DEVICE_ID did = get_energy_storage_device_id(bus_number,identifier);
-        ENERGY_STORAGE* es = psdb.get_energy_storage(did);
+        ENERGY_STORAGE* es = psdb.get_pointer_to_energy_storage(did);
         if(es!=NULL)
         {
             es->set_p_generation_in_MW(P);
@@ -4686,7 +4686,7 @@ void STEPS_IMEXPORTER::load_sv_source_powerflow_result(const vector<string>& dat
         double P = str2double(contents[P_index]);
         double Q = str2double(contents[Q_index]);
         DEVICE_ID did = get_sv_source_device_id(bus_number,identifier);
-        SV_SOURCE*svs = psdb.get_sv_source(did);
+        SV_SOURCE*svs = psdb.get_pointer_to_sv_source(did);
         if(svs!=NULL)
         {
             svs->set_p_generation_in_MW(P);
@@ -4745,7 +4745,7 @@ void STEPS_IMEXPORTER::load_transformer_powerflow_result(const vector<string>& d
         double jtap = str2double(contents[jtap_index]);
         double ktap = str2double(contents[ktap_index]);
         DEVICE_ID did = get_transformer_device_id(ibus_number,jbus_number,kbus_number,identifier);
-        TRANSFORMER* trans = psdb.get_transformer(did);
+        TRANSFORMER* trans = psdb.get_pointer_to_transformer(did);
         if(trans!=NULL)
         {
             trans->set_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE, itap);
@@ -4806,7 +4806,7 @@ void STEPS_IMEXPORTER::load_lcc_hvdc2t_powerflow_result(const vector<string>& da
         double alpha = str2double(contents[alpha_index]);
         double gamma = str2double(contents[gamma_index]);
         DEVICE_ID did = get_lcc_hvdc2t_device_id(rbus_number,ibus_number,identifier);
-        LCC_HVDC2T* hvdc = psdb.get_lcc_hvdc2t(did);
+        LCC_HVDC2T* hvdc = psdb.get_pointer_to_lcc_hvdc2t(did);
         if(hvdc!=NULL)
         {
             hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, alpha);

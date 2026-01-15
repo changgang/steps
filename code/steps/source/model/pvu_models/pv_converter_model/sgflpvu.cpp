@@ -898,7 +898,7 @@ bool SGFLPVU::setup_model_with_steps_string_vector(vector<string>& data)
             DEVICE_ID did = get_pv_unit_device_id(ibus, id);
             STEPS& toolkit = get_toolkit();
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            PV_UNIT* pv = psdb.get_pv_unit(did);
+            PV_UNIT* pv = psdb.get_pointer_to_pv_unit(did);
 
             double mbase = pv->get_mbase_in_MVA();
             unsigned int n_lumped = round(mbase/1.0); //Default prated is set to 1.0 MVA.

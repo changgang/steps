@@ -170,7 +170,7 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
     device_id.set_device_terminal(terminal);
 
     AC_LINE* line;
-    line = psdb.get_ac_line(device_id);
+    line = psdb.get_pointer_to_ac_line(device_id);
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
@@ -180,7 +180,7 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
 
     device_id.set_device_terminal(terminal);
 
-    line = psdb.get_ac_line(device_id);
+    line = psdb.get_pointer_to_ac_line(device_id);
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
@@ -195,7 +195,7 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
 
     device_id.set_device_terminal(terminal);
 
-    line = psdb.get_ac_line(device_id);
+    line = psdb.get_pointer_to_ac_line(device_id);
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
@@ -228,7 +228,7 @@ void NETWORK_MATRIX_TEST::test_get_islands()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
@@ -248,7 +248,7 @@ void NETWORK_MATRIX_TEST::test_get_islands()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    line = psdb.get_ac_line(did);
+    line = psdb.get_pointer_to_ac_line(did);
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
@@ -268,7 +268,7 @@ void NETWORK_MATRIX_TEST::test_get_islands()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    line = psdb.get_ac_line(did);
+    line = psdb.get_pointer_to_ac_line(did);
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
@@ -357,7 +357,7 @@ void NETWORK_MATRIX_TEST::test_build_network_with_bus_out_of_service()
     show_test_information_for_function_of_class(__FUNCTION__,"NETWORK_MATRIX_TEST");
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    BUS* busptr = psdb.get_bus(4);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(4);
     busptr->set_bus_type(OUT_OF_SERVICE);
 
     network_matrix->build_network_Y_matrix();

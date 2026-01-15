@@ -11,7 +11,7 @@ const char* api_get_load_related_model_name(unsigned int bus, char* identifier, 
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     DEVICE_ID did = get_load_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    LOAD* load = psdb.get_load(did);
+    LOAD* load = psdb.get_pointer_to_load(did);
     if(load==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -49,7 +49,7 @@ double api_get_load_related_model_float_parameter(unsigned int bus, char* identi
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_load_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    LOAD* load = psdb.get_load(did);
+    LOAD* load = psdb.get_pointer_to_load(did);
     if(load==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -91,7 +91,7 @@ void api_set_load_related_model_float_parameter(unsigned int bus, char* identifi
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_load_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    LOAD* load = psdb.get_load(did);
+    LOAD* load = psdb.get_pointer_to_load(did);
     if(load==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -132,7 +132,7 @@ unsigned int api_get_load_related_model_float_parameter_count(unsigned int bus, 
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_load_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    LOAD* load = psdb.get_load(did);
+    LOAD* load = psdb.get_pointer_to_load(did);
     if(load==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -173,7 +173,7 @@ const char* api_get_load_related_model_float_parameter_name(unsigned int bus, ch
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_load_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    LOAD* load = psdb.get_load(did);
+    LOAD* load = psdb.get_pointer_to_load(did);
     string name = "";
     if(load==NULL)
     {

@@ -139,7 +139,7 @@ bool MUTUAL_DATA::is_related_to_ac_line(unsigned int ibus, unsigned int jbus, co
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
-    AC_LINE* lineptr = psdb.get_ac_line(did);
+    AC_LINE* lineptr = psdb.get_pointer_to_ac_line(did);
     if(lineptr==first_ac_lineptr)
         return true;
     else if(lineptr==second_ac_lineptr)

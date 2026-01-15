@@ -11,7 +11,7 @@ const char* api_get_mt_hvdc_related_model_name(char* mtdc_name, char* model_type
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    MT_HVDC* mtdc = psdb.get_mt_hvdc(mtdc_name);
+    MT_HVDC* mtdc = psdb.get_pointer_to_mt_hvdc(mtdc_name);
     DEVICE_ID did = mtdc->get_device_id();
     if(mtdc==NULL)
     {
@@ -53,7 +53,7 @@ double api_get_mt_hvdc_related_model_float_parameter(char* mtdc_name, char* mode
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    MT_HVDC* mtdc = psdb.get_mt_hvdc(mtdc_name);
+    MT_HVDC* mtdc = psdb.get_pointer_to_mt_hvdc(mtdc_name);
     DEVICE_ID did = mtdc->get_device_id();
     if(mtdc==NULL)
     {
@@ -96,7 +96,7 @@ void api_set_mt_hvdc_related_model_float_parameter(char* mtdc_name, char* model_
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    MT_HVDC* mtdc = psdb.get_mt_hvdc(mtdc_name);
+    MT_HVDC* mtdc = psdb.get_pointer_to_mt_hvdc(mtdc_name);
     DEVICE_ID did = mtdc->get_device_id();
     if(mtdc==NULL)
     {
@@ -139,7 +139,7 @@ unsigned int api_get_mt_hvdc_related_model_float_parameter_count(char* mtdc_name
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    MT_HVDC* mtdc = psdb.get_mt_hvdc(mtdc_name);
+    MT_HVDC* mtdc = psdb.get_pointer_to_mt_hvdc(mtdc_name);
     DEVICE_ID did = mtdc->get_device_id();
     if(mtdc==NULL)
     {
@@ -182,7 +182,7 @@ const char* api_get_mt_hvdc_related_model_float_parameter_name(char* mtdc_name, 
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    MT_HVDC* mtdc = psdb.get_mt_hvdc(mtdc_name);
+    MT_HVDC* mtdc = psdb.get_pointer_to_mt_hvdc(mtdc_name);
     DEVICE_ID did = mtdc->get_device_id();
     if(mtdc==NULL)
     {

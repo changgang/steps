@@ -66,7 +66,7 @@ int main()
 
     //psdb.check_dynamic_data();
 
-    //VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc("Vsc-Project1");
+    //VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc("Vsc-Project1");
     //VSC_HVDC_CONVERTER_MODEL* model = vsc_hvdc->get_vsc_hvdc_converter_model(0);
     //model->report();
 

@@ -113,8 +113,8 @@ void LVRT_CONTROL_TEST::setup()
 
     lvrt = new LVRT_CONTROL(default_toolkit);
 
-    lvrt->set_bus_pointer(psdb.get_bus(1));
-    lvrt->set_device_pointer(psdb.get_wt_generator(did));
+    lvrt->set_bus_pointer(psdb.get_pointer_to_ac_bus(1));
+    lvrt->set_device_pointer(psdb.get_pointer_to_wt_generator(did));
 }
 
 void LVRT_CONTROL_TEST::tear_down()
@@ -130,7 +130,7 @@ void LVRT_CONTROL_TEST::test_get_bus()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(lvrt->get_bus()==1);
-    TEST_ASSERT(lvrt->get_bus_pointer()==psdb.get_bus(1));
+    TEST_ASSERT(lvrt->get_bus_pointer()==psdb.get_pointer_to_ac_bus(1));
 }
 
 void LVRT_CONTROL_TEST::test_get_device()
@@ -143,7 +143,7 @@ void LVRT_CONTROL_TEST::test_get_device()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    TEST_ASSERT(lvrt->get_device_pointer()==psdb.get_wt_generator(did));
+    TEST_ASSERT(lvrt->get_device_pointer()==psdb.get_pointer_to_wt_generator(did));
     TEST_ASSERT(lvrt->get_device_id()==did);
 }
 

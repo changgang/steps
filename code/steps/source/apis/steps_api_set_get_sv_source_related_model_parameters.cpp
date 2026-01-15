@@ -9,7 +9,7 @@ const char* api_get_sv_source_related_model_name(unsigned int bus, char* identif
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     DEVICE_ID did = get_sv_source_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    SV_SOURCE* sv_source = psdb.get_sv_source(did);
+    SV_SOURCE* sv_source = psdb.get_pointer_to_sv_source(did);
     if(sv_source==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -33,7 +33,7 @@ double api_get_sv_source_related_model_float_parameter(unsigned int bus, char* i
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_sv_source_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    SV_SOURCE* sv_source = psdb.get_sv_source(did);
+    SV_SOURCE* sv_source = psdb.get_pointer_to_sv_source(did);
     if(sv_source==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -59,7 +59,7 @@ void api_set_sv_source_related_model_float_parameter(unsigned int bus, char* ide
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_sv_source_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    SV_SOURCE* sv_source = psdb.get_sv_source(did);
+    SV_SOURCE* sv_source = psdb.get_pointer_to_sv_source(did);
     if(sv_source==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -83,7 +83,7 @@ unsigned int api_get_sv_source_related_model_float_parameter_count(unsigned int 
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_sv_source_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    SV_SOURCE* sv_source = psdb.get_sv_source(did);
+    SV_SOURCE* sv_source = psdb.get_pointer_to_sv_source(did);
     if(sv_source==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -107,7 +107,7 @@ const char* api_get_sv_source_related_model_float_parameter_name(unsigned int bu
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_sv_source_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    SV_SOURCE* sv_source = psdb.get_sv_source(did);
+    SV_SOURCE* sv_source = psdb.get_pointer_to_sv_source(did);
     string name = "";
     if(sv_source==NULL)
     {

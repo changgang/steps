@@ -43,7 +43,7 @@ void SOURCE::set_source_bus(unsigned int bus)
     }
     source_bus = bus;
 
-    busptr = psdb.get_bus(source_bus);
+    busptr = psdb.get_pointer_to_ac_bus(source_bus);
 }
 
 void SOURCE::set_identifier(string id)
@@ -373,7 +373,7 @@ bool SOURCE::is_in_area(unsigned int area) const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* busptr = psdb.get_bus(get_source_bus());
+    BUS* busptr = psdb.get_pointer_to_ac_bus(get_source_bus());
     if(busptr!=NULL)
     {
         return busptr->is_in_area(area);
@@ -386,7 +386,7 @@ bool SOURCE::is_in_zone(unsigned int zone) const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* busptr = psdb.get_bus(get_source_bus());
+    BUS* busptr = psdb.get_pointer_to_ac_bus(get_source_bus());
     if(busptr!=NULL)
     {
         return busptr->is_in_zone(zone);

@@ -12,7 +12,7 @@ int api_get_fixed_shunt_integer_data(unsigned int bus, char* identifier, char* p
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    FIXED_SHUNT* shuntptr = psdb.get_fixed_shunt(did);
+    FIXED_SHUNT* shuntptr = psdb.get_pointer_to_fixed_shunt(did);
     if(shuntptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -34,7 +34,7 @@ void api_set_fixed_shunt_integer_data(unsigned int bus, char* identifier, char* 
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    FIXED_SHUNT* shuntptr = psdb.get_fixed_shunt(did);
+    FIXED_SHUNT* shuntptr = psdb.get_pointer_to_fixed_shunt(did);
     if(shuntptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -52,7 +52,7 @@ double api_get_fixed_shunt_float_data(unsigned int bus, char* identifier, char* 
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    FIXED_SHUNT* shuntptr = psdb.get_fixed_shunt(did);
+    FIXED_SHUNT* shuntptr = psdb.get_pointer_to_fixed_shunt(did);
     if(shuntptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -123,7 +123,7 @@ void api_set_fixed_shunt_float_data(unsigned int bus, char* identifier, char* pa
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
-    FIXED_SHUNT* shuntptr = psdb.get_fixed_shunt(did);
+    FIXED_SHUNT* shuntptr = psdb.get_pointer_to_fixed_shunt(did);
     if(shuntptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -223,7 +223,7 @@ const char* api_get_fixed_shunt_string_data(unsigned int bus, char* identifier, 
 
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
-    FIXED_SHUNT* shuntptr = psdb.get_fixed_shunt(did);
+    FIXED_SHUNT* shuntptr = psdb.get_pointer_to_fixed_shunt(did);
     if(shuntptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -255,7 +255,7 @@ void api_set_fixed_shunt_string_data(unsigned int bus, char* identifier, char* p
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    FIXED_SHUNT* shuntptr = psdb.get_fixed_shunt(did);
+    FIXED_SHUNT* shuntptr = psdb.get_pointer_to_fixed_shunt(did);
     if(shuntptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -277,7 +277,7 @@ bool api_get_fixed_shunt_boolean_data(unsigned int bus, char* identifier, char* 
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    FIXED_SHUNT* shuntptr = psdb.get_fixed_shunt(did);
+    FIXED_SHUNT* shuntptr = psdb.get_pointer_to_fixed_shunt(did);
     if(shuntptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -302,7 +302,7 @@ void api_set_fixed_shunt_boolean_data(unsigned int bus, char* identifier, char* 
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    FIXED_SHUNT* shuntptr = psdb.get_fixed_shunt(did);
+    FIXED_SHUNT* shuntptr = psdb.get_pointer_to_fixed_shunt(did);
     if(shuntptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);

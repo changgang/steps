@@ -518,7 +518,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
 
     gen1_model.set_H_in_s(9.5515);
 
-    generator = psdb.get_generator(did);
+    generator = psdb.get_pointer_to_generator(did);
     dmdb.add_model(&gen1_model);
 
     complex<double> gen_z(0.0, 0.15048);
@@ -534,7 +534,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
 
     gen2_model.set_H_in_s(3.3333);
 
-    generator = psdb.get_generator(did);
+    generator = psdb.get_pointer_to_generator(did);
     dmdb.add_model(&gen2_model);
 
     gen_z = complex<double>(0.0, 0.230016);
@@ -550,7 +550,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
 
     gen3_model.set_H_in_s(2.3516);
 
-    generator = psdb.get_generator(did);
+    generator = psdb.get_pointer_to_generator(did);
     dmdb.add_model(&gen3_model);
 
     gen_z = complex<double>(0.0, 0.232064);

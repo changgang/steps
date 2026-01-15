@@ -242,7 +242,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("ARXL"));
 
-    EQUIVALENT_DEVICE* pedevice = psdb.get_equivalent_device(did);
+    EQUIVALENT_DEVICE* pedevice = psdb.get_pointer_to_equivalent_device(did);
 
     ARXL model(*toolkit);
     model.set_device_id(did);

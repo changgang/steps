@@ -72,7 +72,7 @@ void PSSE_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(n==42);
 
     BUS* bus;
-    bus = psdb.get_bus(101);
+    bus = psdb.get_pointer_to_ac_bus(101);
     TEST_ASSERT(bus->get_bus_number()==101);
     TEST_ASSERT(bus->get_bus_name()=="NUC-A");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-21.6)<FLOAT_EPSILON);
@@ -83,7 +83,7 @@ void PSSE_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_zone_number()==1);
     TEST_ASSERT(bus->get_owner_number()==1);
 
-    bus = psdb.get_bus(201);
+    bus = psdb.get_pointer_to_ac_bus(201);
     TEST_ASSERT(bus->get_bus_number()==201);
     TEST_ASSERT(bus->get_bus_name()=="HYDRO");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-500.0)<FLOAT_EPSILON);
@@ -94,7 +94,7 @@ void PSSE_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_zone_number()==7);
     TEST_ASSERT(bus->get_owner_number()==2);
 
-    bus = psdb.get_bus(3001);
+    bus = psdb.get_pointer_to_ac_bus(3001);
     TEST_ASSERT(bus->get_bus_number()==3001);
     TEST_ASSERT(bus->get_bus_name()=="MINE");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-230.0)<FLOAT_EPSILON);
@@ -105,7 +105,7 @@ void PSSE_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_zone_number()==6);
     TEST_ASSERT(bus->get_owner_number()==5);
 
-    bus = psdb.get_bus(93002);
+    bus = psdb.get_pointer_to_ac_bus(93002);
     TEST_ASSERT(bus->get_bus_number()==93002);
     TEST_ASSERT(bus->get_bus_name()=="WINDBUS3");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-0.69)<FLOAT_EPSILON);
@@ -135,7 +135,7 @@ void PSSE_IMEXPORTER_TEST::test_load_load_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    LOAD* load = psdb.get_load(did);
+    LOAD* load = psdb.get_pointer_to_load(did);
     TEST_ASSERT(load->get_load_bus()==152);
     TEST_ASSERT(load->get_identifier()=="1");
     TEST_ASSERT(load->get_status()==true);
@@ -147,7 +147,7 @@ void PSSE_IMEXPORTER_TEST::test_load_load_data()
     terminal.append_bus(215);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("U1"));
-    load = psdb.get_load(did);
+    load = psdb.get_pointer_to_load(did);
     TEST_ASSERT(load->get_load_bus()==215);
     TEST_ASSERT(load->get_identifier()=="U1");
     TEST_ASSERT(load->get_status()==true);
@@ -159,7 +159,7 @@ void PSSE_IMEXPORTER_TEST::test_load_load_data()
     terminal.append_bus(3010);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    load = psdb.get_load(did);
+    load = psdb.get_pointer_to_load(did);
     TEST_ASSERT(load->get_load_bus()==3010);
     TEST_ASSERT(load->get_identifier()=="1");
     TEST_ASSERT(load->get_status()==true);
@@ -189,7 +189,7 @@ void PSSE_IMEXPORTER_TEST::test_load_fixed_shunt_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("F1"));
 
-    FIXED_SHUNT* shunt = psdb.get_fixed_shunt(did);
+    FIXED_SHUNT* shunt = psdb.get_pointer_to_fixed_shunt(did);
     TEST_ASSERT(shunt->get_shunt_bus()==151);
     TEST_ASSERT(shunt->get_identifier()=="F1");
     TEST_ASSERT(shunt->get_status()==true);
@@ -199,7 +199,7 @@ void PSSE_IMEXPORTER_TEST::test_load_fixed_shunt_data()
     terminal.append_bus(201);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    shunt = psdb.get_fixed_shunt(did);
+    shunt = psdb.get_pointer_to_fixed_shunt(did);
     TEST_ASSERT(shunt->get_shunt_bus()==201);
     TEST_ASSERT(shunt->get_identifier()=="1");
     TEST_ASSERT(shunt->get_status()==true);
@@ -209,7 +209,7 @@ void PSSE_IMEXPORTER_TEST::test_load_fixed_shunt_data()
     terminal.append_bus(3022);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    shunt = psdb.get_fixed_shunt(did);
+    shunt = psdb.get_pointer_to_fixed_shunt(did);
     TEST_ASSERT(shunt->get_shunt_bus()==3022);
     TEST_ASSERT(shunt->get_identifier()=="1");
     TEST_ASSERT(shunt->get_status()==true);
@@ -234,7 +234,7 @@ void PSSE_IMEXPORTER_TEST::test_load_generator_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    GENERATOR* gen = psdb.get_generator(did);
+    GENERATOR* gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==101);
     TEST_ASSERT(gen->get_identifier()=="1");
     TEST_ASSERT(gen->get_status()==true);
@@ -250,7 +250,7 @@ void PSSE_IMEXPORTER_TEST::test_load_generator_data()
     terminal.append_bus(301);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("2"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==301);
     TEST_ASSERT(gen->get_identifier()=="2");
     TEST_ASSERT(gen->get_status()==true);
@@ -266,7 +266,7 @@ void PSSE_IMEXPORTER_TEST::test_load_generator_data()
     terminal.append_bus(3018);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("2"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==3018);
     TEST_ASSERT(gen->get_identifier()=="2");
     TEST_ASSERT(gen->get_status()==true);
@@ -297,7 +297,7 @@ void PSSE_IMEXPORTER_TEST::test_load_wt_generator_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("W1"));
 
-    WT_GENERATOR* wt_generator = psdb.get_wt_generator(did);
+    WT_GENERATOR* wt_generator = psdb.get_pointer_to_wt_generator(did);
     TEST_ASSERT(wt_generator->get_source_bus()==9154);
     TEST_ASSERT(wt_generator->get_identifier()=="W1");
     TEST_ASSERT(wt_generator->get_status()==true);
@@ -313,7 +313,7 @@ void PSSE_IMEXPORTER_TEST::test_load_wt_generator_data()
     terminal.append_bus(93002);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("W3"));
-    wt_generator = psdb.get_wt_generator(did);
+    wt_generator = psdb.get_pointer_to_wt_generator(did);
     TEST_ASSERT(wt_generator->get_source_bus()==93002);
     TEST_ASSERT(wt_generator->get_identifier()=="W3");
     TEST_ASSERT(wt_generator->get_status()==true);
@@ -345,7 +345,7 @@ void PSSE_IMEXPORTER_TEST::test_load_ac_line_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==151);
     TEST_ASSERT(line->get_receiving_side_bus()==152);
     TEST_ASSERT(line->get_identifier()=="1");
@@ -362,7 +362,7 @@ void PSSE_IMEXPORTER_TEST::test_load_ac_line_data()
     terminal.append_bus(214);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    line = psdb.get_ac_line(did);
+    line = psdb.get_pointer_to_ac_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==213);
     TEST_ASSERT(line->get_receiving_side_bus()==214);
     TEST_ASSERT(line->get_identifier()=="1");
@@ -379,7 +379,7 @@ void PSSE_IMEXPORTER_TEST::test_load_ac_line_data()
     terminal.append_bus(3009);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    line = psdb.get_ac_line(did);
+    line = psdb.get_pointer_to_ac_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==3008);
     TEST_ASSERT(line->get_receiving_side_bus()==3009);
     TEST_ASSERT(line->get_identifier()=="1");
@@ -412,7 +412,7 @@ void PSSE_IMEXPORTER_TEST::test_load_transformer_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("T1"));
 
-    TRANSFORMER* transptr = psdb.get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_pointer_to_transformer(did);
     TEST_ASSERT(transptr!=NULL);
     TEST_ASSERT(fabs(transptr->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)-1200.0)<FLOAT_EPSILON);
 
@@ -423,7 +423,7 @@ void PSSE_IMEXPORTER_TEST::test_load_transformer_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("T2"));
 
-    transptr = psdb.get_transformer(did);
+    transptr = psdb.get_pointer_to_transformer(did);
     TEST_ASSERT(transptr!=NULL);
     TEST_ASSERT(fabs(transptr->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)-1210.0)<FLOAT_EPSILON);
 
@@ -444,7 +444,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
 
     AREA* area;
 
-    area = psdb.get_area(1);
+    area = psdb.get_pointer_to_area(1);
     TEST_ASSERT(area!=NULL);
     TEST_ASSERT(area->get_area_number()==1);
     TEST_ASSERT(area->get_area_swing_bus()==101);
@@ -453,7 +453,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
     TEST_ASSERT(area->get_area_name()=="CENTRAL");
     cout<<"Area 1 name is :'"<<area->get_area_name()<<"'"<<endl;
 
-    area = psdb.get_area(2);
+    area = psdb.get_pointer_to_area(2);
     TEST_ASSERT(area!=NULL);
     TEST_ASSERT(area->get_area_number()==2);
     TEST_ASSERT(area->get_area_swing_bus()==206);
@@ -461,7 +461,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
     TEST_ASSERT(fabs(area->get_area_power_mismatch_tolerance_in_MW()-10.0)<FLOAT_EPSILON);
     TEST_ASSERT(area->get_area_name()=="EAST");
 
-    area = psdb.get_area(3);
+    area = psdb.get_pointer_to_area(3);
     TEST_ASSERT(area!=NULL);
     TEST_ASSERT(area->get_area_number()==3);
     TEST_ASSERT(area->get_area_swing_bus()==301);
@@ -469,7 +469,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
     TEST_ASSERT(fabs(area->get_area_power_mismatch_tolerance_in_MW()-55.0)<FLOAT_EPSILON);
     TEST_ASSERT(area->get_area_name()=="CENTRAL_DC");
 
-    area = psdb.get_area(4);
+    area = psdb.get_pointer_to_area(4);
     TEST_ASSERT(area!=NULL);
     TEST_ASSERT(area->get_area_number()==4);
     TEST_ASSERT(area->get_area_swing_bus()==401);
@@ -477,7 +477,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
     TEST_ASSERT(fabs(area->get_area_power_mismatch_tolerance_in_MW()-15.0)<FLOAT_EPSILON);
     TEST_ASSERT(area->get_area_name()=="EAST_COGEN1");
 
-    area = psdb.get_area(5);
+    area = psdb.get_pointer_to_area(5);
     TEST_ASSERT(area!=NULL);
     TEST_ASSERT(area->get_area_number()==5);
     TEST_ASSERT(area->get_area_swing_bus()==3011);
@@ -485,7 +485,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
     TEST_ASSERT(fabs(area->get_area_power_mismatch_tolerance_in_MW()-10.0)<FLOAT_EPSILON);
     TEST_ASSERT(area->get_area_name()=="WEST");
 
-    area = psdb.get_area(6);
+    area = psdb.get_pointer_to_area(6);
     TEST_ASSERT(area!=NULL);
     TEST_ASSERT(area->get_area_number()==6);
     TEST_ASSERT(area->get_area_swing_bus()==402);
@@ -537,47 +537,47 @@ void PSSE_IMEXPORTER_TEST::test_load_zone_data()
 
     ZONE* zone;
 
-    zone = psdb.get_zone(1);
+    zone = psdb.get_pointer_to_zone(1);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==1);
     TEST_ASSERT(zone->get_zone_name()=="NORTH_A1");
 
-    zone = psdb.get_zone(2);
+    zone = psdb.get_pointer_to_zone(2);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==2);
     TEST_ASSERT(zone->get_zone_name()=="MID_A1_A2_A5");
 
-    zone = psdb.get_zone(3);
+    zone = psdb.get_pointer_to_zone(3);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==3);
     TEST_ASSERT(zone->get_zone_name()=="DISCNT_IN_A1");
 
-    zone = psdb.get_zone(4);
+    zone = psdb.get_pointer_to_zone(4);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==4);
     TEST_ASSERT(zone->get_zone_name()=="SOUTH_A1_A5");
 
-    zone = psdb.get_zone(5);
+    zone = psdb.get_pointer_to_zone(5);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==5);
     TEST_ASSERT(zone->get_zone_name()=="ALL_A3");
 
-    zone = psdb.get_zone(6);
+    zone = psdb.get_pointer_to_zone(6);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==6);
     TEST_ASSERT(zone->get_zone_name()=="NORTH_A5");
 
-    zone = psdb.get_zone(7);
+    zone = psdb.get_pointer_to_zone(7);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==7);
     TEST_ASSERT(zone->get_zone_name()=="NORTH_A2");
 
-    zone = psdb.get_zone(8);
+    zone = psdb.get_pointer_to_zone(8);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==8);
     TEST_ASSERT(zone->get_zone_name()=="SOUTH_A2");
 
-    zone = psdb.get_zone(9);
+    zone = psdb.get_pointer_to_zone(9);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==9);
     TEST_ASSERT(zone->get_zone_name()=="ALL_A4_A6");
@@ -598,27 +598,27 @@ void PSSE_IMEXPORTER_TEST::test_load_owner_data()
 
     OWNER* owner;
 
-    owner = psdb.get_owner(1);
+    owner = psdb.get_pointer_to_owner(1);
     TEST_ASSERT(owner!=NULL);
     TEST_ASSERT(owner->get_owner_number()==1);
     TEST_ASSERT(owner->get_owner_name()=="OWNER 1");
 
-    owner = psdb.get_owner(2);
+    owner = psdb.get_pointer_to_owner(2);
     TEST_ASSERT(owner!=NULL);
     TEST_ASSERT(owner->get_owner_number()==2);
     TEST_ASSERT(owner->get_owner_name()=="OWNER 2");
 
-    owner = psdb.get_owner(3);
+    owner = psdb.get_pointer_to_owner(3);
     TEST_ASSERT(owner!=NULL);
     TEST_ASSERT(owner->get_owner_number()==3);
     TEST_ASSERT(owner->get_owner_name()=="OWNER 3");
 
-    owner = psdb.get_owner(4);
+    owner = psdb.get_pointer_to_owner(4);
     TEST_ASSERT(owner!=NULL);
     TEST_ASSERT(owner->get_owner_number()==4);
     TEST_ASSERT(owner->get_owner_name()=="OWNER 4");
 
-    owner = psdb.get_owner(5);
+    owner = psdb.get_pointer_to_owner(5);
     TEST_ASSERT(owner!=NULL);
     TEST_ASSERT(owner->get_owner_number()==5);
     TEST_ASSERT(owner->get_owner_name()=="OWNER 5");

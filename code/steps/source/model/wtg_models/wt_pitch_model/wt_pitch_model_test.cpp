@@ -183,7 +183,7 @@ void WT_PITCH_MODEL_TEST::test_get_bus_frequency()
         unsigned int bus = gen->get_generator_bus();
 
         POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-        BUS* busptrr = psdb.get_bus(bus);
+        BUS* busptrr = psdb.get_pointer_to_ac_bus(bus);
 
         TEST_ASSERT(fabs(model->get_bus_frequency_in_pu()-psdb.get_bus_frequency_in_pu(bus))<FLOAT_EPSILON);
         BUS_FREQUENCY_MODEL* freqmodel = busptrr->get_bus_frequency_model();
@@ -205,7 +205,7 @@ void WT_PITCH_MODEL_TEST::test_get_bus_frequency_deviation()
         unsigned int bus = gen->get_generator_bus();
 
         POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-        BUS* busptrr = psdb.get_bus(bus);
+        BUS* busptrr = psdb.get_pointer_to_ac_bus(bus);
 
         TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu()-psdb.get_bus_frequency_deviation_in_pu(bus))<FLOAT_EPSILON);
         BUS_FREQUENCY_MODEL* freqmodel = busptrr->get_bus_frequency_model();
@@ -338,7 +338,7 @@ void WT_PITCH_MODEL_TEST::apply_frequency_drop_of_5_percent()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     unsigned int bus = gen->get_generator_bus();
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
 
     BUS_FREQUENCY_MODEL* model = busptr->get_bus_frequency_model();
     model->set_frequency_deviation_in_pu(0.05);

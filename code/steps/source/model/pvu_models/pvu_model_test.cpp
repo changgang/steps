@@ -65,7 +65,7 @@ PV_UNIT* PVU_MODEL_TEST::get_test_pv_unit()
     did.set_device_identifier_index(get_index_of_string("#1"));
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    return psdb.get_pv_unit(did);
+    return psdb.get_pointer_to_pv_unit(did);
 }
 
 

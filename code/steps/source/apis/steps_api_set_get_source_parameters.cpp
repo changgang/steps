@@ -23,19 +23,19 @@ int api_get_source_integer_data(unsigned int bus, char* identifier, char* parame
     switch(SOURCE_TYPE)
     {
         case STEPS_GENERATOR:
-            sourceptr = psdb.get_source(generator_did);
+            sourceptr = psdb.get_pointer_to_source(generator_did);
             break;
         case STEPS_WT_GENERATOR:
-            sourceptr = psdb.get_source(wt_generator_did);
+            sourceptr = psdb.get_pointer_to_source(wt_generator_did);
             break;
         case STEPS_PV_UNIT:
-            sourceptr = psdb.get_source(pv_unit_did);
+            sourceptr = psdb.get_pointer_to_source(pv_unit_did);
             break;
         case STEPS_ENERGY_STORAGE:
-            sourceptr = psdb.get_source(energy_storage_did);
+            sourceptr = psdb.get_pointer_to_source(energy_storage_did);
             break;
         case STEPS_SV_SOURCE:
-            sourceptr = psdb.get_source(sv_source_did);
+            sourceptr = psdb.get_pointer_to_source(sv_source_did);
             break;
         default:
             break;
@@ -80,19 +80,19 @@ void api_set_source_integer_data(unsigned int bus, char* identifier, char* param
     switch(SOURCE_TYPE)
     {
         case STEPS_GENERATOR:
-            sourceptr = psdb.get_source(generator_did);
+            sourceptr = psdb.get_pointer_to_source(generator_did);
             break;
         case STEPS_WT_GENERATOR:
-            sourceptr = psdb.get_source(wt_generator_did);
+            sourceptr = psdb.get_pointer_to_source(wt_generator_did);
             break;
         case STEPS_PV_UNIT:
-            sourceptr = psdb.get_source(pv_unit_did);
+            sourceptr = psdb.get_pointer_to_source(pv_unit_did);
             break;
         case STEPS_ENERGY_STORAGE:
-            sourceptr = psdb.get_source(energy_storage_did);
+            sourceptr = psdb.get_pointer_to_source(energy_storage_did);
             break;
         case STEPS_SV_SOURCE:
-            sourceptr = psdb.get_source(sv_source_did);
+            sourceptr = psdb.get_pointer_to_source(sv_source_did);
             break;
         default:
             break;
@@ -132,19 +132,19 @@ double api_get_source_float_data(unsigned int bus, char* identifier, char* param
     switch(SOURCE_TYPE)
     {
         case STEPS_GENERATOR:
-            sourceptr = psdb.get_source(generator_did);
+            sourceptr = psdb.get_pointer_to_source(generator_did);
             break;
         case STEPS_WT_GENERATOR:
-            sourceptr = psdb.get_source(wt_generator_did);
+            sourceptr = psdb.get_pointer_to_source(wt_generator_did);
             break;
         case STEPS_PV_UNIT:
-            sourceptr = psdb.get_source(pv_unit_did);
+            sourceptr = psdb.get_pointer_to_source(pv_unit_did);
             break;
         case STEPS_ENERGY_STORAGE:
-            sourceptr = psdb.get_source(energy_storage_did);
+            sourceptr = psdb.get_pointer_to_source(energy_storage_did);
             break;
         case STEPS_SV_SOURCE:
-            sourceptr = psdb.get_source(sv_source_did);
+            sourceptr = psdb.get_pointer_to_source(sv_source_did);
             break;
         default:
             break;
@@ -232,19 +232,19 @@ void api_set_source_float_data(unsigned int bus, char* identifier, char* paramet
     switch(SOURCE_TYPE)
     {
         case STEPS_GENERATOR:
-            sourceptr = psdb.get_source(generator_did);
+            sourceptr = psdb.get_pointer_to_source(generator_did);
             break;
         case STEPS_WT_GENERATOR:
-            sourceptr = psdb.get_source(wt_generator_did);
+            sourceptr = psdb.get_pointer_to_source(wt_generator_did);
             break;
         case STEPS_PV_UNIT:
-            sourceptr = psdb.get_source(pv_unit_did);
+            sourceptr = psdb.get_pointer_to_source(pv_unit_did);
             break;
         case STEPS_ENERGY_STORAGE:
-            sourceptr = psdb.get_source(energy_storage_did);
+            sourceptr = psdb.get_pointer_to_source(energy_storage_did);
             break;
         case STEPS_SV_SOURCE:
-            sourceptr = psdb.get_source(sv_source_did);
+            sourceptr = psdb.get_pointer_to_source(sv_source_did);
             break;
         default:
             break;
@@ -336,19 +336,19 @@ const char* api_get_source_string_data(unsigned int bus, char* identifier, char*
     switch(SOURCE_TYPE)
     {
         case STEPS_GENERATOR:
-            sourceptr = psdb.get_source(generator_did);
+            sourceptr = psdb.get_pointer_to_source(generator_did);
             break;
         case STEPS_WT_GENERATOR:
-            sourceptr = psdb.get_source(wt_generator_did);
+            sourceptr = psdb.get_pointer_to_source(wt_generator_did);
             break;
         case STEPS_PV_UNIT:
-            sourceptr = psdb.get_source(pv_unit_did);
+            sourceptr = psdb.get_pointer_to_source(pv_unit_did);
             break;
         case STEPS_ENERGY_STORAGE:
-            sourceptr = psdb.get_source(energy_storage_did);
+            sourceptr = psdb.get_pointer_to_source(energy_storage_did);
             break;
         case STEPS_SV_SOURCE:
-            sourceptr = psdb.get_source(sv_source_did);
+            sourceptr = psdb.get_pointer_to_source(sv_source_did);
             break;
         default:
             break;
@@ -386,19 +386,19 @@ void api_set_source_string_data(unsigned int bus, char* identifier, char* parame
     switch(SOURCE_TYPE)
     {
         case STEPS_GENERATOR:
-            sourceptr = psdb.get_source(generator_did);
+            sourceptr = psdb.get_pointer_to_source(generator_did);
             break;
         case STEPS_WT_GENERATOR:
-            sourceptr = psdb.get_source(wt_generator_did);
+            sourceptr = psdb.get_pointer_to_source(wt_generator_did);
             break;
         case STEPS_PV_UNIT:
-            sourceptr = psdb.get_source(pv_unit_did);
+            sourceptr = psdb.get_pointer_to_source(pv_unit_did);
             break;
         case STEPS_ENERGY_STORAGE:
-            sourceptr = psdb.get_source(energy_storage_did);
+            sourceptr = psdb.get_pointer_to_source(energy_storage_did);
             break;
         case STEPS_SV_SOURCE:
-            sourceptr = psdb.get_source(sv_source_did);
+            sourceptr = psdb.get_pointer_to_source(sv_source_did);
             break;
         default:
             break;
@@ -432,19 +432,19 @@ bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* param
     switch(SOURCE_TYPE)
     {
         case STEPS_GENERATOR:
-            sourceptr = psdb.get_source(generator_did);
+            sourceptr = psdb.get_pointer_to_source(generator_did);
             break;
         case STEPS_WT_GENERATOR:
-            sourceptr = psdb.get_source(wt_generator_did);
+            sourceptr = psdb.get_pointer_to_source(wt_generator_did);
             break;
         case STEPS_PV_UNIT:
-            sourceptr = psdb.get_source(pv_unit_did);
+            sourceptr = psdb.get_pointer_to_source(pv_unit_did);
             break;
         case STEPS_ENERGY_STORAGE:
-            sourceptr = psdb.get_source(energy_storage_did);
+            sourceptr = psdb.get_pointer_to_source(energy_storage_did);
             break;
         case STEPS_SV_SOURCE:
-            sourceptr = psdb.get_source(sv_source_did);
+            sourceptr = psdb.get_pointer_to_source(sv_source_did);
             break;
         default:
             break;
@@ -485,19 +485,19 @@ void api_set_source_boolean_data(unsigned int bus, char* identifier, char* param
     switch(SOURCE_TYPE)
     {
         case STEPS_GENERATOR:
-            sourceptr = psdb.get_source(generator_did);
+            sourceptr = psdb.get_pointer_to_source(generator_did);
             break;
         case STEPS_WT_GENERATOR:
-            sourceptr = psdb.get_source(wt_generator_did);
+            sourceptr = psdb.get_pointer_to_source(wt_generator_did);
             break;
         case STEPS_PV_UNIT:
-            sourceptr = psdb.get_source(pv_unit_did);
+            sourceptr = psdb.get_pointer_to_source(pv_unit_did);
             break;
         case STEPS_ENERGY_STORAGE:
-            sourceptr = psdb.get_source(energy_storage_did);
+            sourceptr = psdb.get_pointer_to_source(energy_storage_did);
             break;
         case STEPS_SV_SOURCE:
-            sourceptr = psdb.get_source(sv_source_did);
+            sourceptr = psdb.get_pointer_to_source(sv_source_did);
             break;
         default:
             break;

@@ -12,7 +12,7 @@ int api_get_line_integer_data(unsigned int ibus, unsigned int jbus, char* identi
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    AC_LINE* lineptr = psdb.get_ac_line(did);
+    AC_LINE* lineptr = psdb.get_pointer_to_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -46,7 +46,7 @@ void api_set_line_integer_data(unsigned int ibus, unsigned int jbus, char* ident
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    AC_LINE* lineptr = psdb.get_ac_line(did);
+    AC_LINE* lineptr = psdb.get_pointer_to_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -75,7 +75,7 @@ double api_get_line_float_data(unsigned int ibus, unsigned int jbus, char* ident
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    AC_LINE* lineptr = psdb.get_ac_line(did);
+    AC_LINE* lineptr = psdb.get_pointer_to_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -226,7 +226,7 @@ void api_set_line_float_data(unsigned int ibus, unsigned int jbus, char* identif
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    AC_LINE* lineptr = psdb.get_ac_line(did);
+    AC_LINE* lineptr = psdb.get_pointer_to_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -368,7 +368,7 @@ const char* api_get_line_string_data(unsigned int ibus, unsigned int jbus, char*
 
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
-    AC_LINE* lineptr = psdb.get_ac_line(did);
+    AC_LINE* lineptr = psdb.get_pointer_to_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -400,7 +400,7 @@ void api_set_line_string_data(unsigned int ibus, unsigned int jbus, char* identi
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    AC_LINE* lineptr = psdb.get_ac_line(did);
+    AC_LINE* lineptr = psdb.get_pointer_to_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -422,7 +422,7 @@ bool api_get_line_boolean_data(unsigned int ibus, unsigned int jbus, char* ident
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    AC_LINE* lineptr = psdb.get_ac_line(did);
+    AC_LINE* lineptr = psdb.get_pointer_to_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -450,7 +450,7 @@ void api_set_line_boolean_data(unsigned int ibus, unsigned int jbus, char* ident
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    AC_LINE* lineptr = psdb.get_ac_line(did);
+    AC_LINE* lineptr = psdb.get_pointer_to_ac_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);

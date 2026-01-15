@@ -112,7 +112,7 @@ void TRANSFORMER::set_winding_bus(TRANSFORMER_WINDING_SIDE winding, unsigned int
         return;
     }
     winding_bus[winding] = bus;
-    //winding_busptr[winding] = psdb.get_bus(bus);
+    //winding_busptr[winding] = psdb.get_pointer_to_ac_bus(bus);
 }
 
 void TRANSFORMER::set_winding_breaker_status(TRANSFORMER_WINDING_SIDE winding, bool status)
@@ -940,8 +940,8 @@ bool TRANSFORMER::is_in_area(unsigned int area) const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     if(is_two_winding_transformer())
     {
-        BUS* busptr_pri = psdb.get_bus(get_winding_bus(PRIMARY_SIDE));
-        BUS* busptr_sec = psdb.get_bus(get_winding_bus(SECONDARY_SIDE));
+        BUS* busptr_pri = psdb.get_pointer_to_ac_bus(get_winding_bus(PRIMARY_SIDE));
+        BUS* busptr_sec = psdb.get_pointer_to_ac_bus(get_winding_bus(SECONDARY_SIDE));
         if(busptr_pri!=NULL or busptr_sec!=NULL)
         {
             bool in_area = false;
@@ -956,9 +956,9 @@ bool TRANSFORMER::is_in_area(unsigned int area) const
     }
     else
     {
-        BUS* busptr_pri = psdb.get_bus(get_winding_bus(PRIMARY_SIDE));
-        BUS* busptr_sec = psdb.get_bus(get_winding_bus(SECONDARY_SIDE));
-        BUS* busptr_ter = psdb.get_bus(get_winding_bus(TERTIARY_SIDE));
+        BUS* busptr_pri = psdb.get_pointer_to_ac_bus(get_winding_bus(PRIMARY_SIDE));
+        BUS* busptr_sec = psdb.get_pointer_to_ac_bus(get_winding_bus(SECONDARY_SIDE));
+        BUS* busptr_ter = psdb.get_pointer_to_ac_bus(get_winding_bus(TERTIARY_SIDE));
         if(busptr_pri!=NULL or busptr_sec!=NULL or busptr_ter!=NULL)
         {
             bool in_area = false;
@@ -982,8 +982,8 @@ bool TRANSFORMER::is_in_zone(unsigned int zone) const
 
     if(is_two_winding_transformer())
     {
-        BUS* busptr_pri = psdb.get_bus(get_winding_bus(PRIMARY_SIDE));
-        BUS* busptr_sec = psdb.get_bus(get_winding_bus(SECONDARY_SIDE));
+        BUS* busptr_pri = psdb.get_pointer_to_ac_bus(get_winding_bus(PRIMARY_SIDE));
+        BUS* busptr_sec = psdb.get_pointer_to_ac_bus(get_winding_bus(SECONDARY_SIDE));
         if(busptr_pri!=NULL or busptr_sec!=NULL)
         {
             bool in_zone = false;
@@ -998,9 +998,9 @@ bool TRANSFORMER::is_in_zone(unsigned int zone) const
     }
     else
     {
-        BUS* busptr_pri = psdb.get_bus(get_winding_bus(PRIMARY_SIDE));
-        BUS* busptr_sec = psdb.get_bus(get_winding_bus(SECONDARY_SIDE));
-        BUS* busptr_ter = psdb.get_bus(get_winding_bus(TERTIARY_SIDE));
+        BUS* busptr_pri = psdb.get_pointer_to_ac_bus(get_winding_bus(PRIMARY_SIDE));
+        BUS* busptr_sec = psdb.get_pointer_to_ac_bus(get_winding_bus(SECONDARY_SIDE));
+        BUS* busptr_ter = psdb.get_pointer_to_ac_bus(get_winding_bus(TERTIARY_SIDE));
         if(busptr_pri!=NULL or busptr_sec!=NULL or busptr_ter!=NULL)
         {
             bool in_zone = false;

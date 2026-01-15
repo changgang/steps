@@ -232,7 +232,7 @@ bool ESP0::setup_model_with_steps_string_vector(vector<string>& data)
             DEVICE_ID did = get_energy_storage_device_id(ibus, id);
             STEPS& toolkit = get_toolkit();
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            ENERGY_STORAGE* es = psdb.get_energy_storage(did);
+            ENERGY_STORAGE* es = psdb.get_pointer_to_energy_storage(did);
             if(es!=NULL)
             {
                 set_Tr_in_s(tr);

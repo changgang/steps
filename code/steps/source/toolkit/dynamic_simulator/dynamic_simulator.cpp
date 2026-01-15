@@ -405,7 +405,7 @@ void DYNAMICS_SIMULATOR::add_bus_for_system_change_detection(unsigned int bus_nu
             }
         }
         if(not is_bus_monitored)
-            buses4change_detection.push_back(psdb.get_bus(bus_number));
+            buses4change_detection.push_back(psdb.get_pointer_to_ac_bus(bus_number));
     }
 }
 
@@ -434,7 +434,7 @@ void DYNAMICS_SIMULATOR::add_generator_for_system_change_detection(DEVICE_ID did
             }
         }
         if(not is_gen_monitored)
-            generators4change_detection.push_back(psdb.get_generator(did));
+            generators4change_detection.push_back(psdb.get_pointer_to_generator(did));
     }
 }
 
@@ -984,7 +984,7 @@ void DYNAMICS_SIMULATOR::set_internal_bus_pointer()
     for(unsigned int internal_bus=0; internal_bus!=nbus; ++internal_bus)
     {
         unsigned int physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
-        internal_bus_pointers.push_back(psdb.get_bus(physical_bus));
+        internal_bus_pointers.push_back(psdb.get_pointer_to_ac_bus(physical_bus));
     }
 
     internal_bus_complex_voltage_in_pu.resize(nbus, 0.0);
@@ -3299,7 +3299,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(unsigned int bus_n
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* busptr = psdb.get_bus(bus_number);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus_number);
     BUS& bus = *busptr;
     if(bus.get_bus_type()==OUT_OF_SERVICE)
         return;
@@ -3340,7 +3340,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(unsigned int b
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* busptr = psdb.get_bus(bus_number);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus_number);
     BUS& bus = *busptr;
     double fault_b = fault.get_fault_shunt_in_pu().imag();
     double current_voltage = bus.get_positive_sequence_voltage_in_pu();
@@ -3383,7 +3383,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_set(const DEVICE_I
     if(location >=0.0 and location <= 1.0)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        AC_LINE* line_ptr = psdb.get_ac_line(did);
+        AC_LINE* line_ptr = psdb.get_pointer_to_ac_line(did);
         AC_LINE& line = *line_ptr;
         if(line.is_connected_to_bus(side_bus))
         {
@@ -3426,7 +3426,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_cleared(const DEVI
     if(location >= 0.0 and location <= 1.0)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        AC_LINE* line_ptr = psdb.get_ac_line(did);
+        AC_LINE* line_ptr = psdb.get_pointer_to_ac_line(did);
         AC_LINE& line = *line_ptr;
         if(line.is_connected_to_bus(side_bus))
         {
@@ -3582,7 +3582,7 @@ void DYNAMICS_SIMULATOR::set_bus_fault(unsigned int bus_number, const complex<do
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(bus_number);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus_number);
     if(busptr!=NULL)
     {
         BUS& bus = *busptr;
@@ -3629,7 +3629,7 @@ void DYNAMICS_SIMULATOR::clear_bus_fault(unsigned int bus_number)
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(bus_number);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus_number);
     if(busptr!=NULL)
     {
         BUS& bus = *busptr;
@@ -3661,7 +3661,7 @@ void DYNAMICS_SIMULATOR::trip_bus(unsigned int bus_number)
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     ostringstream osstream;
 
-    BUS* busptr = psdb.get_bus(bus_number);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus_number);
     if(busptr!=NULL)
     {
         BUS& bus = *busptr;
@@ -3703,7 +3703,7 @@ void DYNAMICS_SIMULATOR::set_ac_line_fault(const DEVICE_ID& line_id, unsigned in
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        AC_LINE* lineptr = psdb.get_ac_line(line_id);
+        AC_LINE* lineptr = psdb.get_pointer_to_ac_line(line_id);
         if(lineptr!=NULL)
         {
             AC_LINE& line = *lineptr;
@@ -3780,7 +3780,7 @@ void DYNAMICS_SIMULATOR::clear_ac_line_fault(const DEVICE_ID& line_id, unsigned 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        AC_LINE* lineptr = psdb.get_ac_line(line_id);
+        AC_LINE* lineptr = psdb.get_pointer_to_ac_line(line_id);
         if(lineptr!=NULL)
         {
             AC_LINE& line = *lineptr;
@@ -3845,7 +3845,7 @@ void DYNAMICS_SIMULATOR::trip_ac_line(const DEVICE_ID& line_id)
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        AC_LINE* lineptr = psdb.get_ac_line(line_id);
+        AC_LINE* lineptr = psdb.get_pointer_to_ac_line(line_id);
         if(lineptr!=NULL)
         {
             AC_LINE& line = *lineptr;
@@ -3892,7 +3892,7 @@ void DYNAMICS_SIMULATOR::trip_ac_line_breaker(const DEVICE_ID& line_id, unsigned
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        AC_LINE* lineptr = psdb.get_ac_line(line_id);
+        AC_LINE* lineptr = psdb.get_pointer_to_ac_line(line_id);
         if(lineptr!=NULL)
         {
             AC_LINE& line = *lineptr;
@@ -3949,7 +3949,7 @@ void DYNAMICS_SIMULATOR::close_ac_line(const DEVICE_ID& line_id)
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        AC_LINE* lineptr = psdb.get_ac_line(line_id);
+        AC_LINE* lineptr = psdb.get_pointer_to_ac_line(line_id);
         if(lineptr!=NULL)
         {
             AC_LINE& line = *lineptr;
@@ -3990,7 +3990,7 @@ void DYNAMICS_SIMULATOR::close_ac_line_breaker(const DEVICE_ID& line_id, unsigne
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        AC_LINE* lineptr = psdb.get_ac_line(line_id);
+        AC_LINE* lineptr = psdb.get_pointer_to_ac_line(line_id);
         if(lineptr!=NULL)
         {
             AC_LINE& line = *lineptr;
@@ -4045,7 +4045,7 @@ void DYNAMICS_SIMULATOR::trip_transformer(const DEVICE_ID& trans_id)
     if(trans_id.get_device_type()==STEPS_TRANSFORMER)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        TRANSFORMER* transptr = psdb.get_transformer(trans_id);
+        TRANSFORMER* transptr = psdb.get_pointer_to_transformer(trans_id);
         if(transptr!=NULL)
         {
             TRANSFORMER& trans = *transptr;
@@ -4094,7 +4094,7 @@ void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, uns
     if(trans_id.get_device_type()==STEPS_TRANSFORMER)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        TRANSFORMER* transptr = psdb.get_transformer(trans_id);
+        TRANSFORMER* transptr = psdb.get_pointer_to_transformer(trans_id);
         if(transptr!=NULL)
         {
             TRANSFORMER& trans = *transptr;
@@ -4172,7 +4172,7 @@ void DYNAMICS_SIMULATOR::close_transformer(const DEVICE_ID& trans_id)
     if(trans_id.get_device_type()==STEPS_TRANSFORMER)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        TRANSFORMER* transptr = psdb.get_transformer(trans_id);
+        TRANSFORMER* transptr = psdb.get_pointer_to_transformer(trans_id);
         if(transptr!=NULL)
         {
             TRANSFORMER& trans = *transptr;
@@ -4221,7 +4221,7 @@ void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, un
     if(trans_id.get_device_type()==STEPS_TRANSFORMER)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        TRANSFORMER* transptr = psdb.get_transformer(trans_id);
+        TRANSFORMER* transptr = psdb.get_pointer_to_transformer(trans_id);
         if(transptr!=NULL)
         {
             TRANSFORMER& trans = *transptr;
@@ -4294,7 +4294,7 @@ void DYNAMICS_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
     if(gen_id.get_device_type()==STEPS_GENERATOR)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+        GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
         if(generator_ptr!=NULL)
         {
             GENERATOR& generator = *generator_ptr;
@@ -4334,7 +4334,7 @@ void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
     if(gen_id.get_device_type()==STEPS_GENERATOR)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+        GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
         if(generator_ptr!=NULL)
         {
             GENERATOR& generator = *generator_ptr;
@@ -4391,7 +4391,7 @@ void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id)
     if(gen_id.get_device_type()==STEPS_WT_GENERATOR)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        WT_GENERATOR* generator_ptr = psdb.get_wt_generator(gen_id);
+        WT_GENERATOR* generator_ptr = psdb.get_pointer_to_wt_generator(gen_id);
         if(generator_ptr!=NULL)
         {
             WT_GENERATOR& generator = *generator_ptr;
@@ -4431,7 +4431,7 @@ void DYNAMICS_SIMULATOR::shed_wt_generator(const DEVICE_ID& gen_id,double percen
     if(gen_id.get_device_type()==STEPS_WT_GENERATOR)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        WT_GENERATOR* generator_ptr = psdb.get_wt_generator(gen_id);
+        WT_GENERATOR* generator_ptr = psdb.get_pointer_to_wt_generator(gen_id);
         if(generator_ptr!=NULL)
         {
             WT_GENERATOR& generator = *generator_ptr;
@@ -4487,7 +4487,7 @@ void DYNAMICS_SIMULATOR::trip_pv_unit(const DEVICE_ID& gen_id)
     if(gen_id.get_device_type()==STEPS_PV_UNIT)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        PV_UNIT* pv_unit_ptr = psdb.get_pv_unit(gen_id);
+        PV_UNIT* pv_unit_ptr = psdb.get_pointer_to_pv_unit(gen_id);
         if(pv_unit_ptr!=NULL)
         {
             PV_UNIT& pv_unit = *pv_unit_ptr;
@@ -4527,7 +4527,7 @@ void DYNAMICS_SIMULATOR::shed_pv_unit(const DEVICE_ID& gen_id,double percent)
     if(gen_id.get_device_type()==STEPS_PV_UNIT)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        PV_UNIT* pv_unit_ptr = psdb.get_pv_unit(gen_id);
+        PV_UNIT* pv_unit_ptr = psdb.get_pointer_to_pv_unit(gen_id);
         if(pv_unit_ptr!=NULL)
         {
             PV_UNIT& pv_unit = *pv_unit_ptr;
@@ -4583,7 +4583,7 @@ void DYNAMICS_SIMULATOR::trip_energy_storage(const DEVICE_ID& gen_id)
     if(gen_id.get_device_type()==STEPS_ENERGY_STORAGE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        ENERGY_STORAGE* energy_storage_ptr = psdb.get_energy_storage(gen_id);
+        ENERGY_STORAGE* energy_storage_ptr = psdb.get_pointer_to_energy_storage(gen_id);
         if(energy_storage_ptr!=NULL)
         {
             ENERGY_STORAGE& energy_storage = *energy_storage_ptr;
@@ -4623,7 +4623,7 @@ void DYNAMICS_SIMULATOR::shed_energy_storage(const DEVICE_ID& gen_id,double perc
     if(gen_id.get_device_type()==STEPS_ENERGY_STORAGE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        ENERGY_STORAGE* energy_storage_ptr = psdb.get_energy_storage(gen_id);
+        ENERGY_STORAGE* energy_storage_ptr = psdb.get_pointer_to_energy_storage(gen_id);
         if(energy_storage_ptr!=NULL)
         {
             ENERGY_STORAGE& energy_storage = *energy_storage_ptr;
@@ -4679,7 +4679,7 @@ void DYNAMICS_SIMULATOR::trip_sv_source(const DEVICE_ID& gen_id)
     if(gen_id.get_device_type()==STEPS_SV_SOURCE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        SV_SOURCE* svs_ptr = psdb.get_sv_source(gen_id);
+        SV_SOURCE* svs_ptr = psdb.get_pointer_to_sv_source(gen_id);
         if(svs_ptr!=NULL)
         {
             SV_SOURCE& svs = *svs_ptr;
@@ -4719,7 +4719,7 @@ void DYNAMICS_SIMULATOR::shed_sv_source(const DEVICE_ID& gen_id,double percent)
     if(gen_id.get_device_type()==STEPS_SV_SOURCE)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        SV_SOURCE* svs_ptr = psdb.get_sv_source(gen_id);
+        SV_SOURCE* svs_ptr = psdb.get_pointer_to_sv_source(gen_id);
         if(svs_ptr!=NULL)
         {
             SV_SOURCE& svs = *svs_ptr;
@@ -4775,7 +4775,7 @@ void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
     if(load_id.get_device_type()==STEPS_LOAD)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        LOAD* load_ptr = psdb.get_load(load_id);
+        LOAD* load_ptr = psdb.get_pointer_to_load(load_id);
         if(load_ptr!=NULL)
         {
             LOAD& load = *load_ptr;
@@ -4815,7 +4815,7 @@ void DYNAMICS_SIMULATOR::close_load(const DEVICE_ID& load_id)
     if(load_id.get_device_type()==STEPS_LOAD)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        LOAD* load_ptr = psdb.get_load(load_id);
+        LOAD* load_ptr = psdb.get_pointer_to_load(load_id);
         if(load_ptr!=NULL)
         {
             LOAD& load = *load_ptr;
@@ -4856,7 +4856,7 @@ void DYNAMICS_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
     if(load_id.get_device_type()==STEPS_LOAD)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        LOAD* load_ptr = psdb.get_load(load_id);
+        LOAD* load_ptr = psdb.get_pointer_to_load(load_id);
         if(load_ptr!=NULL)
         {
             LOAD& load = *load_ptr;
@@ -4932,7 +4932,7 @@ void DYNAMICS_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
     if(shunt_id.get_device_type()==STEPS_FIXED_SHUNT)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        FIXED_SHUNT* shunt_ptr = psdb.get_fixed_shunt(shunt_id);
+        FIXED_SHUNT* shunt_ptr = psdb.get_pointer_to_fixed_shunt(shunt_id);
         if(shunt_ptr!=NULL)
         {
             FIXED_SHUNT& shunt = *shunt_ptr;
@@ -4972,7 +4972,7 @@ void DYNAMICS_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
     if(shunt_id.get_device_type()==STEPS_FIXED_SHUNT)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        FIXED_SHUNT* shunt_ptr = psdb.get_fixed_shunt(shunt_id);
+        FIXED_SHUNT* shunt_ptr = psdb.get_pointer_to_fixed_shunt(shunt_id);
         if(shunt_ptr!=NULL)
         {
             FIXED_SHUNT& shunt = *shunt_ptr;
@@ -5011,7 +5011,7 @@ void DYNAMICS_SIMULATOR::manual_bypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(hvdc_id);
+    LCC_HVDC2T* hvdc_ptr = psdb.get_pointer_to_lcc_hvdc2t(hvdc_id);
     if(hvdc_ptr!=NULL)
     {
         LCC_HVDC2T& hvdc = *hvdc_ptr;
@@ -5030,7 +5030,7 @@ void DYNAMICS_SIMULATOR::manual_unbypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(hvdc_id);
+    LCC_HVDC2T* hvdc_ptr = psdb.get_pointer_to_lcc_hvdc2t(hvdc_id);
     if(hvdc_ptr!=NULL)
     {
         LCC_HVDC2T& hvdc = *hvdc_ptr;
@@ -5050,7 +5050,7 @@ void DYNAMICS_SIMULATOR::manual_block_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(hvdc_id);
+    LCC_HVDC2T* hvdc_ptr = psdb.get_pointer_to_lcc_hvdc2t(hvdc_id);
 
     if(hvdc_ptr!=NULL)
     {
@@ -5070,7 +5070,7 @@ void DYNAMICS_SIMULATOR::manual_unblock_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(hvdc_id);
+    LCC_HVDC2T* hvdc_ptr = psdb.get_pointer_to_lcc_hvdc2t(hvdc_id);
     if(hvdc_ptr!=NULL)
     {
         LCC_HVDC2T& hvdc = *hvdc_ptr;
@@ -5089,7 +5089,7 @@ double DYNAMICS_SIMULATOR::get_generator_voltage_reference_in_pu(const DEVICE_ID
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
     if(generator_ptr != NULL)
     {
         GENERATOR& generator = *generator_ptr;
@@ -5110,7 +5110,7 @@ double DYNAMICS_SIMULATOR::get_generator_mechanical_power_reference_in_pu_based_
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
     if(generator_ptr != NULL)
     {
         GENERATOR& generator = *generator_ptr;
@@ -5131,7 +5131,7 @@ double DYNAMICS_SIMULATOR::get_generator_mechanical_power_reference_in_MW(const 
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
     if(generator_ptr != NULL)
     {
         GENERATOR& generator = *generator_ptr;
@@ -5145,7 +5145,7 @@ double DYNAMICS_SIMULATOR::get_generator_excitation_voltage_in_pu(const DEVICE_I
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
     if(generator_ptr != NULL)
     {
         GENERATOR& generator = *generator_ptr;
@@ -5175,7 +5175,7 @@ double DYNAMICS_SIMULATOR::get_generator_mechanical_power_in_pu_based_on_mbase(c
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
     if(generator_ptr != NULL)
     {
         GENERATOR& generator = *generator_ptr;
@@ -5204,7 +5204,7 @@ double DYNAMICS_SIMULATOR::get_generator_mechanical_power_in_MW(const DEVICE_ID&
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
     if(generator_ptr != NULL)
     {
         GENERATOR& generator = *generator_ptr;
@@ -5219,7 +5219,7 @@ void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_I
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
     if(generator_ptr != NULL)
     {
         GENERATOR& generator = *generator_ptr;
@@ -5247,7 +5247,7 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_reference_in_pu_based
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
     if(generator_ptr != NULL)
     {
         GENERATOR& generator = *generator_ptr;
@@ -5270,7 +5270,7 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_reference_in_MW(const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
     if(generator_ptr != NULL)
     {
         GENERATOR& generator = *generator_ptr;
@@ -5289,7 +5289,7 @@ void DYNAMICS_SIMULATOR::change_generator_excitation_voltage_in_pu(const DEVICE_
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
     if(generator_ptr != NULL)
     {
         GENERATOR& generator = *generator_ptr;
@@ -5322,7 +5322,7 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_pu_based_on_mbase(
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
     if(generator_ptr != NULL)
     {
         GENERATOR& generator = *generator_ptr;
@@ -5355,7 +5355,7 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_MW(const DEVICE_ID
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator_ptr = psdb.get_generator(gen_id);
+    GENERATOR* generator_ptr = psdb.get_pointer_to_generator(gen_id);
     if(generator_ptr != NULL)
     {
         GENERATOR& generator = *generator_ptr;
@@ -5374,7 +5374,7 @@ void DYNAMICS_SIMULATOR::change_energy_storage_active_power_reference_in_pu_base
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    ENERGY_STORAGE* energy_storage_ptr = psdb.get_energy_storage(es_id);
+    ENERGY_STORAGE* energy_storage_ptr = psdb.get_pointer_to_energy_storage(es_id);
     if(energy_storage_ptr != NULL)
     {
         ENERGY_STORAGE& energy_storage = *energy_storage_ptr;
@@ -5392,7 +5392,7 @@ double DYNAMICS_SIMULATOR::get_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hvd
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(hvdc_id);
+    LCC_HVDC2T* hvdc_ptr = psdb.get_pointer_to_lcc_hvdc2t(hvdc_id);
     if(hvdc_ptr != NULL)
     {
         LCC_HVDC2T& hvdc = *hvdc_ptr;
@@ -5406,7 +5406,7 @@ void DYNAMICS_SIMULATOR::change_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hv
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(hvdc_id);
+    LCC_HVDC2T* hvdc_ptr = psdb.get_pointer_to_lcc_hvdc2t(hvdc_id);
     if(hvdc_ptr != NULL)
     {
         LCC_HVDC2T& hvdc = *hvdc_ptr;
@@ -5426,7 +5426,7 @@ void DYNAMICS_SIMULATOR::set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID l
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc_ptr = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC* vsc_hvdc_ptr = psdb.get_pointer_to_vsc_hvdc(vsc_name);
     if(vsc_hvdc_ptr != NULL)
     {
         VSC_HVDC& vsc_hvdc = *vsc_hvdc_ptr;
@@ -5453,7 +5453,7 @@ void DYNAMICS_SIMULATOR::clear_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc_ptr = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC* vsc_hvdc_ptr = psdb.get_pointer_to_vsc_hvdc(vsc_name);
     VSC_HVDC& vsc_hvdc = *vsc_hvdc_ptr;
     unsigned int line_index = vsc_hvdc.get_dc_line_index(line_did);
     if(line_index!=INDEX_NOT_EXIST)
@@ -5464,7 +5464,7 @@ void DYNAMICS_SIMULATOR::trip_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_d
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc_ptr = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC* vsc_hvdc_ptr = psdb.get_pointer_to_vsc_hvdc(vsc_name);
     VSC_HVDC& vsc_hvdc = *vsc_hvdc_ptr;
     unsigned int line_index = vsc_hvdc.get_dc_line_index(line_did);
     if(line_index!=INDEX_NOT_EXIST)
@@ -5475,7 +5475,7 @@ void DYNAMICS_SIMULATOR::close_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc_ptr = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC* vsc_hvdc_ptr = psdb.get_pointer_to_vsc_hvdc(vsc_name);
     VSC_HVDC& vsc_hvdc = *vsc_hvdc_ptr;
     unsigned int line_index = vsc_hvdc.get_dc_line_index(line_did);
     if(line_index!=INDEX_NOT_EXIST)

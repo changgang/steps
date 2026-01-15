@@ -662,7 +662,7 @@ void SHORT_CIRCUIT_SOLVER::set_bus_fault(unsigned int bus, FAULT_TYPE type, cons
         return;
     }
 
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
     {
         string busname = busptr->get_bus_name();
@@ -713,7 +713,7 @@ void SHORT_CIRCUIT_SOLVER::set_ac_line_fault(const DEVICE_ID& line_id, unsigned 
 
     if(line_id.get_device_type()==STEPS_AC_LINE)
     {
-        AC_LINE* lineptr = psdb.get_ac_line(line_id);
+        AC_LINE* lineptr = psdb.get_pointer_to_ac_line(line_id);
         if(lineptr!=NULL)
         {
             string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
@@ -2396,7 +2396,7 @@ void SHORT_CIRCUIT_SOLVER::update_bus_sequence_voltage_after_iteration_consideri
     {
         unsigned int busk = network_matrix.get_physical_bus_number_of_internal_bus(k);
 
-         BUS* busptr = psdb.get_bus(busk);
+         BUS* busptr = psdb.get_pointer_to_ac_bus(busk);
          complex<double> V1 = busptr->get_positive_sequence_complex_voltage_in_pu();
          for(unsigned int j=0; j<nwtg; j++)
             V1 = V1 + Z1_between_internal_bus_to_wtg_buses[j][k]*delta_injection_current_of_RES[j];
@@ -2483,7 +2483,7 @@ void SHORT_CIRCUIT_SOLVER::update_bus_sequence_voltage_after_iteration_consideri
     {
         unsigned int busk = network_matrix.get_physical_bus_number_of_internal_bus(k);
 
-         BUS* busptr = psdb.get_bus(busk);
+         BUS* busptr = psdb.get_pointer_to_ac_bus(busk);
          complex<double> V1 = busptr->get_positive_sequence_complex_voltage_in_pu();
          complex<double> V2 = 0.0;
          for(unsigned int j=0; j<nwtg; j++)
@@ -3145,7 +3145,7 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
                 I2 = line.get_line_negative_sequence_complex_current_at_sending_side_in_kA();
                 I0 = line.get_line_zero_sequence_complex_current_at_sending_side_in_kA();
             }
-            BUS* busptr = psdb.get_bus(current_from_bus);
+            BUS* busptr = psdb.get_pointer_to_ac_bus(current_from_bus);
             string busname = busptr->get_bus_name();
             toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(current_from_bus, line.get_identifier(), I1, I2, I0));
             toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data(busname, busptr->get_base_voltage_in_kV(), I1, I2, I0));
@@ -3165,7 +3165,7 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
                 I2 = line.get_line_negative_sequence_complex_current_at_receiving_side_in_kA();
                 I0 = line.get_line_zero_sequence_complex_current_at_receiving_side_in_kA();
             }
-            BUS* busptr = psdb.get_bus(current_from_bus);
+            BUS* busptr = psdb.get_pointer_to_ac_bus(current_from_bus);
             string busname = busptr->get_bus_name();
             toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(current_from_bus, line.get_identifier(), I1, I2, I0));
             toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data(busname, busptr->get_base_voltage_in_kV(), I1, I2, I0));
@@ -3196,7 +3196,7 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
                     I2 = trans.get_winding_negative_sequence_complex_current_in_kA(PRIMARY_SIDE);
                     I0 = trans.get_winding_zero_sequence_complex_current_in_kA(PRIMARY_SIDE);
                 }
-                BUS* busptr = psdb.get_bus(current_from_bus);
+                BUS* busptr = psdb.get_pointer_to_ac_bus(current_from_bus);
                 string busname = busptr->get_bus_name();
                 toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(current_from_bus,trans.get_identifier(), I1, I2, I0));
                 toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data(busname, busptr->get_base_voltage_in_kV(), I1, I2, I0));
@@ -3216,7 +3216,7 @@ void SHORT_CIRCUIT_SOLVER::show_contributions_of_fault_current_with_bus_fault()
                     I2 = trans.get_winding_negative_sequence_complex_current_in_kA(SECONDARY_SIDE);
                     I0 = trans.get_winding_zero_sequence_complex_current_in_kA(SECONDARY_SIDE);
                 }
-                BUS* busptr = psdb.get_bus(current_from_bus);
+                BUS* busptr = psdb.get_pointer_to_ac_bus(current_from_bus);
                 string busname = busptr->get_bus_name();
                 toolkit->show_information_with_leading_time_stamp(get_formatted_sequence_data(current_from_bus,trans.get_identifier(), I1, I2, I0));
                 toolkit->show_information_with_leading_time_stamp(get_formatted_phase_data(busname, busptr->get_base_voltage_in_kV(), I1, I2, I0));
@@ -3620,7 +3620,7 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
                     I2 = line.get_line_negative_sequence_complex_current_at_sending_side_in_kA();
                     I0 = line.get_line_zero_sequence_complex_current_at_sending_side_in_kA();
                 }
-                BUS* busptr = psdb.get_bus(current_from_bus);
+                BUS* busptr = psdb.get_pointer_to_ac_bus(current_from_bus);
                 string busname = busptr->get_bus_name();
                 file<< get_formatted_sequence_data(current_from_bus,line.get_identifier(), I1, I2, I0, true);
                 file<< get_formatted_phase_data(busname, busptr->get_base_voltage_in_kV(), I1, I2, I0, true);
@@ -3640,7 +3640,7 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
                     I2 = line.get_line_negative_sequence_complex_current_at_receiving_side_in_kA();
                     I0 = line.get_line_zero_sequence_complex_current_at_receiving_side_in_kA();
                 }
-                BUS* busptr = psdb.get_bus(current_from_bus);
+                BUS* busptr = psdb.get_pointer_to_ac_bus(current_from_bus);
                 string busname = busptr->get_bus_name();
                 file<< get_formatted_sequence_data(current_from_bus,line.get_identifier(), I1, I2, I0, true);
                 file<< get_formatted_phase_data(busname, busptr->get_base_voltage_in_kV(), I1, I2, I0, true);
@@ -3671,7 +3671,7 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
                         I2 = trans.get_winding_negative_sequence_complex_current_in_kA(PRIMARY_SIDE);
                         I0 = trans.get_winding_zero_sequence_complex_current_in_kA(PRIMARY_SIDE);
                     }
-                    BUS* busptr = psdb.get_bus(current_from_bus);
+                    BUS* busptr = psdb.get_pointer_to_ac_bus(current_from_bus);
                     file<< get_formatted_sequence_data(current_from_bus,trans.get_identifier(), I1, I2, I0, true);
                     file<< get_formatted_phase_data(busptr->get_bus_name(), busptr->get_base_voltage_in_kV(), I1, I2, I0, true);
                 }
@@ -3690,7 +3690,7 @@ void SHORT_CIRCUIT_SOLVER::save_short_circuit_result_to_file_with_bus_fault(cons
                         I2 = trans.get_winding_negative_sequence_complex_current_in_kA(SECONDARY_SIDE);
                         I0 = trans.get_winding_zero_sequence_complex_current_in_kA(SECONDARY_SIDE);
                     }
-                    BUS* busptr = psdb.get_bus(current_from_bus);
+                    BUS* busptr = psdb.get_pointer_to_ac_bus(current_from_bus);
                     file<< get_formatted_sequence_data(current_from_bus,trans.get_identifier(), I1, I2, I0, true);
                     file<< get_formatted_phase_data(busptr->get_bus_name(), busptr->get_base_voltage_in_kV(), I1, I2, I0, true);
                 }
@@ -4231,7 +4231,7 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                     to_bus_name = "DUMMY BUS";
                 else
                 {
-                    BUS* busptr = psdb.get_bus(to_bus);
+                    BUS* busptr = psdb.get_pointer_to_ac_bus(to_bus);
                     to_bus_name = busptr->get_bus_name();
                 }
                 file<< get_formatted_sequence_data(to_bus, line.get_identifier(), I1, I2, I0, true);
@@ -4262,7 +4262,7 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                             I2 = trans.get_winding_negative_sequence_complex_current_in_kA(PRIMARY_SIDE);
                             I0 = trans.get_winding_zero_sequence_complex_current_in_kA(PRIMARY_SIDE);
                         }
-                        BUS* busptr = psdb.get_bus(to_bus);
+                        BUS* busptr = psdb.get_pointer_to_ac_bus(to_bus);
                         file<< get_formatted_sequence_data(to_bus, trans.get_identifier(), I1, I2, I0, true);
                         file<< get_formatted_phase_data(busptr->get_bus_name(), busptr->get_base_voltage_in_kV(), I1, I2, I0, true);
                     }
@@ -4281,7 +4281,7 @@ void SHORT_CIRCUIT_SOLVER::save_extended_short_circuit_result_to_file(const stri
                             I2 = trans.get_winding_negative_sequence_complex_current_in_kA(SECONDARY_SIDE);
                             I0 = trans.get_winding_zero_sequence_complex_current_in_kA(SECONDARY_SIDE);
                         }
-                        BUS* busptr = psdb.get_bus(to_bus);
+                        BUS* busptr = psdb.get_pointer_to_ac_bus(to_bus);
                         file<< get_formatted_sequence_data(to_bus, trans.get_identifier(), I1, I2, I0, true);
                         file<< get_formatted_phase_data(busptr->get_bus_name(), busptr->get_base_voltage_in_kV(), I1, I2, I0, true);
                     }

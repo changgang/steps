@@ -174,7 +174,7 @@ void GENERATOR_TEST::test_set_get_sync_generator_model()
 
     DEVICE_ID did = generator.get_device_id();
 
-    GENERATOR* gen = psdb.get_generator(did);
+    GENERATOR* gen = psdb.get_pointer_to_generator(did);
 
     GENCLS model(default_toolkit);
     model.set_device_id(did);
@@ -212,7 +212,7 @@ void GENERATOR_TEST::test_set_get_compensator_model()
 
     DEVICE_ID did = generator.get_device_id();
 
-    GENERATOR* gen = psdb.get_generator(did);
+    GENERATOR* gen = psdb.get_pointer_to_generator(did);
 
     COMP model(default_toolkit);
     model.set_device_id(did);
@@ -247,7 +247,7 @@ void GENERATOR_TEST::test_set_get_exciter_model()
 
     DEVICE_ID did = generator.get_device_id();
 
-    GENERATOR* gen = psdb.get_generator(did);
+    GENERATOR* gen = psdb.get_pointer_to_generator(did);
 
     SEXS model(default_toolkit);
     model.set_device_id(did);
@@ -290,7 +290,7 @@ void GENERATOR_TEST::test_set_get_stabilizer_model()
 
     DEVICE_ID did = generator.get_device_id();
 
-    GENERATOR* gen = psdb.get_generator(did);
+    GENERATOR* gen = psdb.get_pointer_to_generator(did);
 
     IEE2ST model(default_toolkit);
     model.set_device_id(did);
@@ -347,7 +347,7 @@ void GENERATOR_TEST::test_set_get_turbine_governor_model()
 
     DEVICE_ID did = generator.get_device_id();
 
-    GENERATOR* gen = psdb.get_generator(did);
+    GENERATOR* gen = psdb.get_pointer_to_generator(did);
 
     TGOV1 model(default_toolkit);
     model.set_device_id(did);

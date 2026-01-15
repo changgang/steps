@@ -82,7 +82,7 @@ void CONVERTER::set_bus(const unsigned int bus)
     if(psdb.is_bus_exist(bus))
     {
         this->bus = bus;
-        busptr = psdb.get_bus(bus);
+        busptr = psdb.get_pointer_to_ac_bus(bus);
     }
     else
     {

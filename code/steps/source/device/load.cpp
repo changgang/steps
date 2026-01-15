@@ -66,7 +66,7 @@ void LOAD::set_load_bus(unsigned int load_bus)
         }
         this->bus = load_bus;
 
-        busptr = psdb.get_bus(load_bus);
+        busptr = psdb.get_pointer_to_ac_bus(load_bus);
     }
     else
     {

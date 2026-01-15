@@ -336,7 +336,7 @@ bool ESCVXG1::setup_model_with_steps_string_vector(vector<string>& data)
             DEVICE_ID did = get_energy_storage_device_id(ibus, id);
             STEPS& toolkit = get_toolkit();
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            ENERGY_STORAGE* es = psdb.get_energy_storage(did);
+            ENERGY_STORAGE* es = psdb.get_pointer_to_energy_storage(did);
             if(es==NULL)
             {
                 osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_compound_device_name()<<endl

@@ -31,7 +31,7 @@ void LCC_HVDC2T::set_converter_bus(CONVERTER_SIDE converter, const unsigned int 
         if(psdb.is_bus_exist(bus))
         {
             converter_bus[converter] = bus;
-            converter_busptr[converter] = psdb.get_bus(bus);
+            converter_busptr[converter] = psdb.get_pointer_to_ac_bus(bus);
         }
         else
         {
@@ -976,8 +976,8 @@ bool LCC_HVDC2T::is_in_area(unsigned int area) const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* busptr_rec = psdb.get_bus(get_converter_bus(RECTIFIER));
-    BUS* busptr_inv = psdb.get_bus(get_converter_bus(INVERTER));
+    BUS* busptr_rec = psdb.get_pointer_to_ac_bus(get_converter_bus(RECTIFIER));
+    BUS* busptr_inv = psdb.get_pointer_to_ac_bus(get_converter_bus(INVERTER));
     if(busptr_rec!=NULL or busptr_inv!=NULL)
     {
         bool in_area = false;
@@ -995,8 +995,8 @@ bool LCC_HVDC2T::is_in_zone(unsigned int zone) const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* busptr_rec = psdb.get_bus(get_converter_bus(RECTIFIER));
-    BUS* busptr_inv = psdb.get_bus(get_converter_bus(INVERTER));
+    BUS* busptr_rec = psdb.get_pointer_to_ac_bus(get_converter_bus(RECTIFIER));
+    BUS* busptr_inv = psdb.get_pointer_to_ac_bus(get_converter_bus(INVERTER));
     if(busptr_rec!=NULL or busptr_inv!=NULL)
     {
         bool in_zone = false;

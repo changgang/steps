@@ -50,7 +50,7 @@ void LOAD_RELAY_MODEL_TEST::setup()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    loadptr = psdb.get_load(did);
+    loadptr = psdb.get_pointer_to_load(did);
 }
 
 void LOAD_RELAY_MODEL_TEST::tear_down()

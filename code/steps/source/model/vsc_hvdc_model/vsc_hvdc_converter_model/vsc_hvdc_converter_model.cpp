@@ -38,7 +38,7 @@ void VSC_HVDC_CONVERTER_MODEL::set_converter_name(string name)
 
             unsigned int bus = vsc->get_converter_ac_bus(converter_index);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            converter_ac_busptr = psdb.get_bus(bus);
+            converter_ac_busptr = psdb.get_pointer_to_ac_bus(bus);
         }
         else
         {

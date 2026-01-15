@@ -12,7 +12,7 @@ int api_get_bus_integer_data(unsigned int bus, char* parameter_name, unsigned in
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -68,7 +68,7 @@ void api_set_bus_integer_data(unsigned int bus, char* parameter_name, int value,
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -127,7 +127,7 @@ double api_get_bus_float_data(unsigned int bus, char* parameter_name, unsigned i
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -202,7 +202,7 @@ void api_set_bus_float_data(unsigned int bus, char* parameter_name, double value
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -275,7 +275,7 @@ const char* api_get_bus_string_data(unsigned int bus, char* parameter_name, unsi
 
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -302,7 +302,7 @@ void api_set_bus_string_data(unsigned int bus, char* parameter_name, char* value
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -322,7 +322,7 @@ bool api_get_bus_boolean_data(unsigned int bus, char* parameter_name, unsigned i
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);

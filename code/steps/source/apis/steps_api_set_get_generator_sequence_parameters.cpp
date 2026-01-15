@@ -11,7 +11,7 @@ double api_get_generator_sequence_float_data(unsigned int bus, char* identifier,
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_generator_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(did);
+    GENERATOR* generator = psdb.get_pointer_to_generator(did);
 
     if(generator==NULL)
     {
@@ -83,7 +83,7 @@ void api_set_generator_sequence_float_data(unsigned int bus, char* identifier, c
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_generator_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    GENERATOR* generator = psdb.get_generator(did);
+    GENERATOR* generator = psdb.get_pointer_to_generator(did);
 
     if(generator==NULL)
     {

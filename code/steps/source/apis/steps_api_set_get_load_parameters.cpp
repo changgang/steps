@@ -12,7 +12,7 @@ int api_get_load_integer_data(unsigned int bus, char* identifier, char* paramete
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LOAD* loadptr = psdb.get_load(did);
+    LOAD* loadptr = psdb.get_pointer_to_load(did);
     if(loadptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -43,7 +43,7 @@ void api_set_load_integer_data(unsigned int bus, char* identifier, char* paramet
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LOAD* loadptr = psdb.get_load(did);
+    LOAD* loadptr = psdb.get_pointer_to_load(did);
     if(loadptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -70,7 +70,7 @@ double api_get_load_float_data(unsigned int bus, char* identifier, char* paramet
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LOAD* loadptr = psdb.get_load(did);
+    LOAD* loadptr = psdb.get_pointer_to_load(did);
     if(loadptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -182,7 +182,7 @@ void api_set_load_float_data(unsigned int bus, char* identifier, char* parameter
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LOAD* loadptr = psdb.get_load(did);
+    LOAD* loadptr = psdb.get_pointer_to_load(did);
     if(loadptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -259,7 +259,7 @@ const char* api_get_load_string_data(unsigned int bus, char* identifier, char* p
 
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
-    LOAD* loadptr = psdb.get_load(did);
+    LOAD* loadptr = psdb.get_pointer_to_load(did);
     if(loadptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -281,7 +281,7 @@ void api_set_load_string_data(unsigned int bus, char* identifier, char* paramete
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LOAD* loadptr = psdb.get_load(did);
+    LOAD* loadptr = psdb.get_pointer_to_load(did);
     if(loadptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -299,7 +299,7 @@ bool api_get_load_boolean_data(unsigned int bus, char* identifier, char* paramet
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LOAD* loadptr = psdb.get_load(did);
+    LOAD* loadptr = psdb.get_pointer_to_load(did);
     if(loadptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -327,7 +327,7 @@ void api_set_load_boolean_data(unsigned int bus, char* identifier, char* paramet
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    LOAD* loadptr = psdb.get_load(did);
+    LOAD* loadptr = psdb.get_pointer_to_load(did);
     if(loadptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);

@@ -1096,7 +1096,7 @@ void POWERFLOW_SOLVER::initialize_regulatable_q_max_and_min()
     for(unsigned int i=0; i<n; ++i)
     {
         unsigned int bus_number = buses[i];
-        BUS* busptr = psdb.get_bus(bus_number);
+        BUS* busptr = psdb.get_pointer_to_ac_bus(bus_number);
         BUS& bus = *(busptr);
         BUS_TYPE btype = bus.get_bus_type();
         if(btype==PV_TYPE or
@@ -1199,7 +1199,7 @@ void POWERFLOW_SOLVER::set_internal_bus_pointer()
     for(unsigned int internal_bus=0; internal_bus!=nbus; ++internal_bus)
     {
         unsigned int physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
-        internal_bus_pointers.push_back(psdb.get_bus(physical_bus));
+        internal_bus_pointers.push_back(psdb.get_pointer_to_ac_bus(physical_bus));
     }
 }
 
@@ -1271,7 +1271,7 @@ void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
     for(unsigned int i=0; i!=nbus; ++i)
     {
         //unsigned int bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
-        //BUS* busptr = psdb.get_bus(bus);
+        //BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
         BUS* busptr = internal_bus_pointers[i];
         BUS& bus = *(busptr);
         BUS_TYPE btype = bus.get_bus_type();
@@ -1523,7 +1523,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
         {
             unsigned int bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
             string bus_name = psdb.bus_number2bus_name(bus);
-            BUS_TYPE btype = psdb.get_bus(bus)->get_bus_type();
+            BUS_TYPE btype = psdb.get_pointer_to_ac_bus(bus)->get_bus_type();
             double p = bus_power[i].real()*sbase;
             double q = bus_power[i].imag()*sbase;
             if(btype==PV_TYPE or btype == SLACK_TYPE)
@@ -2058,7 +2058,7 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(unsigned int p
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    //BUS* bus = psdb.get_bus(physical_bus);
+    //BUS* bus = psdb.get_pointer_to_ac_bus(physical_bus);
     unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
     BUS* busptr = internal_bus_pointers[internal_bus];
     BUS& bus = *(busptr);
@@ -2842,7 +2842,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
     {
         unsigned int internal_bus = internal_P_equation_buses[i];
         //unsigned int physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
-        //BUS* bus = psdb.get_bus(physical_bus);
+        //BUS* bus = psdb.get_pointer_to_ac_bus(physical_bus);
         BUS* busptr = internal_bus_pointers[internal_bus];
         BUS& bus = *(busptr);
 
@@ -2861,7 +2861,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
     {
         unsigned int internal_bus = internal_Q_equation_buses[i];
         //unsigned int physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
-        //BUS* bus = psdb.get_bus(physical_bus);
+        //BUS* bus = psdb.get_pointer_to_ac_bus(physical_bus);
         BUS* busptr = internal_bus_pointers[internal_bus];
         BUS& bus = *(busptr);
 
@@ -2897,7 +2897,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
                 {
                     unsigned int internal_bus = internal_P_equation_buses[j];
                     //unsigned int physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
-                    //BUS* bus = psdb.get_bus(physical_bus);
+                    //BUS* bus = psdb.get_pointer_to_ac_bus(physical_bus);
                     BUS& bus = *(internal_bus_pointers[internal_bus]);
 
                     double current_angle = bus.get_positive_sequence_angle_in_rad();
@@ -2915,7 +2915,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
                 {
                     unsigned int internal_bus = internal_Q_equation_buses[j];
                     //unsigned int physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
-                    //BUS* bus = psdb.get_bus(physical_bus);
+                    //BUS* bus = psdb.get_pointer_to_ac_bus(physical_bus);
                     BUS& bus = *(internal_bus_pointers[internal_bus]);
 
                     double current_voltage = bus.get_positive_sequence_voltage_in_pu();
@@ -2982,7 +2982,7 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
     for(unsigned int i=0; i<nQ; ++i)
     {
         unsigned int internal_bus = internal_Q_equation_buses[i];
-        //BUS* bus = psdb.get_bus(physical_bus);
+        //BUS* bus = psdb.get_pointer_to_ac_bus(physical_bus);
         BUS& bus = *(internal_bus_pointers[internal_bus]);
 
         double current_voltage = bus.get_positive_sequence_voltage_in_pu();
@@ -3010,7 +3010,7 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
                 {
                     unsigned int internal_bus = internal_Q_equation_buses[j];
                     //unsigned int physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
-                    //BUS* bus = psdb.get_bus(physical_bus);
+                    //BUS* bus = psdb.get_pointer_to_ac_bus(physical_bus);
                     BUS& bus = *(internal_bus_pointers[internal_bus]);
 
                     double current_voltage = bus.get_positive_sequence_voltage_in_pu();
@@ -3080,7 +3080,7 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
     for(unsigned int i=0; i<nP; ++i)
     {
         unsigned int internal_bus = internal_P_equation_buses[i];
-        //BUS* bus = psdb.get_bus(physical_bus);
+        //BUS* bus = psdb.get_pointer_to_ac_bus(physical_bus);
         BUS& bus = *(internal_bus_pointers[internal_bus]);
 
         double current_angle = bus.get_positive_sequence_angle_in_rad();
@@ -3109,7 +3109,7 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
                 {
                     unsigned int internal_bus = internal_P_equation_buses[j];
                     //unsigned int physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
-                    //BUS* bus = psdb.get_bus(physical_bus);
+                    //BUS* bus = psdb.get_pointer_to_ac_bus(physical_bus);
                     BUS& bus = *(internal_bus_pointers[internal_bus]);
 
                     double current_angle = bus.get_positive_sequence_angle_in_rad();

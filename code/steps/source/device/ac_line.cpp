@@ -26,7 +26,7 @@ void AC_LINE::set_sending_side_bus(unsigned int bus)
         if(psdb.is_bus_exist(bus))
         {
             sending_side_bus = bus;
-            sending_side_busptr = psdb.get_bus(bus);
+            sending_side_busptr = psdb.get_pointer_to_ac_bus(bus);
         }
         else
         {
@@ -56,7 +56,7 @@ void AC_LINE::set_receiving_side_bus(unsigned int bus)
         if(psdb.is_bus_exist(bus))
         {
             receiving_side_bus = bus;
-            receiving_side_busptr = psdb.get_bus(bus);
+            receiving_side_busptr = psdb.get_pointer_to_ac_bus(bus);
         }
         else
         {
@@ -590,8 +590,8 @@ bool AC_LINE::is_in_area(unsigned int area) const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* busptr_send = psdb.get_bus(get_sending_side_bus());
-    BUS* busptr_rec = psdb.get_bus(get_receiving_side_bus());
+    BUS* busptr_send = psdb.get_pointer_to_ac_bus(get_sending_side_bus());
+    BUS* busptr_rec = psdb.get_pointer_to_ac_bus(get_receiving_side_bus());
     if(busptr_send!=NULL or busptr_rec!=NULL)
     {
         bool in_area = false;
@@ -609,8 +609,8 @@ bool AC_LINE::is_in_zone(unsigned int zone) const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* busptr_send = psdb.get_bus(get_sending_side_bus());
-    BUS* busptr_rec = psdb.get_bus(get_receiving_side_bus());
+    BUS* busptr_send = psdb.get_pointer_to_ac_bus(get_sending_side_bus());
+    BUS* busptr_rec = psdb.get_pointer_to_ac_bus(get_receiving_side_bus());
     if(busptr_send!=NULL or busptr_rec!=NULL)
     {
         bool in_zone = false;

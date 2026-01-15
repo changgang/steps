@@ -11,7 +11,7 @@ double api_get_wt_generator_sequence_float_data(unsigned int bus, char* identifi
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_wt_generator_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    WT_GENERATOR* wt_generator = psdb.get_wt_generator(did);
+    WT_GENERATOR* wt_generator = psdb.get_pointer_to_wt_generator(did);
 
     if(wt_generator==NULL)
     {
@@ -85,7 +85,7 @@ void api_set_wt_generator_sequence_float_data(unsigned int bus, char* identifier
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_wt_generator_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    WT_GENERATOR* wt_generator = psdb.get_wt_generator(did);
+    WT_GENERATOR* wt_generator = psdb.get_pointer_to_wt_generator(did);
 
     if(wt_generator==NULL)
     {

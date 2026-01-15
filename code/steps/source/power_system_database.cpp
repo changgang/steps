@@ -1304,7 +1304,7 @@ void POWER_SYSTEM_DATABASE::replace_generator_with_wt_generator(DEVICE_ID& gendi
     {
         if(is_generator_exist(gendid))
         {
-            GENERATOR* gen = get_generator(gendid);
+            GENERATOR* gen = get_pointer_to_generator(gendid);
 
             DEVICE_ID wtgendid;
             wtgendid.set_device_type(STEPS_WT_GENERATOR);
@@ -1352,7 +1352,7 @@ void POWER_SYSTEM_DATABASE::replace_generator_with_pv_unit(DEVICE_ID& gendid)
     {
         if(is_generator_exist(gendid))
         {
-            GENERATOR* gen = get_generator(gendid);
+            GENERATOR* gen = get_pointer_to_generator(gendid);
 
             DEVICE_ID pvudid;
             pvudid.set_device_type(STEPS_PV_UNIT);
@@ -1400,7 +1400,7 @@ void POWER_SYSTEM_DATABASE::replace_generator_with_energy_storage(DEVICE_ID& gen
     {
         if(is_generator_exist(gendid))
         {
-            GENERATOR* gen = get_generator(gendid);
+            GENERATOR* gen = get_pointer_to_generator(gendid);
 
             DEVICE_ID esdid;
             esdid.set_device_type(STEPS_ENERGY_STORAGE);
@@ -1448,7 +1448,7 @@ void POWER_SYSTEM_DATABASE::replace_generator_with_sv_source(DEVICE_ID& gendid)
     {
         if(is_generator_exist(gendid))
         {
-            GENERATOR* gen = get_generator(gendid);
+            GENERATOR* gen = get_pointer_to_generator(gendid);
 
             DEVICE_ID svsdid;
             svsdid.set_device_type(STEPS_SV_SOURCE);
@@ -1499,7 +1499,7 @@ void POWER_SYSTEM_DATABASE::copy_bus(unsigned int new_bus_number, string new_bus
         if(is_bus_exist(old_bus_number))
         {
             BUS new_bus(toolkit);
-            BUS* old_bus = get_bus(old_bus_number);
+            BUS* old_bus = get_pointer_to_ac_bus(old_bus_number);
 
             new_bus.set_bus_number(new_bus_number);
             new_bus.set_bus_name(new_bus_name);
@@ -1544,7 +1544,7 @@ void POWER_SYSTEM_DATABASE::copy_generator(DEVICE_ID& new_did, DEVICE_ID& old_di
             string identifier = new_did.get_device_identifier();
 
             GENERATOR new_gen(toolkit);
-            GENERATOR* old_gen = get_generator(old_did);
+            GENERATOR* old_gen = get_pointer_to_generator(old_did);
 
             new_gen.set_generator_bus(bus);
             new_gen.set_identifier(identifier);
@@ -1588,7 +1588,7 @@ void POWER_SYSTEM_DATABASE::copy_wt_generator(DEVICE_ID& new_did, DEVICE_ID& old
             string identifier = new_did.get_device_identifier();
 
             WT_GENERATOR new_wt_gen(toolkit);
-            WT_GENERATOR* old_wt_gen = get_wt_generator(old_did);
+            WT_GENERATOR* old_wt_gen = get_pointer_to_wt_generator(old_did);
 
             new_wt_gen.set_generator_bus(bus);
             new_wt_gen.set_identifier(identifier);
@@ -1632,7 +1632,7 @@ void POWER_SYSTEM_DATABASE::copy_pv_unit(DEVICE_ID& new_did, DEVICE_ID& old_did)
             string identifier = new_did.get_device_identifier();
 
             PV_UNIT new_pvu(toolkit);
-            PV_UNIT* old_pvu = get_pv_unit(old_did);
+            PV_UNIT* old_pvu = get_pointer_to_pv_unit(old_did);
 
             new_pvu.set_unit_bus(bus);
             new_pvu.set_identifier(identifier);
@@ -1676,7 +1676,7 @@ void POWER_SYSTEM_DATABASE::copy_energy_storage(DEVICE_ID& new_did, DEVICE_ID& o
             string identifier = new_did.get_device_identifier();
 
             ENERGY_STORAGE new_es(toolkit);
-            ENERGY_STORAGE* old_es = get_energy_storage(old_did);
+            ENERGY_STORAGE* old_es = get_pointer_to_energy_storage(old_did);
 
             new_es.set_energy_storage_bus(bus);
             new_es.set_identifier(identifier);
@@ -1720,7 +1720,7 @@ void POWER_SYSTEM_DATABASE::copy_sv_source(DEVICE_ID& new_did, DEVICE_ID& old_di
             string identifier = new_did.get_device_identifier();
 
             SV_SOURCE new_svs(toolkit);
-            SV_SOURCE* old_svs = get_sv_source(old_did);
+            SV_SOURCE* old_svs = get_pointer_to_sv_source(old_did);
 
             new_svs.set_sv_source_bus(bus);
             new_svs.set_identifier(identifier);
@@ -1764,7 +1764,7 @@ void POWER_SYSTEM_DATABASE::copy_load(DEVICE_ID& new_did, DEVICE_ID& old_did)
             string identifier = new_did.get_device_identifier();
 
             LOAD new_load(toolkit);
-            LOAD* old_load = get_load(old_did);
+            LOAD* old_load = get_pointer_to_load(old_did);
 
             new_load.set_load_bus(bus);
             new_load.set_identifier(identifier);
@@ -1808,7 +1808,7 @@ void POWER_SYSTEM_DATABASE::copy_fixed_shunt(DEVICE_ID& new_did, DEVICE_ID& old_
             string identifier = new_did.get_device_identifier();
 
             FIXED_SHUNT new_fixed_shunt(toolkit);
-            FIXED_SHUNT* old_fixed_shunt = get_fixed_shunt(old_did);
+            FIXED_SHUNT* old_fixed_shunt = get_pointer_to_fixed_shunt(old_did);
 
             new_fixed_shunt.set_shunt_bus(bus);
             new_fixed_shunt.set_identifier(identifier);
@@ -1853,7 +1853,7 @@ void POWER_SYSTEM_DATABASE::copy_ac_line(DEVICE_ID& new_did, DEVICE_ID& old_did)
             string identifier = new_did.get_device_identifier();
 
             AC_LINE new_line(toolkit);
-            AC_LINE* old_line = get_ac_line(old_did);
+            AC_LINE* old_line = get_pointer_to_ac_line(old_did);
 
             new_line.set_sending_side_bus(ibus);
             new_line.set_receiving_side_bus(jbus);
@@ -1918,7 +1918,7 @@ void POWER_SYSTEM_DATABASE::copy_transformer(DEVICE_ID& new_did, DEVICE_ID& old_
                 return;
             }
             TRANSFORMER  new_transformer(toolkit);
-            TRANSFORMER* old_transformer = get_transformer(old_did);
+            TRANSFORMER* old_transformer = get_pointer_to_transformer(old_did);
             if(kbus == 0)
             {
                 double ibasekV = get_bus_base_voltage_in_kV(ibus);
@@ -2027,7 +2027,7 @@ void POWER_SYSTEM_DATABASE::copy_lcc_hvdc2t(unsigned int new_rec_bus_number, uns
         if(is_lcc_hvdc2t_exist(old_did))
         {
             LCC_HVDC2T new_hvdc(toolkit);
-            LCC_HVDC2T* old_hvdc = get_lcc_hvdc2t(old_did);
+            LCC_HVDC2T* old_hvdc = get_pointer_to_lcc_hvdc2t(old_did);
 
             new_hvdc.set_converter_bus(RECTIFIER, new_rec_bus_number);
             new_hvdc.set_converter_bus(INVERTER, new_inv_bus_number);
@@ -2094,7 +2094,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
-        VSC_HVDC* vsc_hvdc = get_vsc_hvdc(did_old);
+        VSC_HVDC* vsc_hvdc = get_pointer_to_vsc_hvdc(did_old);
         vsc_hvdc_index.swap_device_index(did_old, did_new);
         unsigned int n_bus = new_terminal.get_bus_count();
         for(unsigned int i=0; i != n_bus; ++i)
@@ -2121,7 +2121,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
-        MT_HVDC* mt_hvdc = get_mt_hvdc(did_old);
+        MT_HVDC* mt_hvdc = get_pointer_to_mt_hvdc(did_old);
         mt_hvdc_index.swap_device_index(did_old, did_new);
         string name = did_new.get_device_name();
         mt_hvdc->set_name(name);
@@ -2147,7 +2147,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
-        GENERATOR* gen = get_generator(did_old);
+        GENERATOR* gen = get_pointer_to_generator(did_old);
         generator_index.swap_device_index(did_old, did_new);
         gen->set_generator_bus(ibus);
         gen->set_identifier(new_id);
@@ -2168,7 +2168,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
-        WT_GENERATOR* gen = get_wt_generator(did_old);
+        WT_GENERATOR* gen = get_pointer_to_wt_generator(did_old);
         wt_generator_index.swap_device_index(did_old, did_new);
         gen->set_generator_bus(ibus);
         gen->set_identifier(new_id);
@@ -2189,7 +2189,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
-        PV_UNIT* pv = get_pv_unit(did_old);
+        PV_UNIT* pv = get_pointer_to_pv_unit(did_old);
         pv_unit_index.swap_device_index(did_old, did_new);
         pv->set_unit_bus(ibus);
         pv->set_identifier(new_id);
@@ -2210,7 +2210,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
-        ENERGY_STORAGE* es = get_energy_storage(did_old);
+        ENERGY_STORAGE* es = get_pointer_to_energy_storage(did_old);
         energy_storage_index.swap_device_index(did_old, did_new);
         es->set_energy_storage_bus(ibus);
         es->set_identifier(new_id);
@@ -2231,7 +2231,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
-        SV_SOURCE* svs = get_sv_source(did_old);
+        SV_SOURCE* svs = get_pointer_to_sv_source(did_old);
         sv_source_index.swap_device_index(did_old, did_new);
         svs->set_sv_source_bus(ibus);
         svs->set_identifier(new_id);
@@ -2252,7 +2252,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
-        LOAD* load = get_load(did_old);
+        LOAD* load = get_pointer_to_load(did_old);
         load_index.swap_device_index(did_old, did_new);
         load->set_load_bus(ibus);
         load->set_identifier(new_id);
@@ -2273,7 +2273,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
-        FIXED_SHUNT* fixed_shunt = get_fixed_shunt(did_old);
+        FIXED_SHUNT* fixed_shunt = get_pointer_to_fixed_shunt(did_old);
         fixed_shunt_index.swap_device_index(did_old, did_new);
         fixed_shunt->set_shunt_bus(ibus);
         fixed_shunt->set_identifier(new_id);
@@ -2294,7 +2294,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
-        AC_LINE* line = get_ac_line(did_old);
+        AC_LINE* line = get_pointer_to_ac_line(did_old);
         ac_line_index.swap_device_index(did_old, did_new);
         line->set_sending_side_bus(ibus);
         line->set_receiving_side_bus(jbus);
@@ -2323,7 +2323,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
-        TRANSFORMER* trans = get_transformer(did_old);
+        TRANSFORMER* trans = get_pointer_to_transformer(did_old);
         transformer_index.swap_device_index(did_old, did_new);
         trans->set_winding_bus(PRIMARY_SIDE, ibus);
         trans->set_winding_bus(SECONDARY_SIDE, jbus);
@@ -2346,7 +2346,7 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
             toolkit->show_information_with_leading_time_stamp(osstream);
             return;
         }
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t(did_old);
+        LCC_HVDC2T* hvdc = get_pointer_to_lcc_hvdc2t(did_old);
         lcc_hvdc2t_index.swap_device_index(did_old, did_new);
         hvdc->set_converter_bus(RECTIFIER, ibus);
         hvdc->set_converter_bus(INVERTER, jbus);
@@ -2546,7 +2546,7 @@ void POWER_SYSTEM_DATABASE::change_bus_number(unsigned int original_bus_number, 
        (not is_bus_exist(new_bus_number)) and
        is_bus_in_allowed_range(new_bus_number))
     {
-        BUS* bus = get_bus(original_bus_number);
+        BUS* bus = get_pointer_to_ac_bus(original_bus_number);
 
         bus->set_bus_number(new_bus_number);
 
@@ -2818,65 +2818,65 @@ void POWER_SYSTEM_DATABASE::change_bus_number_with_file(string file)
     fclose(fid);
 }
 
-DEVICE* POWER_SYSTEM_DATABASE::get_device(const DEVICE_ID& device_id) const
+DEVICE* POWER_SYSTEM_DATABASE::get_pointer_to_device(const DEVICE_ID& device_id) const
 {
     // this function is not tested
     if(device_id.is_valid())
     {
         STEPS_DEVICE_TYPE dtype = device_id.get_device_type();
         if(dtype==STEPS_BUS)
-            return get_bus(device_id);
+            return get_pointer_to_ac_bus(device_id);
         else
-            return get_nonbus_device(device_id);
+            return get_pointer_to_nonbus_device(device_id);
     }
     else
         return NULL;
 }
 
-NONBUS_DEVICE* POWER_SYSTEM_DATABASE::get_nonbus_device(const DEVICE_ID& device_id) const
+NONBUS_DEVICE* POWER_SYSTEM_DATABASE::get_pointer_to_nonbus_device(const DEVICE_ID& device_id) const
 {
     // this function is not tested
     if(device_id.is_valid())
     {
         STEPS_DEVICE_TYPE dtype = device_id.get_device_type();
         if(dtype==STEPS_GENERATOR)
-            return get_generator(device_id);
+            return get_pointer_to_generator(device_id);
 
         if(dtype==STEPS_WT_GENERATOR)
-            return get_wt_generator(device_id);
+            return get_pointer_to_wt_generator(device_id);
 
         if(dtype==STEPS_PV_UNIT)
-            return get_pv_unit(device_id);
+            return get_pointer_to_pv_unit(device_id);
 
         if(dtype==STEPS_ENERGY_STORAGE)
-            return get_energy_storage(device_id);
+            return get_pointer_to_energy_storage(device_id);
 
         if(dtype==STEPS_SV_SOURCE)
-            return get_sv_source(device_id);
+            return get_pointer_to_sv_source(device_id);
 
         if(dtype==STEPS_LOAD)
-            return get_load(device_id);
+            return get_pointer_to_load(device_id);
 
         if(dtype==STEPS_FIXED_SHUNT)
-            return get_fixed_shunt(device_id);
+            return get_pointer_to_fixed_shunt(device_id);
 
         if(dtype==STEPS_AC_LINE)
-            return get_ac_line(device_id);
+            return get_pointer_to_ac_line(device_id);
 
         if(dtype==STEPS_LCC_HVDC2T)
-            return get_lcc_hvdc2t(device_id);
+            return get_pointer_to_lcc_hvdc2t(device_id);
 
         if(dtype==STEPS_VSC_HVDC)
-            return get_vsc_hvdc(device_id);
+            return get_pointer_to_vsc_hvdc(device_id);
 
         if(dtype==STEPS_HYBRID_DC)
-            return get_mt_hvdc(device_id);
+            return get_pointer_to_mt_hvdc(device_id);
 
         if(dtype==STEPS_TRANSFORMER)
-            return get_transformer(device_id);
+            return get_pointer_to_transformer(device_id);
 
         if(dtype==STEPS_EQUIVALENT_DEVICE)
-            return get_equivalent_device(device_id);
+            return get_pointer_to_equivalent_device(device_id);
 
         return NULL;
     }
@@ -2884,7 +2884,7 @@ NONBUS_DEVICE* POWER_SYSTEM_DATABASE::get_nonbus_device(const DEVICE_ID& device_
         return NULL;
 }
 
-BUS* POWER_SYSTEM_DATABASE::get_bus(unsigned int bus) const
+BUS* POWER_SYSTEM_DATABASE::get_pointer_to_ac_bus(unsigned int bus) const
 {
     unsigned int index = bus_index.get_index_of_bus(bus);
     if(index!=INDEX_NOT_EXIST)
@@ -2893,7 +2893,7 @@ BUS* POWER_SYSTEM_DATABASE::get_bus(unsigned int bus) const
         return NULL;
 }
 
-BUS* POWER_SYSTEM_DATABASE::get_bus(const DEVICE_ID & device_id) const
+BUS* POWER_SYSTEM_DATABASE::get_pointer_to_ac_bus(const DEVICE_ID & device_id) const
 {
     if(device_id.is_valid())
     {
@@ -2901,7 +2901,7 @@ BUS* POWER_SYSTEM_DATABASE::get_bus(const DEVICE_ID & device_id) const
         {
             TERMINAL terminal = device_id.get_device_terminal();
             unsigned int bus = terminal[0];
-            return get_bus(bus);
+            return get_pointer_to_ac_bus(bus);
         }
         else
             return NULL;
@@ -2910,7 +2910,7 @@ BUS* POWER_SYSTEM_DATABASE::get_bus(const DEVICE_ID & device_id) const
         return NULL;
 }
 
-GENERATOR* POWER_SYSTEM_DATABASE::get_generator(const DEVICE_ID & device_id) const
+GENERATOR* POWER_SYSTEM_DATABASE::get_pointer_to_generator(const DEVICE_ID & device_id) const
 {
     unsigned int index = generator_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
@@ -2919,7 +2919,7 @@ GENERATOR* POWER_SYSTEM_DATABASE::get_generator(const DEVICE_ID & device_id) con
         return NULL;
 }
 
-WT_GENERATOR* POWER_SYSTEM_DATABASE::get_wt_generator(const DEVICE_ID & device_id) const
+WT_GENERATOR* POWER_SYSTEM_DATABASE::get_pointer_to_wt_generator(const DEVICE_ID & device_id) const
 {
     unsigned int index = wt_generator_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
@@ -2928,7 +2928,7 @@ WT_GENERATOR* POWER_SYSTEM_DATABASE::get_wt_generator(const DEVICE_ID & device_i
         return NULL;
 }
 
-PV_UNIT* POWER_SYSTEM_DATABASE::get_pv_unit(const DEVICE_ID & device_id) const
+PV_UNIT* POWER_SYSTEM_DATABASE::get_pointer_to_pv_unit(const DEVICE_ID & device_id) const
 {
     unsigned int index = pv_unit_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
@@ -2937,7 +2937,7 @@ PV_UNIT* POWER_SYSTEM_DATABASE::get_pv_unit(const DEVICE_ID & device_id) const
         return NULL;
 }
 
-ENERGY_STORAGE* POWER_SYSTEM_DATABASE::get_energy_storage(const DEVICE_ID & device_id) const
+ENERGY_STORAGE* POWER_SYSTEM_DATABASE::get_pointer_to_energy_storage(const DEVICE_ID & device_id) const
 {
     unsigned int index = energy_storage_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
@@ -2946,7 +2946,7 @@ ENERGY_STORAGE* POWER_SYSTEM_DATABASE::get_energy_storage(const DEVICE_ID & devi
         return NULL;
 }
 
-SV_SOURCE* POWER_SYSTEM_DATABASE::get_sv_source(const DEVICE_ID & device_id) const
+SV_SOURCE* POWER_SYSTEM_DATABASE::get_pointer_to_sv_source(const DEVICE_ID & device_id) const
 {
     unsigned int index = sv_source_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
@@ -2955,26 +2955,26 @@ SV_SOURCE* POWER_SYSTEM_DATABASE::get_sv_source(const DEVICE_ID & device_id) con
         return NULL;
 }
 
-SOURCE* POWER_SYSTEM_DATABASE::get_source(const DEVICE_ID & device_id) const
+SOURCE* POWER_SYSTEM_DATABASE::get_pointer_to_source(const DEVICE_ID & device_id) const
 {
     switch(device_id.get_device_type())
     {
         case STEPS_GENERATOR:
-            return (SOURCE*) get_generator(device_id);
+            return (SOURCE*) get_pointer_to_generator(device_id);
         case STEPS_WT_GENERATOR:
-            return (SOURCE*) get_wt_generator(device_id);
+            return (SOURCE*) get_pointer_to_wt_generator(device_id);
         case STEPS_PV_UNIT:
-            return (SOURCE*) get_pv_unit(device_id);
+            return (SOURCE*) get_pointer_to_pv_unit(device_id);
         case STEPS_ENERGY_STORAGE:
-            return (SOURCE*) get_energy_storage(device_id);
+            return (SOURCE*) get_pointer_to_energy_storage(device_id);
         case STEPS_SV_SOURCE:
-            return (SOURCE*) get_sv_source(device_id);
+            return (SOURCE*) get_pointer_to_sv_source(device_id);
         default:
             return NULL;
     }
 }
 
-LOAD* POWER_SYSTEM_DATABASE::get_load(const DEVICE_ID & device_id) const
+LOAD* POWER_SYSTEM_DATABASE::get_pointer_to_load(const DEVICE_ID & device_id) const
 {
     unsigned int index = load_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
@@ -2983,7 +2983,7 @@ LOAD* POWER_SYSTEM_DATABASE::get_load(const DEVICE_ID & device_id) const
         return NULL;
 }
 
-FIXED_SHUNT* POWER_SYSTEM_DATABASE::get_fixed_shunt(const DEVICE_ID & device_id) const
+FIXED_SHUNT* POWER_SYSTEM_DATABASE::get_pointer_to_fixed_shunt(const DEVICE_ID & device_id) const
 {
     unsigned int index = fixed_shunt_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
@@ -2992,7 +2992,7 @@ FIXED_SHUNT* POWER_SYSTEM_DATABASE::get_fixed_shunt(const DEVICE_ID & device_id)
         return NULL;
 }
 
-AC_LINE* POWER_SYSTEM_DATABASE::get_ac_line(const DEVICE_ID & device_id) const
+AC_LINE* POWER_SYSTEM_DATABASE::get_pointer_to_ac_line(const DEVICE_ID & device_id) const
 {
     unsigned int index = ac_line_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
@@ -3001,7 +3001,7 @@ AC_LINE* POWER_SYSTEM_DATABASE::get_ac_line(const DEVICE_ID & device_id) const
         return NULL;
 }
 
-TRANSFORMER* POWER_SYSTEM_DATABASE::get_transformer(const DEVICE_ID & device_id) const
+TRANSFORMER* POWER_SYSTEM_DATABASE::get_pointer_to_transformer(const DEVICE_ID & device_id) const
 {
     unsigned int index = transformer_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
@@ -3010,7 +3010,7 @@ TRANSFORMER* POWER_SYSTEM_DATABASE::get_transformer(const DEVICE_ID & device_id)
         return NULL;
 }
 
-LCC_HVDC2T* POWER_SYSTEM_DATABASE::get_lcc_hvdc2t(const DEVICE_ID & device_id) const
+LCC_HVDC2T* POWER_SYSTEM_DATABASE::get_pointer_to_lcc_hvdc2t(const DEVICE_ID & device_id) const
 {
     unsigned int index = lcc_hvdc2t_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
@@ -3019,7 +3019,7 @@ LCC_HVDC2T* POWER_SYSTEM_DATABASE::get_lcc_hvdc2t(const DEVICE_ID & device_id) c
         return NULL;
 }
 
-VSC_HVDC* POWER_SYSTEM_DATABASE::get_vsc_hvdc(const DEVICE_ID & device_id) const
+VSC_HVDC* POWER_SYSTEM_DATABASE::get_pointer_to_vsc_hvdc(const DEVICE_ID & device_id) const
 {
     unsigned int index = vsc_hvdc_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
@@ -3028,7 +3028,7 @@ VSC_HVDC* POWER_SYSTEM_DATABASE::get_vsc_hvdc(const DEVICE_ID & device_id) const
         return NULL;
 }
 
-VSC_HVDC* POWER_SYSTEM_DATABASE::get_vsc_hvdc(string name) const
+VSC_HVDC* POWER_SYSTEM_DATABASE::get_pointer_to_vsc_hvdc(string name) const
 {
     unsigned int n = Vsc_hvdc.size();
     for(unsigned int index=0; index!=n; ++index)
@@ -3039,7 +3039,7 @@ VSC_HVDC* POWER_SYSTEM_DATABASE::get_vsc_hvdc(string name) const
     return NULL;
 }
 
-MT_HVDC* POWER_SYSTEM_DATABASE::get_mt_hvdc(const DEVICE_ID & device_id) const
+MT_HVDC* POWER_SYSTEM_DATABASE::get_pointer_to_mt_hvdc(const DEVICE_ID & device_id) const
 {
     unsigned int index = mt_hvdc_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
@@ -3048,7 +3048,7 @@ MT_HVDC* POWER_SYSTEM_DATABASE::get_mt_hvdc(const DEVICE_ID & device_id) const
         return NULL;
 }
 
-MT_HVDC* POWER_SYSTEM_DATABASE::get_mt_hvdc(const string name) const
+MT_HVDC* POWER_SYSTEM_DATABASE::get_pointer_to_mt_hvdc(const string name) const
 {
     unsigned int n = Mt_hvdc.size();
     for(unsigned int index=0; index!=n; ++index)
@@ -3059,7 +3059,7 @@ MT_HVDC* POWER_SYSTEM_DATABASE::get_mt_hvdc(const string name) const
     return NULL;
 }
 
-EQUIVALENT_DEVICE* POWER_SYSTEM_DATABASE::get_equivalent_device(const DEVICE_ID & device_id) const
+EQUIVALENT_DEVICE* POWER_SYSTEM_DATABASE::get_pointer_to_equivalent_device(const DEVICE_ID & device_id) const
 {
     unsigned int index = equivalent_device_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
@@ -3068,7 +3068,7 @@ EQUIVALENT_DEVICE* POWER_SYSTEM_DATABASE::get_equivalent_device(const DEVICE_ID 
         return NULL;
 }
 
-AREA* POWER_SYSTEM_DATABASE::get_area(const unsigned int no) const
+AREA* POWER_SYSTEM_DATABASE::get_pointer_to_area(const unsigned int no) const
 {
     unsigned int index = get_area_index(no);
     if(index!=INDEX_NOT_EXIST)
@@ -3077,7 +3077,7 @@ AREA* POWER_SYSTEM_DATABASE::get_area(const unsigned int no) const
         return NULL;
 }
 
-ZONE* POWER_SYSTEM_DATABASE::get_zone(const unsigned int no) const
+ZONE* POWER_SYSTEM_DATABASE::get_pointer_to_zone(const unsigned int no) const
 {
     unsigned int index = get_zone_index(no);
     if(index!=INDEX_NOT_EXIST)
@@ -3086,7 +3086,7 @@ ZONE* POWER_SYSTEM_DATABASE::get_zone(const unsigned int no) const
         return NULL;
 }
 
-OWNER* POWER_SYSTEM_DATABASE::get_owner(const unsigned int no) const
+OWNER* POWER_SYSTEM_DATABASE::get_pointer_to_owner(const unsigned int no) const
 {
     unsigned int index = get_owner_index(no);
     if(index!=INDEX_NOT_EXIST)
@@ -5183,12 +5183,12 @@ void POWER_SYSTEM_DATABASE::update_overshadowed_bus_count()
                     {
                         if(iequvilent_bus<jequvilent_bus)
                         {
-                            BUS* busptr = get_bus(jbus);
+                            BUS* busptr = get_pointer_to_ac_bus(jbus);
                             busptr->set_equivalent_bus_number(iequvilent_bus);
                         }
                         else
                         {
-                            BUS* busptr = get_bus(ibus);
+                            BUS* busptr = get_pointer_to_ac_bus(ibus);
                             busptr->set_equivalent_bus_number(jequvilent_bus);
                         }
                         if(new_bus_is_overshadowed==false)
@@ -5215,7 +5215,7 @@ void POWER_SYSTEM_DATABASE::update_overshadowed_bus_count()
 
 unsigned int POWER_SYSTEM_DATABASE::get_equivalent_bus_of_bus(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_equivalent_bus_number();
     else
@@ -5448,7 +5448,7 @@ string POWER_SYSTEM_DATABASE::bus_number2bus_name(unsigned int number)
 {
     if(is_bus_in_allowed_range(number))
     {
-        BUS* bus = get_bus(number);
+        BUS* bus = get_pointer_to_ac_bus(number);
         if(bus!=NULL)
             return bus->get_bus_name();
         else
@@ -5461,7 +5461,7 @@ string POWER_SYSTEM_DATABASE::bus_number2bus_name(unsigned int number)
 
 string POWER_SYSTEM_DATABASE::area_number2area_name(unsigned int number)
 {
-    AREA* area = get_area(number);
+    AREA* area = get_pointer_to_area(number);
     if(area!=NULL)
         return area->get_area_name();
     else
@@ -5470,7 +5470,7 @@ string POWER_SYSTEM_DATABASE::area_number2area_name(unsigned int number)
 
 string POWER_SYSTEM_DATABASE::zone_number2zone_name(unsigned int number)
 {
-    ZONE* zone = get_zone(number);
+    ZONE* zone = get_pointer_to_zone(number);
     if(zone!=NULL)
         return zone->get_zone_name();
     else
@@ -5479,7 +5479,7 @@ string POWER_SYSTEM_DATABASE::zone_number2zone_name(unsigned int number)
 
 string POWER_SYSTEM_DATABASE::owner_number2owner_name(unsigned int number)
 {
-    OWNER* owner = get_owner(number);
+    OWNER* owner = get_pointer_to_owner(number);
     if(owner!=NULL)
         return owner->get_owner_name();
     else
@@ -6487,7 +6487,7 @@ void POWER_SYSTEM_DATABASE::check_missing_equivalent_device_related_model()
 
 void POWER_SYSTEM_DATABASE::scale_load_power(const DEVICE_ID& did, double scale)
 {
-    LOAD* load = get_load(did);
+    LOAD* load = get_pointer_to_load(did);
     if(load!=NULL)
     {
         scale += 1.0;
@@ -6535,7 +6535,7 @@ void POWER_SYSTEM_DATABASE::scale_loads_power_in_zone(unsigned int zone_number, 
 
 void POWER_SYSTEM_DATABASE::scale_source_power(const DEVICE_ID& did, double scale)
 {
-    SOURCE* source = get_source(did);
+    SOURCE* source = get_pointer_to_source(did);
     if(source!=NULL)
     {
         scale += 1.0;
@@ -7305,7 +7305,7 @@ void POWER_SYSTEM_DATABASE::clear_vsc_hvdc(const string vsc_name)
     {
         unsigned int current_index = get_vsc_hvdc_index(vsc_name);
 
-        VSC_HVDC* vsc_hvdc = get_vsc_hvdc(vsc_name);
+        VSC_HVDC* vsc_hvdc = get_pointer_to_vsc_hvdc(vsc_name);
         DEVICE_ID device_id = vsc_hvdc->get_device_id();
 
         vector<VSC_HVDC>::iterator iter_vsc_hvdc = Vsc_hvdc.begin();
@@ -7363,7 +7363,7 @@ void POWER_SYSTEM_DATABASE::clear_mt_hvdc(const string mtdc_name)
     {
         unsigned int current_index = get_mt_hvdc_index(mtdc_name);
 
-        MT_HVDC* mt_hvdc = get_mt_hvdc(mtdc_name);
+        MT_HVDC* mt_hvdc = get_pointer_to_mt_hvdc(mtdc_name);
         DEVICE_ID device_id = mt_hvdc->get_device_id();
 
         vector<MT_HVDC>::iterator iter_mt_hvdc = Mt_hvdc.begin();
@@ -7810,7 +7810,7 @@ void POWER_SYSTEM_DATABASE::calibrate_generators_pmax_and_pmin_with_turbine_gove
 
 BUS_TYPE POWER_SYSTEM_DATABASE::get_bus_type(unsigned int bus) const
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_bus_type();
     else
@@ -7819,7 +7819,7 @@ BUS_TYPE POWER_SYSTEM_DATABASE::get_bus_type(unsigned int bus) const
 
 double POWER_SYSTEM_DATABASE::get_bus_base_frequency_in_Hz(unsigned int bus) const
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_base_frequency_in_Hz();
     else
@@ -7828,7 +7828,7 @@ double POWER_SYSTEM_DATABASE::get_bus_base_frequency_in_Hz(unsigned int bus) con
 
 double POWER_SYSTEM_DATABASE::get_bus_base_voltage_in_kV(unsigned int bus) const
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_base_voltage_in_kV();
     else
@@ -7837,7 +7837,7 @@ double POWER_SYSTEM_DATABASE::get_bus_base_voltage_in_kV(unsigned int bus) const
 
 double POWER_SYSTEM_DATABASE::get_bus_positive_sequence_voltage_in_pu(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_positive_sequence_voltage_in_pu();
     else
@@ -7846,7 +7846,7 @@ double POWER_SYSTEM_DATABASE::get_bus_positive_sequence_voltage_in_pu(unsigned i
 
 double POWER_SYSTEM_DATABASE::get_bus_positive_sequence_voltage_in_kV(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_positive_sequence_voltage_in_kV();
     else
@@ -7860,7 +7860,7 @@ double POWER_SYSTEM_DATABASE::get_bus_positive_sequence_angle_in_deg(unsigned in
 
 double POWER_SYSTEM_DATABASE::get_bus_positive_sequence_angle_in_rad(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_positive_sequence_angle_in_rad();
     else
@@ -7869,7 +7869,7 @@ double POWER_SYSTEM_DATABASE::get_bus_positive_sequence_angle_in_rad(unsigned in
 
 complex<double> POWER_SYSTEM_DATABASE::get_bus_positive_sequence_complex_voltage_in_pu(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_positive_sequence_complex_voltage_in_pu();
     else
@@ -7878,7 +7878,7 @@ complex<double> POWER_SYSTEM_DATABASE::get_bus_positive_sequence_complex_voltage
 
 complex<double> POWER_SYSTEM_DATABASE::get_bus_positive_sequence_complex_voltage_in_kV(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_positive_sequence_complex_voltage_in_kV();
     else
@@ -7887,7 +7887,7 @@ complex<double> POWER_SYSTEM_DATABASE::get_bus_positive_sequence_complex_voltage
 
 double POWER_SYSTEM_DATABASE::get_bus_negative_sequence_voltage_in_pu(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_negative_sequence_voltage_in_pu();
     else
@@ -7896,7 +7896,7 @@ double POWER_SYSTEM_DATABASE::get_bus_negative_sequence_voltage_in_pu(unsigned i
 
 double POWER_SYSTEM_DATABASE::get_bus_negative_sequence_voltage_in_kV(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_negative_sequence_voltage_in_kV();
     else
@@ -7910,7 +7910,7 @@ double POWER_SYSTEM_DATABASE::get_bus_negative_sequence_angle_in_deg(unsigned in
 
 double POWER_SYSTEM_DATABASE::get_bus_negative_sequence_angle_in_rad(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_negative_sequence_angle_in_rad();
     else
@@ -7919,7 +7919,7 @@ double POWER_SYSTEM_DATABASE::get_bus_negative_sequence_angle_in_rad(unsigned in
 
 complex<double> POWER_SYSTEM_DATABASE::get_bus_negative_sequence_complex_voltage_in_pu(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_negative_sequence_complex_voltage_in_pu();
     else
@@ -7928,7 +7928,7 @@ complex<double> POWER_SYSTEM_DATABASE::get_bus_negative_sequence_complex_voltage
 
 complex<double> POWER_SYSTEM_DATABASE::get_bus_negative_sequence_complex_voltage_in_kV(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_negative_sequence_complex_voltage_in_kV();
     else
@@ -7937,7 +7937,7 @@ complex<double> POWER_SYSTEM_DATABASE::get_bus_negative_sequence_complex_voltage
 
 double POWER_SYSTEM_DATABASE::get_bus_zero_sequence_voltage_in_pu(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_zero_sequence_voltage_in_pu();
     else
@@ -7946,7 +7946,7 @@ double POWER_SYSTEM_DATABASE::get_bus_zero_sequence_voltage_in_pu(unsigned int b
 
 double POWER_SYSTEM_DATABASE::get_bus_zero_sequence_voltage_in_kV(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_zero_sequence_voltage_in_kV();
     else
@@ -7960,7 +7960,7 @@ double POWER_SYSTEM_DATABASE::get_bus_zero_sequence_angle_in_deg(unsigned int bu
 
 double POWER_SYSTEM_DATABASE::get_bus_zero_sequence_angle_in_rad(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_zero_sequence_angle_in_rad();
     else
@@ -7969,7 +7969,7 @@ double POWER_SYSTEM_DATABASE::get_bus_zero_sequence_angle_in_rad(unsigned int bu
 
 complex<double> POWER_SYSTEM_DATABASE::get_bus_zero_sequence_complex_voltage_in_pu(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_zero_sequence_complex_voltage_in_pu();
     else
@@ -7978,7 +7978,7 @@ complex<double> POWER_SYSTEM_DATABASE::get_bus_zero_sequence_complex_voltage_in_
 
 complex<double> POWER_SYSTEM_DATABASE::get_bus_zero_sequence_complex_voltage_in_kV(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_zero_sequence_complex_voltage_in_kV();
     else
@@ -7987,7 +7987,7 @@ complex<double> POWER_SYSTEM_DATABASE::get_bus_zero_sequence_complex_voltage_in_
 
 double POWER_SYSTEM_DATABASE::get_bus_frequency_deviation_in_pu(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
     {
         BUS_FREQUENCY_MODEL* fmodel = busptr->get_bus_frequency_model();
@@ -8000,7 +8000,7 @@ double POWER_SYSTEM_DATABASE::get_bus_frequency_deviation_in_pu(unsigned int bus
 
 double POWER_SYSTEM_DATABASE::get_bus_frequency_deviation_in_Hz(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
     {
         BUS_FREQUENCY_MODEL* fmodel = busptr->get_bus_frequency_model();
@@ -8013,7 +8013,7 @@ double POWER_SYSTEM_DATABASE::get_bus_frequency_deviation_in_Hz(unsigned int bus
 
 double POWER_SYSTEM_DATABASE::get_bus_frequency_in_Hz(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
     {
         BUS_FREQUENCY_MODEL* fmodel = busptr->get_bus_frequency_model();
@@ -8026,7 +8026,7 @@ double POWER_SYSTEM_DATABASE::get_bus_frequency_in_Hz(unsigned int bus)
 
 double POWER_SYSTEM_DATABASE::get_bus_frequency_in_pu(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
     {
         BUS_FREQUENCY_MODEL* fmodel = busptr->get_bus_frequency_model();
@@ -8039,7 +8039,7 @@ double POWER_SYSTEM_DATABASE::get_bus_frequency_in_pu(unsigned int bus)
 
 double POWER_SYSTEM_DATABASE::get_voltage_to_regulate_of_physical_bus_in_pu(unsigned int bus)
 {
-    BUS* busptr = get_bus(bus);
+    BUS* busptr = get_pointer_to_ac_bus(bus);
     if(busptr!=NULL)
         return busptr->get_voltage_to_regulate_in_pu();
     else
@@ -8050,7 +8050,7 @@ double POWER_SYSTEM_DATABASE::get_regulatable_p_max_at_physical_bus_in_MW(unsign
 {
     if(is_bus_exist(bus))
     {
-        BUS* busptr = get_bus(bus);
+        BUS* busptr = get_pointer_to_ac_bus(bus);
         BUS_TYPE btype = busptr->get_bus_type();
         if(btype==SLACK_TYPE)
         {
@@ -8092,7 +8092,7 @@ double POWER_SYSTEM_DATABASE::get_regulatable_p_min_at_physical_bus_in_MW(unsign
 {
     if(is_bus_exist(bus))
     {
-        BUS* busptr = get_bus(bus);
+        BUS* busptr = get_pointer_to_ac_bus(bus);
         BUS_TYPE btype = busptr->get_bus_type();
         if(btype==SLACK_TYPE)
         {
@@ -8134,7 +8134,7 @@ double POWER_SYSTEM_DATABASE::get_total_regulating_p_generation_at_physical_bus_
 {
     if(is_bus_exist(bus))
     {
-        BUS* busptr = get_bus(bus);
+        BUS* busptr = get_pointer_to_ac_bus(bus);
         BUS_TYPE btype = busptr->get_bus_type();
         if(btype==SLACK_TYPE)
         {
@@ -8175,7 +8175,7 @@ double POWER_SYSTEM_DATABASE::get_total_regulating_q_generation_at_physical_bus_
 
     if(is_bus_exist(bus))
     {
-        BUS* busptr = get_bus(bus);
+        BUS* busptr = get_pointer_to_ac_bus(bus);
         BUS_TYPE btype = busptr->get_bus_type();
         if(btype==PV_TYPE or
            btype==PV_TO_PQ_TYPE_1 or btype==PV_TO_PQ_TYPE_2 or

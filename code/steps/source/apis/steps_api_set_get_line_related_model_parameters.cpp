@@ -11,7 +11,7 @@ const char* api_get_line_related_model_name(unsigned int ibus, unsigned int jbus
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
     if(line==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -32,7 +32,7 @@ double api_get_line_related_model_float_parameter(unsigned int ibus, unsigned in
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
     if(line==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -53,7 +53,7 @@ void api_set_line_related_model_float_parameter(unsigned int ibus, unsigned int 
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
     if(line==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -73,7 +73,7 @@ unsigned int api_get_line_related_model_float_parameter_count(unsigned int ibus,
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
     if(line==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -92,7 +92,7 @@ const char* api_get_line_related_model_float_parameter_name(unsigned int ibus, u
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_ac_line_device_id(ibus, jbus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
     string name = "";
     if(line==NULL)
     {

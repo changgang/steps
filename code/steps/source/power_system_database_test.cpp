@@ -1320,7 +1320,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
 
     BUS* pbus;
 
-    pbus = psdb.get_bus(1);
+    pbus = psdb.get_pointer_to_ac_bus(1);
     TEST_ASSERT(pbus!=NULL);
     TEST_ASSERT(pbus->get_bus_number()==1);
     TEST_ASSERT(fabs(pbus->get_base_voltage_in_kV()-110.0)<FLOAT_EPSILON);
@@ -1333,14 +1333,14 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
-    pbus = psdb.get_bus(1);
+    pbus = psdb.get_pointer_to_ac_bus(1);
     TEST_ASSERT(pbus!=NULL);
     TEST_ASSERT(pbus->get_bus_number()==1);
     TEST_ASSERT(fabs(pbus->get_base_voltage_in_kV()-110.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(pbus->get_positive_sequence_voltage_in_pu()-1.05)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(pbus->get_positive_sequence_angle_in_rad()-0.5)<FLOAT_EPSILON);
 
-    pbus = psdb.get_bus(2);
+    pbus = psdb.get_pointer_to_ac_bus(2);
     TEST_ASSERT(pbus!=NULL);
     TEST_ASSERT(pbus->get_bus_number()==2);
     TEST_ASSERT(fabs(pbus->get_base_voltage_in_kV()-220.0)<FLOAT_EPSILON);
@@ -1352,7 +1352,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
 
-    pbus = psdb.get_bus(2);
+    pbus = psdb.get_pointer_to_ac_bus(2);
     TEST_ASSERT(pbus!=NULL);
     TEST_ASSERT(pbus->get_bus_number()==2);
     TEST_ASSERT(fabs(pbus->get_base_voltage_in_kV()-220.0)<FLOAT_EPSILON);
@@ -1397,7 +1397,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_generator()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    pgenerator = psdb.get_generator(did);
+    pgenerator = psdb.get_pointer_to_generator(did);
 
     TEST_ASSERT(pgenerator!=NULL);
     TEST_ASSERT(pgenerator->get_generator_bus()==1);
@@ -1406,7 +1406,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_generator()
 
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    pgenerator = psdb.get_generator(did);
+    pgenerator = psdb.get_pointer_to_generator(did);
 
     TEST_ASSERT(pgenerator!=NULL);
     TEST_ASSERT(pgenerator->get_generator_bus()==1);
@@ -1452,7 +1452,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_wt_generator()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    pwt_generator = psdb.get_wt_generator(did);
+    pwt_generator = psdb.get_pointer_to_wt_generator(did);
 
     TEST_ASSERT(pwt_generator!=NULL);
     TEST_ASSERT(pwt_generator->get_source_bus()==1);
@@ -1461,7 +1461,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_wt_generator()
 
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    pwt_generator = psdb.get_wt_generator(did);
+    pwt_generator = psdb.get_pointer_to_wt_generator(did);
 
     TEST_ASSERT(pwt_generator!=NULL);
     TEST_ASSERT(pwt_generator->get_source_bus()==1);
@@ -1508,7 +1508,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pv_unit()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    ppv_unit = psdb.get_pv_unit(did);
+    ppv_unit = psdb.get_pointer_to_pv_unit(did);
 
     TEST_ASSERT(ppv_unit!=NULL);
     TEST_ASSERT(ppv_unit->get_source_bus()==1);
@@ -1517,7 +1517,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pv_unit()
 
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    ppv_unit = psdb.get_pv_unit(did);
+    ppv_unit = psdb.get_pointer_to_pv_unit(did);
 
     TEST_ASSERT(ppv_unit!=NULL);
     TEST_ASSERT(ppv_unit->get_source_bus()==1);
@@ -1563,7 +1563,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_load()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    pload = psdb.get_load(did);
+    pload = psdb.get_pointer_to_load(did);
 
     TEST_ASSERT(pload!=NULL);
     TEST_ASSERT(pload->get_load_bus()==1);
@@ -1572,7 +1572,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_load()
 
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    pload = psdb.get_load(did);
+    pload = psdb.get_pointer_to_load(did);
 
     TEST_ASSERT(pload!=NULL);
     TEST_ASSERT(pload->get_load_bus()==1);
@@ -1626,7 +1626,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_ac_line()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    pline = psdb.get_ac_line(did);
+    pline = psdb.get_pointer_to_ac_line(did);
 
     TEST_ASSERT(pline!=NULL);
     TEST_ASSERT(pline->get_sending_side_bus()==1);
@@ -1637,7 +1637,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_ac_line()
 
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    pline = psdb.get_ac_line(did);
+    pline = psdb.get_pointer_to_ac_line(did);
 
     TEST_ASSERT(pline!=NULL);
     TEST_ASSERT(pline->get_sending_side_bus()==1);
@@ -1700,7 +1700,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_transformer()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    ptransformer = psdb.get_transformer(did);
+    ptransformer = psdb.get_pointer_to_transformer(did);
 
     TEST_ASSERT(ptransformer!=NULL);
     TEST_ASSERT(ptransformer->is_two_winding_transformer()==true);
@@ -1714,7 +1714,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_transformer()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    ptransformer = psdb.get_transformer(did);
+    ptransformer = psdb.get_pointer_to_transformer(did);
 
     TEST_ASSERT(ptransformer!=NULL);
     TEST_ASSERT(ptransformer->is_three_winding_transformer()==true);
@@ -1764,7 +1764,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_fixed_shunt()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    pshunt = psdb.get_fixed_shunt(did);
+    pshunt = psdb.get_pointer_to_fixed_shunt(did);
 
     TEST_ASSERT(pshunt!=NULL);
     TEST_ASSERT(pshunt->get_shunt_bus()==1);
@@ -1773,7 +1773,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_fixed_shunt()
 
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    pshunt = psdb.get_fixed_shunt(did);
+    pshunt = psdb.get_pointer_to_fixed_shunt(did);
 
     TEST_ASSERT(pshunt!=NULL);
     TEST_ASSERT(pshunt->get_shunt_bus()==1);
@@ -1827,7 +1827,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_lcc_hvdc2t()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    phvdc = psdb.get_lcc_hvdc2t(did);
+    phvdc = psdb.get_pointer_to_lcc_hvdc2t(did);
 
     TEST_ASSERT(phvdc!=NULL);
     TEST_ASSERT(phvdc->get_name()=="#1");
@@ -1837,7 +1837,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_lcc_hvdc2t()
     TEST_ASSERT(phvdc->get_status()==true);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
-    phvdc = psdb.get_lcc_hvdc2t(did);
+    phvdc = psdb.get_pointer_to_lcc_hvdc2t(did);
 
     TEST_ASSERT(phvdc!=NULL);
     TEST_ASSERT(phvdc->get_name()=="#2");
@@ -1906,7 +1906,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    pvschvdc = psdb.get_vsc_hvdc(did);
+    pvschvdc = psdb.get_pointer_to_vsc_hvdc(did);
     cout<<__LINE__<<" @ "<<__FUNCTION__<<endl;
     TEST_ASSERT(pvschvdc!=NULL);
     TEST_ASSERT(pvschvdc->get_name()=="#1");
@@ -1917,7 +1917,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
     TEST_ASSERT(pvschvdc->get_status()==true);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
-    pvschvdc = psdb.get_vsc_hvdc(did);
+    pvschvdc = psdb.get_pointer_to_vsc_hvdc(did);
 
     TEST_ASSERT(pvschvdc!=NULL);
     TEST_ASSERT(pvschvdc->get_name()=="#2");
@@ -1927,7 +1927,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_vsc_hvdc()
     TEST_ASSERT(pvschvdc->get_identifier()=="#2");
     TEST_ASSERT(pvschvdc->get_status()==false);
 
-    pvschvdc = psdb.get_vsc_hvdc("VSC DC1");
+    pvschvdc = psdb.get_pointer_to_vsc_hvdc("VSC DC1");
     cout<<__LINE__<<" @ "<<__FUNCTION__<<endl;
     TEST_ASSERT(pvschvdc!=NULL);
     TEST_ASSERT(pvschvdc->get_name()=="#1");
@@ -1974,7 +1974,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_equivalent_device()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    pedevice = psdb.get_equivalent_device(did);
+    pedevice = psdb.get_pointer_to_equivalent_device(did);
 
     TEST_ASSERT(pedevice!=NULL);
     TEST_ASSERT(pedevice->get_equivalent_device_bus()==1);
@@ -1982,7 +1982,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_equivalent_device()
     TEST_ASSERT(pedevice->get_status()==true);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
-    pedevice = psdb.get_equivalent_device(did);
+    pedevice = psdb.get_pointer_to_equivalent_device(did);
 
     TEST_ASSERT(pedevice!=NULL);
     TEST_ASSERT(pedevice->get_equivalent_device_bus()==1);
@@ -2026,7 +2026,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_energy_storage()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    pestorage = psdb.get_energy_storage(did);
+    pestorage = psdb.get_pointer_to_energy_storage(did);
 
     TEST_ASSERT(pestorage!=NULL);
     TEST_ASSERT(pestorage->get_energy_storage_bus()==1);
@@ -2034,7 +2034,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_energy_storage()
     TEST_ASSERT(pestorage->get_status()==true);
 
     did.set_device_identifier_index(get_index_of_string("#2"));
-    pestorage = psdb.get_energy_storage(did);
+    pestorage = psdb.get_pointer_to_energy_storage(did);
 
     TEST_ASSERT(pestorage!=NULL);
     TEST_ASSERT(pestorage->get_energy_storage_bus()==1);
@@ -2075,7 +2075,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_area()
 
     AREA* parea;
 
-    parea = psdb.get_area(1);
+    parea = psdb.get_pointer_to_area(1);
 
     TEST_ASSERT(parea!=NULL);
     TEST_ASSERT(parea->get_area_number()==1);
@@ -2092,7 +2092,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_area()
 
     TEST_ASSERT(psdb.get_area_count()==2);
 
-    parea = psdb.get_area(2);
+    parea = psdb.get_pointer_to_area(2);
 
     TEST_ASSERT(parea!=NULL);
     TEST_ASSERT(parea->get_area_number()==2);
@@ -2119,7 +2119,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_zone()
 
     ZONE* pzone;
 
-    pzone = psdb.get_zone(1);
+    pzone = psdb.get_pointer_to_zone(1);
 
     TEST_ASSERT(pzone!=NULL);
     TEST_ASSERT(pzone->get_zone_number()==1);
@@ -2131,7 +2131,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_zone()
 
     TEST_ASSERT(psdb.get_zone_count()==2);
 
-    pzone = psdb.get_zone(2);
+    pzone = psdb.get_pointer_to_zone(2);
 
     TEST_ASSERT(pzone!=NULL);
     TEST_ASSERT(pzone->get_zone_number()==2);
@@ -2156,7 +2156,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_owner()
 
     OWNER* powner;
 
-    powner = psdb.get_owner(1);
+    powner = psdb.get_pointer_to_owner(1);
 
     TEST_ASSERT(powner!=NULL);
     TEST_ASSERT(powner->get_owner_number()==1);
@@ -2168,7 +2168,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_owner()
 
     TEST_ASSERT(psdb.get_owner_count()==2);
 
-    powner = psdb.get_owner(2);
+    powner = psdb.get_pointer_to_owner(2);
 
     TEST_ASSERT(powner!=NULL);
     TEST_ASSERT(powner->get_owner_number()==2);
@@ -3378,7 +3378,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_connecting_to_bus
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()==STEPS_GENERATOR);
-            TEST_ASSERT(psdb.get_generator(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_generator(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -3400,7 +3400,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_connecting_to_
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()==STEPS_WT_GENERATOR);
-            TEST_ASSERT(psdb.get_wt_generator(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_wt_generator(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -3423,7 +3423,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_connecting_to_bus()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()==STEPS_PV_UNIT);
-            TEST_ASSERT(psdb.get_pv_unit(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_pv_unit(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -3447,7 +3447,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_connecting_to_bus()
             STEPS_DEVICE_TYPE device_type = dids[j].get_device_type();
             TEST_ASSERT(device_type==STEPS_GENERATOR or device_type==STEPS_WT_GENERATOR
                         or device_type==STEPS_PV_UNIT or device_type==STEPS_ENERGY_STORAGE);
-            TEST_ASSERT(psdb.get_source(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_source(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -3469,7 +3469,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_connecting_to_bus()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()==STEPS_LOAD);
-            TEST_ASSERT(psdb.get_load(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_load(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -3491,7 +3491,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_ac_lines_device_id_connecting_to_bus()
         for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()==STEPS_AC_LINE);
-            TEST_ASSERT(psdb.get_ac_line(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_ac_line(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -3513,7 +3513,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_connecting_to_b
         for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()==STEPS_TRANSFORMER);
-            TEST_ASSERT(psdb.get_transformer(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_transformer(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -3535,7 +3535,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_connecting_to_b
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()==STEPS_FIXED_SHUNT);
-            TEST_ASSERT(psdb.get_fixed_shunt(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_fixed_shunt(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -3557,7 +3557,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lcc_hvdc2ts_device_id_connecting_to_bu
         for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()==STEPS_LCC_HVDC2T);
-            TEST_ASSERT(psdb.get_lcc_hvdc2t(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_lcc_hvdc2t(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -3579,7 +3579,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_device_id_connecting_to_bus(
         for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()==STEPS_VSC_HVDC);
-            TEST_ASSERT(psdb.get_vsc_hvdc(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_vsc_hvdc(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -3601,7 +3601,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_connectin
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()==STEPS_EQUIVALENT_DEVICE);
-            TEST_ASSERT(psdb.get_equivalent_device(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_equivalent_device(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -3623,7 +3623,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_connecting_t
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()==STEPS_ENERGY_STORAGE);
-            TEST_ASSERT(psdb.get_energy_storage(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_energy_storage(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -3938,7 +3938,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_area()
         for(unsigned int j=0; j!=1; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_BUS);
-            TEST_ASSERT(psdb.get_bus(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_ac_bus(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -3960,7 +3960,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_area()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_GENERATOR);
-            TEST_ASSERT(psdb.get_generator(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_generator(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -3982,7 +3982,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_area()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_WT_GENERATOR);
-            TEST_ASSERT(psdb.get_wt_generator(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_wt_generator(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -4005,7 +4005,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_in_area()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_PV_UNIT);
-            TEST_ASSERT(psdb.get_pv_unit(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_pv_unit(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -4030,7 +4030,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_area()
                         or devices[j].get_device_type()==STEPS_WT_GENERATOR
                         or devices[j].get_device_type()==STEPS_PV_UNIT
                         or devices[j].get_device_type()==STEPS_ENERGY_STORAGE);
-            TEST_ASSERT(psdb.get_source(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_source(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -4052,7 +4052,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_in_area()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_LOAD);
-            TEST_ASSERT(psdb.get_load(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_load(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -4074,7 +4074,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_ac_lines_device_id_in_area()
         for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_AC_LINE);
-            TEST_ASSERT(psdb.get_ac_line(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_ac_line(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -4096,7 +4096,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_in_area()
         for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_TRANSFORMER);
-            TEST_ASSERT(psdb.get_transformer(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_transformer(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -4118,7 +4118,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_area()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_FIXED_SHUNT);
-            TEST_ASSERT(psdb.get_fixed_shunt(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_fixed_shunt(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -4140,7 +4140,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lcc_hvdc2ts_device_id_in_area()
         for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_LCC_HVDC2T);
-            TEST_ASSERT(psdb.get_lcc_hvdc2t(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_lcc_hvdc2t(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -4162,7 +4162,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_device_id_in_area()
         for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_VSC_HVDC);
-            TEST_ASSERT(psdb.get_vsc_hvdc(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_vsc_hvdc(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -4184,7 +4184,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_area()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_EQUIVALENT_DEVICE);
-            TEST_ASSERT(psdb.get_equivalent_device(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_equivalent_device(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -4206,7 +4206,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_area()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_ENERGY_STORAGE);
-            TEST_ASSERT(psdb.get_energy_storage(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_energy_storage(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -4519,7 +4519,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_zone()
         for(unsigned int j=0; j!=1; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_BUS);
-            TEST_ASSERT(psdb.get_bus(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_ac_bus(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4541,7 +4541,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_zone()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_GENERATOR);
-            TEST_ASSERT(psdb.get_generator(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_generator(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4563,7 +4563,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_zone()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_WT_GENERATOR);
-            TEST_ASSERT(psdb.get_wt_generator(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_wt_generator(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4586,7 +4586,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_in_zone()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_PV_UNIT);
-            TEST_ASSERT(psdb.get_pv_unit(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_pv_unit(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4611,7 +4611,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_zone()
                         or devices[j].get_device_type()==STEPS_WT_GENERATOR
                         or devices[j].get_device_type()==STEPS_PV_UNIT
                         or devices[j].get_device_type()==STEPS_ENERGY_STORAGE);
-            TEST_ASSERT(psdb.get_source(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_source(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4633,7 +4633,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_in_zone()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_LOAD);
-            TEST_ASSERT(psdb.get_load(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_load(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4655,7 +4655,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_ac_lines_device_id_in_zone()
         for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_AC_LINE);
-            TEST_ASSERT(psdb.get_ac_line(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_ac_line(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4677,7 +4677,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_in_zone()
         for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_TRANSFORMER);
-            TEST_ASSERT(psdb.get_transformer(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_transformer(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4699,7 +4699,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_zone()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_FIXED_SHUNT);
-            TEST_ASSERT(psdb.get_fixed_shunt(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_fixed_shunt(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4721,7 +4721,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lcc_hvdc2ts_device_id_in_zone()
         for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_LCC_HVDC2T);
-            TEST_ASSERT(psdb.get_lcc_hvdc2t(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_lcc_hvdc2t(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4743,7 +4743,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_vsc_hvdcs_device_id_in_zone()
         for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_VSC_HVDC);
-            TEST_ASSERT(psdb.get_vsc_hvdc(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_vsc_hvdc(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4765,7 +4765,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_zone()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_EQUIVALENT_DEVICE);
-            TEST_ASSERT(psdb.get_equivalent_device(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_equivalent_device(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4787,7 +4787,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_zone()
         for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()==STEPS_ENERGY_STORAGE);
-            TEST_ASSERT(psdb.get_energy_storage(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(psdb.get_pointer_to_energy_storage(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -4906,7 +4906,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses()
     TEST_ASSERT(device[1]->get_bus_number()==2);
     TEST_ASSERT(device[2]->get_bus_number()==3);
 
-    BUS* bus = psdb.get_bus(2);
+    BUS* bus = psdb.get_pointer_to_ac_bus(2);
     bus->set_bus_type(OUT_OF_SERVICE);
 
     device = psdb.get_all_in_service_buses();
@@ -5448,7 +5448,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses_number()
     TEST_ASSERT(buses[1]==2);
     TEST_ASSERT(buses[2]==3);
 
-    BUS* bus = psdb.get_bus(2);
+    BUS* bus = psdb.get_pointer_to_ac_bus(2);
     bus->set_bus_type(OUT_OF_SERVICE);
 
     buses = psdb.get_all_in_service_buses_number();
@@ -6074,7 +6074,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
 
-    AC_LINE* lineptr = psdb.get_ac_line(did);
+    AC_LINE* lineptr = psdb.get_pointer_to_ac_line(did);
     lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.001));
 
     terminal.clear();
@@ -6082,7 +6082,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
 
-    lineptr = psdb.get_ac_line(did);
+    lineptr = psdb.get_pointer_to_ac_line(did);
     lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.001));
 
     terminal.clear();
@@ -6090,7 +6090,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
     terminal.append_bus(5);
     did.set_device_terminal(terminal);
 
-    lineptr = psdb.get_ac_line(did);
+    lineptr = psdb.get_pointer_to_ac_line(did);
     lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.001));
 
     terminal.clear();
@@ -6098,7 +6098,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
     terminal.append_bus(4);
     did.set_device_terminal(terminal);
 
-    lineptr = psdb.get_ac_line(did);
+    lineptr = psdb.get_pointer_to_ac_line(did);
     lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.001));
 
     terminal.clear();
@@ -6106,7 +6106,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
-    lineptr = psdb.get_ac_line(did);
+    lineptr = psdb.get_pointer_to_ac_line(did);
     lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.001));
 
     psdb.update_overshadowed_bus_count();
@@ -6123,7 +6123,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
-    lineptr = psdb.get_ac_line(did);
+    lineptr = psdb.get_pointer_to_ac_line(did);
     lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.01));
 
     psdb.update_overshadowed_bus_count();
@@ -6140,7 +6140,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
 
-    lineptr = psdb.get_ac_line(did);
+    lineptr = psdb.get_pointer_to_ac_line(did);
     lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.01));
 
     psdb.update_overshadowed_bus_count();
@@ -6157,7 +6157,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
 
-    lineptr = psdb.get_ac_line(did);
+    lineptr = psdb.get_pointer_to_ac_line(did);
     lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.01));
 
     psdb.update_overshadowed_bus_count();
@@ -6174,7 +6174,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
     terminal.append_bus(4);
     did.set_device_terminal(terminal);
 
-    lineptr = psdb.get_ac_line(did);
+    lineptr = psdb.get_pointer_to_ac_line(did);
     lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.01));
 
     psdb.update_overshadowed_bus_count();
@@ -6191,7 +6191,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
 
-    lineptr = psdb.get_ac_line(did);
+    lineptr = psdb.get_pointer_to_ac_line(did);
     lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.01));
 
     psdb.update_overshadowed_bus_count();
@@ -7036,7 +7036,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    load = psdb.get_load(did);
+    load = psdb.get_pointer_to_load(did);
     S = load->get_nominal_constant_power_load_in_MVA();
 
     psdb.scale_load_power(did, 0.1);
@@ -7048,7 +7048,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    load = psdb.get_load(did);
+    load = psdb.get_pointer_to_load(did);
     S = load->get_nominal_constant_power_load_in_MVA();
 
     psdb.scale_load_power(did, -0.1);
@@ -7228,7 +7228,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    source = psdb.get_generator(did);
+    source = psdb.get_pointer_to_generator(did);
     S = source->get_complex_generation_in_MVA();
 
     psdb.scale_source_power(did, 0.1);
@@ -7241,7 +7241,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    source = psdb.get_wt_generator(did);
+    source = psdb.get_pointer_to_wt_generator(did);
     S = source->get_complex_generation_in_MVA();
 
     psdb.scale_source_power(did, -0.1);
@@ -7254,7 +7254,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    source = psdb.get_pv_unit(did);
+    source = psdb.get_pointer_to_pv_unit(did);
     S = source->get_complex_generation_in_MVA();
 
     psdb.scale_source_power(did, -0.1);
@@ -7267,7 +7267,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    source = psdb.get_energy_storage(did);
+    source = psdb.get_pointer_to_energy_storage(did);
     S = source->get_complex_generation_in_MVA();
 
     psdb.scale_source_power(did, -0.1);
@@ -7426,7 +7426,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     S = gen->get_complex_generation_in_MVA();
 
     psdb.scale_generator_power(did, 0.1);
@@ -7438,7 +7438,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     S = gen->get_complex_generation_in_MVA();
 
     psdb.scale_generator_power(did, -0.1);
@@ -7596,7 +7596,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    source = psdb.get_wt_generator(did);
+    source = psdb.get_pointer_to_wt_generator(did);
     S = source->get_complex_generation_in_MVA();
 
     psdb.scale_wt_generator_power(did, 0.1);
@@ -7608,7 +7608,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    source = psdb.get_wt_generator(did);
+    source = psdb.get_pointer_to_wt_generator(did);
     S = source->get_complex_generation_in_MVA();
 
     psdb.scale_wt_generator_power(did, -0.1);
@@ -7768,7 +7768,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#1"));
 
-    source = psdb.get_pv_unit(did);
+    source = psdb.get_pointer_to_pv_unit(did);
     S = source->get_complex_generation_in_MVA();
 
     psdb.scale_pv_unit_power(did, 0.1);
@@ -7780,7 +7780,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("#2"));
 
-    source = psdb.get_pv_unit(did);
+    source = psdb.get_pointer_to_pv_unit(did);
     S = source->get_complex_generation_in_MVA();
 
     psdb.scale_pv_unit_power(did, -0.1);
@@ -9309,7 +9309,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_complex_voltage()
 
     prepare_database_for_test();
 
-    BUS* bus = psdb.get_bus(1);
+    BUS* bus = psdb.get_pointer_to_ac_bus(1);
     bus->set_positive_sequence_voltage_in_pu(1.05);
     bus->set_positive_sequence_angle_in_rad(0.5);
 
@@ -9347,7 +9347,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_voltage()
 
     prepare_database_for_test();
 
-    BUS* bus = psdb.get_bus(1);
+    BUS* bus = psdb.get_pointer_to_ac_bus(1);
     bus->set_positive_sequence_voltage_in_pu(1.05);
 
 
@@ -9363,7 +9363,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_angle()
 
     prepare_database_for_test();
 
-    BUS* bus = psdb.get_bus(1);
+    BUS* bus = psdb.get_pointer_to_ac_bus(1);
     bus->set_positive_sequence_angle_in_rad(0.5);
 
     TEST_ASSERT(fabs(psdb.get_bus_positive_sequence_angle_in_rad(1)-0.5)<FLOAT_EPSILON);
@@ -9379,7 +9379,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_voltage_to_regulate_of_physical_bus_in
 
     prepare_database_for_test();
 
-    BUS* bus = psdb.get_bus(1);
+    BUS* bus = psdb.get_pointer_to_ac_bus(1);
     bus->set_positive_sequence_voltage_in_pu(1.05);
     bus->set_voltage_to_regulate_in_pu(1.05);
 

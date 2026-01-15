@@ -665,7 +665,7 @@ string PSSE_IMEXPORTER::export_all_bus_data() const
 
     for(unsigned int i=0; i!=n; ++i)
     {
-        BUS* bus = psdb.get_bus(ordered_buses[i]);
+        BUS* bus = psdb.get_pointer_to_ac_bus(ordered_buses[i]);
         buses.push_back(bus);
     }
 
@@ -1184,7 +1184,7 @@ string PSSE_IMEXPORTER::export_all_ac_line_data() const
     vector<AC_LINE*> lines;
     unsigned int n = dids.size();
     for(unsigned int i=0; i!=n; ++i)
-        lines.push_back(psdb.get_ac_line(dids[i]));
+        lines.push_back(psdb.get_pointer_to_ac_line(dids[i]));
 
     for(unsigned int i=0; i!=n; ++i)
         osstream<<export_ac_line_data(lines[i]);
@@ -1264,7 +1264,7 @@ string PSSE_IMEXPORTER::export_all_transformer_data() const
     vector<TRANSFORMER*> transformers;
     unsigned int n = dids.size();
     for(unsigned int i=0; i!=n; ++i)
-        transformers.push_back(psdb.get_transformer(dids[i]));
+        transformers.push_back(psdb.get_pointer_to_transformer(dids[i]));
 
     for(unsigned int i=0; i!=n; ++i)
         osstream<<export_transformer_data(transformers[i]);
@@ -1582,7 +1582,7 @@ string PSSE_IMEXPORTER::export_all_area_data() const
     vector<AREA*> areas;
     unsigned int n = areas_number.size();
     for(unsigned int i=0; i!=n; ++i)
-        areas.push_back(psdb.get_area(areas_number[i]));
+        areas.push_back(psdb.get_pointer_to_area(areas_number[i]));
 
     for(unsigned int i=0; i!=n; ++i)
         osstream<<export_area_data(areas[i]);
@@ -1632,7 +1632,7 @@ string PSSE_IMEXPORTER::export_all_lcc_hvdc2t_data() const
     vector<LCC_HVDC2T*> hvdcs;
     unsigned int n = dids.size();
     for(unsigned int i=0; i!=n; ++i)
-        hvdcs.push_back(psdb.get_lcc_hvdc2t(dids[i]));
+        hvdcs.push_back(psdb.get_pointer_to_lcc_hvdc2t(dids[i]));
 
     for(unsigned int i=0; i!=n; ++i)
         osstream<<export_lcc_hvdc2t_data(hvdcs[i]);
@@ -1874,7 +1874,7 @@ string PSSE_IMEXPORTER::export_all_zone_data() const
     vector<ZONE*> zones;
     unsigned int n = zones_number.size();
     for(unsigned int i=0; i!=n; ++i)
-        zones.push_back(psdb.get_zone(zones_number[i]));
+        zones.push_back(psdb.get_pointer_to_zone(zones_number[i]));
 
     for(unsigned int i=0; i!=n; ++i)
         osstream<<export_zone_data(zones[i]);
@@ -1911,7 +1911,7 @@ string PSSE_IMEXPORTER::export_all_owner_data() const
     vector<OWNER*> owners;
     unsigned int n = owners_number.size();
     for(unsigned int i=0; i!=n; ++i)
-        owners.push_back(psdb.get_owner(owners_number[i]));
+        owners.push_back(psdb.get_pointer_to_owner(owners_number[i]));
 
     for(unsigned int i=0; i!=n; ++i)
         osstream<<export_owner_data(owners[i]);

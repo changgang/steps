@@ -310,11 +310,11 @@ void POWERFLOW_SOLVER_TEST::test_solve_IEEE_9_bus_model_with_full_Newton_Raphson
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    TRANSFORMER* trans = psdb.get_transformer(did);
+    TRANSFORMER* trans = psdb.get_pointer_to_transformer(did);
 
     trans->set_winding_angle_shift_in_deg(PRIMARY_SIDE, 180.0);
 
-    BUS* bus = psdb.get_bus(2);
+    BUS* bus = psdb.get_pointer_to_ac_bus(2);
     bus->set_positive_sequence_angle_in_deg(180.0);
 
     powerflow_solver.solve_with_full_Newton_Raphson_solution();
@@ -332,13 +332,13 @@ void POWERFLOW_SOLVER_TEST::test_solve_IEEE_9_bus_model_with_full_Newton_Raphson
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    GENERATOR* gen = psdb.get_generator(did);
+    GENERATOR* gen = psdb.get_pointer_to_generator(did);
     gen->set_q_max_in_MVar(100.0);
     gen->set_q_min_in_MVar(100.0);
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     gen->set_q_max_in_MVar(100.0);
     gen->set_q_min_in_MVar(70.0);
 
@@ -403,7 +403,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_full_Ne
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
 
     line->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.0000001));
     line->set_line_positive_sequence_y_in_pu(0.0);
@@ -414,7 +414,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_full_Ne
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    line = psdb.get_ac_line(did);
+    line = psdb.get_pointer_to_ac_line(did);
 
     line->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.0000001));
     line->set_line_positive_sequence_y_in_pu(0.0);
@@ -547,13 +547,13 @@ void POWERFLOW_SOLVER_TEST::test_solve_IEEE_9_bus_model_with_fast_decoupled_solu
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    GENERATOR* gen = psdb.get_generator(did);
+    GENERATOR* gen = psdb.get_pointer_to_generator(did);
     gen->set_q_max_in_MVar(100.0);
     gen->set_q_min_in_MVar(100.0);
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     gen->set_q_max_in_MVar(100.0);
     gen->set_q_min_in_MVar(70.0);
 
@@ -621,7 +621,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_de
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
 
     line->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.0000001));
     line->set_line_positive_sequence_y_in_pu(0.0);
@@ -632,7 +632,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_de
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
 
-    line = psdb.get_ac_line(did);
+    line = psdb.get_pointer_to_ac_line(did);
     line->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.0000001));
     line->set_line_positive_sequence_y_in_pu(0.0);
 
@@ -780,13 +780,13 @@ void POWERFLOW_SOLVER_TEST::check_Arthur_R_Bergen_3_bus_model_powerflow_result()
     double veps = 1e-5, peps = 1e-3;
 
     BUS* bus;
-    bus = psdb.get_bus(1);
+    bus = psdb.get_pointer_to_ac_bus(1);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.0)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-0.0)<veps);
-    bus = psdb.get_bus(2);
+    bus = psdb.get_pointer_to_ac_bus(2);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.05)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-3.000597))<veps);
-    bus = psdb.get_bus(3);
+    bus = psdb.get_pointer_to_ac_bus(3);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-0.949475)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-10.00501))<veps);
 
@@ -798,7 +798,7 @@ void POWERFLOW_SOLVER_TEST::check_Arthur_R_Bergen_3_bus_model_powerflow_result()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-219.92)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-15.40361)<peps);
     cout<<"gen 1 of Arthur system: p = "<<gen->get_p_generation_in_MW()<<", q = "<<gen->get_q_generation_in_MVar()<<endl;
@@ -807,7 +807,7 @@ void POWERFLOW_SOLVER_TEST::check_Arthur_R_Bergen_3_bus_model_powerflow_result()
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-66.61)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-165.8286)<peps);
     cout<<"gen 2 of Arthur system: p = "<<gen->get_p_generation_in_MW()<<", q = "<<gen->get_q_generation_in_MVar()<<endl;
@@ -820,31 +820,31 @@ void POWERFLOW_SOLVER_TEST::check_IEEE_9_bus_model_powerflow_result()
     double veps = 1e-5, peps = 1e-3;
 
     BUS* bus;
-    bus = psdb.get_bus(1);
+    bus = psdb.get_pointer_to_ac_bus(1);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.04)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-0.0)<veps);
-    bus = psdb.get_bus(2);
+    bus = psdb.get_pointer_to_ac_bus(2);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.025)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-9.280008)<veps);
-    bus = psdb.get_bus(3);
+    bus = psdb.get_pointer_to_ac_bus(3);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.025)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-4.664753)<veps);
-    bus = psdb.get_bus(4);
+    bus = psdb.get_pointer_to_ac_bus(4);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.025788)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-2.216789))<veps);
-    bus = psdb.get_bus(5);
+    bus = psdb.get_pointer_to_ac_bus(5);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-0.9956308)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-3.988807))<veps);
-    bus = psdb.get_bus(6);
+    bus = psdb.get_pointer_to_ac_bus(6);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.012654)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-3.687397))<veps);
-    bus = psdb.get_bus(7);
+    bus = psdb.get_pointer_to_ac_bus(7);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.025769)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-3.719703)<veps);
-    bus = psdb.get_bus(8);
+    bus = psdb.get_pointer_to_ac_bus(8);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.015883)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-0.7275366)<veps);
-    bus = psdb.get_bus(9);
+    bus = psdb.get_pointer_to_ac_bus(9);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.032353)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-1.966717)<veps);
 
@@ -856,7 +856,7 @@ void POWERFLOW_SOLVER_TEST::check_IEEE_9_bus_model_powerflow_result()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-71.64101)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-27.04592)<peps);
 
@@ -864,7 +864,7 @@ void POWERFLOW_SOLVER_TEST::check_IEEE_9_bus_model_powerflow_result()
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-163.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-6.653666)<peps);
 
@@ -872,7 +872,7 @@ void POWERFLOW_SOLVER_TEST::check_IEEE_9_bus_model_powerflow_result()
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-85.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-(-10.8597))<peps);
 }
@@ -884,121 +884,121 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     double veps = 1e-5, peps = 1e-3;
 
     BUS* bus;
-    bus = psdb.get_bus(1);
+    bus = psdb.get_pointer_to_ac_bus(1);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.047543)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-9.570696))<veps);
-    bus = psdb.get_bus(2);
+    bus = psdb.get_pointer_to_ac_bus(2);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.048955)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-7.011069))<veps);
-    bus = psdb.get_bus(3);
+    bus = psdb.get_pointer_to_ac_bus(3);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.030421)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-9.858091))<veps);
-    bus = psdb.get_bus(4);
+    bus = psdb.get_pointer_to_ac_bus(4);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.003808)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-10.6546))<veps);
-    bus = psdb.get_bus(5);
+    bus = psdb.get_pointer_to_ac_bus(5);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.005019)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-9.468711))<veps);
-    bus = psdb.get_bus(6);
+    bus = psdb.get_pointer_to_ac_bus(6);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.007365)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-8.766821))<veps);
-    bus = psdb.get_bus(7);
+    bus = psdb.get_pointer_to_ac_bus(7);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-0.9966974)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-10.970223))<veps);
-    bus = psdb.get_bus(8);
+    bus = psdb.get_pointer_to_ac_bus(8);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-0.995726)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-11.47624))<veps);
-    bus = psdb.get_bus(9);
+    bus = psdb.get_pointer_to_ac_bus(9);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.028092)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-11.29968))<veps);
-    bus = psdb.get_bus(10);
+    bus = psdb.get_pointer_to_ac_bus(10);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.017024)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-6.381594))<veps);
-    bus = psdb.get_bus(11);
+    bus = psdb.get_pointer_to_ac_bus(11);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.01253)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-7.195228))<veps);
-    bus = psdb.get_bus(12);
+    bus = psdb.get_pointer_to_ac_bus(12);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.000001)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-7.210636))<veps);
-    bus = psdb.get_bus(13);
+    bus = psdb.get_pointer_to_ac_bus(13);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.014192)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-7.0959))<veps);
-    bus = psdb.get_bus(14);
+    bus = psdb.get_pointer_to_ac_bus(14);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.011731)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-8.76476))<veps);
-    bus = psdb.get_bus(15);
+    bus = psdb.get_pointer_to_ac_bus(15);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.015785)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-9.180734))<veps);
-    bus = psdb.get_bus(16);
+    bus = psdb.get_pointer_to_ac_bus(16);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.032254)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-7.77659))<veps);
-    bus = psdb.get_bus(17);
+    bus = psdb.get_pointer_to_ac_bus(17);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.033955)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-8.774818))<veps);
-    bus = psdb.get_bus(18);
+    bus = psdb.get_pointer_to_ac_bus(18);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.031295)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-9.615593))<veps);
-    bus = psdb.get_bus(19);
+    bus = psdb.get_pointer_to_ac_bus(19);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.050009)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-3.152467))<veps);
-    bus = psdb.get_bus(20);
+    bus = psdb.get_pointer_to_ac_bus(20);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-0.9909571)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-4.563902))<veps);
-    bus = psdb.get_bus(21);
+    bus = psdb.get_pointer_to_ac_bus(21);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.032098)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-5.37102))<veps);
-    bus = psdb.get_bus(22);
+    bus = psdb.get_pointer_to_ac_bus(22);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.049976)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-0.9239033))<veps);
-    bus = psdb.get_bus(23);
+    bus = psdb.get_pointer_to_ac_bus(23);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.044976)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-1.122123))<veps);
-    bus = psdb.get_bus(24);
+    bus = psdb.get_pointer_to_ac_bus(24);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.037749)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-7.656979))<veps);
-    bus = psdb.get_bus(25);
+    bus = psdb.get_pointer_to_ac_bus(25);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.05752)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-5.649259))<veps);
-    bus = psdb.get_bus(26);
+    bus = psdb.get_pointer_to_ac_bus(26);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.052155)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-6.905797))<veps);
-    bus = psdb.get_bus(27);
+    bus = psdb.get_pointer_to_ac_bus(27);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.037948)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-8.917284))<veps);
-    bus = psdb.get_bus(28);
+    bus = psdb.get_pointer_to_ac_bus(28);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.050164)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-3.394192))<veps);
-    bus = psdb.get_bus(29);
+    bus = psdb.get_pointer_to_ac_bus(29);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.049971)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-0.6350747))<veps);
-    bus = psdb.get_bus(30);
+    bus = psdb.get_pointer_to_ac_bus(30);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.0475)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-4.591804))<veps);
-    bus = psdb.get_bus(31);
+    bus = psdb.get_pointer_to_ac_bus(31);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-0.982)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-0.0)<veps);
-    bus = psdb.get_bus(32);
+    bus = psdb.get_pointer_to_ac_bus(32);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-0.9831)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-1.615497)<veps);
-    bus = psdb.get_bus(33);
+    bus = psdb.get_pointer_to_ac_bus(33);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-0.9972)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-2.064657)<veps);
-    bus = psdb.get_bus(34);
+    bus = psdb.get_pointer_to_ac_bus(34);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.0123)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-0.6262833)<veps);
-    bus = psdb.get_bus(35);
+    bus = psdb.get_pointer_to_ac_bus(35);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.0493)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-4.036989)<veps);
-    bus = psdb.get_bus(36);
+    bus = psdb.get_pointer_to_ac_bus(36);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.0635)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-6.729544)<veps);
-    bus = psdb.get_bus(37);
+    bus = psdb.get_pointer_to_ac_bus(37);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.0278)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-1.135481)<veps);
-    bus = psdb.get_bus(38);
+    bus = psdb.get_pointer_to_ac_bus(38);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.0265)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-6.428187)<veps);
-    bus = psdb.get_bus(39);
+    bus = psdb.get_pointer_to_ac_bus(39);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.03)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-11.10825))<veps);
 
@@ -1010,7 +1010,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.append_bus(30);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-250.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-144.9194)<peps);
 
@@ -1018,7 +1018,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.append_bus(31);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-572.835)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-207.0365)<peps);
 
@@ -1026,7 +1026,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.append_bus(32);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-650.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-205.7312)<peps);
 
@@ -1034,7 +1034,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.append_bus(33);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-632.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-108.9362)<peps);
 
@@ -1042,7 +1042,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.append_bus(34);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-508.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-166.9861)<peps);
 
@@ -1050,7 +1050,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.append_bus(35);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-650.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-211.1118)<peps);
 
@@ -1058,7 +1058,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.append_bus(36);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-560.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-100.4377)<peps);
 
@@ -1066,7 +1066,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.append_bus(37);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-540.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-0.64692)<peps);
 
@@ -1074,7 +1074,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.append_bus(38);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-830.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-22.65877)<peps);
 
@@ -1082,7 +1082,7 @@ void POWERFLOW_SOLVER_TEST::check_ISO_New_England_39_bus_model_powerflow_result(
     terminal.append_bus(39);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-1000.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-87.88259)<peps);
 }
@@ -1094,58 +1094,58 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     double veps = 1e-5, peps = 1e-3;
 
     BUS* bus;
-    bus = psdb.get_bus(1);
+    bus = psdb.get_pointer_to_ac_bus(1);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.01107)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-4.961183)<veps);
-    bus = psdb.get_bus(2);
+    bus = psdb.get_pointer_to_ac_bus(2);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.006724)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-4.168255)<veps);
-    bus = psdb.get_bus(3);
+    bus = psdb.get_pointer_to_ac_bus(3);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.046986)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-4.116957)<veps);
-    bus = psdb.get_bus(11);
+    bus = psdb.get_pointer_to_ac_bus(11);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-0.9841065)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-6.493938)<veps);
-    bus = psdb.get_bus(12);
+    bus = psdb.get_pointer_to_ac_bus(12);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.02509)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-5.997)<veps);
-    bus = psdb.get_bus(13);
+    bus = psdb.get_pointer_to_ac_bus(13);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.04576)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-10.72433)<veps);
-    bus = psdb.get_bus(21);
+    bus = psdb.get_pointer_to_ac_bus(21);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-0.98)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-13.0313)<veps);
-    bus = psdb.get_bus(22);
+    bus = psdb.get_pointer_to_ac_bus(22);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-0.99)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-13.26405)<veps);
-    bus = psdb.get_bus(23);
+    bus = psdb.get_pointer_to_ac_bus(23);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.0066)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-11.69455)<veps);
-    bus = psdb.get_bus(51);
+    bus = psdb.get_pointer_to_ac_bus(51);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.04)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-8.822804)<veps);
-    bus = psdb.get_bus(52);
+    bus = psdb.get_pointer_to_ac_bus(52);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.040545)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-19.85086)<veps);
-    bus = psdb.get_bus(53);
+    bus = psdb.get_pointer_to_ac_bus(53);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.03)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-18.43824)<veps);
-    bus = psdb.get_bus(101);
+    bus = psdb.get_pointer_to_ac_bus(101);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.05)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-25.10549)<veps);
-    bus = psdb.get_bus(102);
+    bus = psdb.get_pointer_to_ac_bus(102);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.021117)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-26.24741)<veps);
-    bus = psdb.get_bus(103);
+    bus = psdb.get_pointer_to_ac_bus(103);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.011717)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-26.05651)<veps);
-    bus = psdb.get_bus(131);
+    bus = psdb.get_pointer_to_ac_bus(131);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.026067)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-13.3688)<veps);
-    bus = psdb.get_bus(132);
+    bus = psdb.get_pointer_to_ac_bus(132);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.039277)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-19.53944)<veps);
-    bus = psdb.get_bus(133);
+    bus = psdb.get_pointer_to_ac_bus(133);
     TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.02)<veps);
     TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-34.30826)<veps);
 
@@ -1157,7 +1157,7 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     terminal.append_bus(21);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-650.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-217.7195)<peps);
 
@@ -1165,7 +1165,7 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     terminal.append_bus(27);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-540.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-44.97655)<peps);
 
@@ -1173,7 +1173,7 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     terminal.append_bus(47);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-400.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-(-3.853355))<peps);
 
@@ -1181,7 +1181,7 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     terminal.append_bus(60);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-410.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-96.04207)<peps);
 
@@ -1189,7 +1189,7 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     terminal.append_bus(78);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-461.3814)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-90.81911)<peps);
 
@@ -1197,7 +1197,7 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     terminal.append_bus(101);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-1200.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-164.5751)<peps);
 
@@ -1205,7 +1205,7 @@ void POWERFLOW_SOLVER_TEST::check_NPCC_140_bus_model_powerflow_result()
     terminal.append_bus(139);
     did.set_device_terminal(terminal);
     did.set_device_identifier_index(get_index_of_string("1"));
-    gen = psdb.get_generator(did);
+    gen = psdb.get_pointer_to_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-115.0)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-18.48766)<peps);
 }

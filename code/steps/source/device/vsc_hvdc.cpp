@@ -320,7 +320,7 @@ void VSC_HVDC::set_converter_ac_bus(const unsigned int index, const unsigned int
         if(psdb.is_bus_exist(bus))
         {
             converters[index].converter_bus = bus;
-            converters[index].converter_busptr = psdb.get_bus(bus);
+            converters[index].converter_busptr = psdb.get_pointer_to_ac_bus(bus);
         }
         else
         {
@@ -2082,7 +2082,7 @@ bool VSC_HVDC::is_in_area(unsigned int area) const
     bool in_area = false;
     for(unsigned int i=0; i!=n_converter; ++i)
     {
-        BUS* busptr = psdb.get_bus(get_converter_ac_bus(i));
+        BUS* busptr = psdb.get_pointer_to_ac_bus(get_converter_ac_bus(i));
         if(busptr!=NULL)
             in_area = in_area or busptr->is_in_area(area);
         if(in_area)
@@ -2099,7 +2099,7 @@ bool VSC_HVDC::is_in_zone(unsigned int zone) const
     bool in_zone = false;
     for(unsigned int i=0; i!=n_converter; ++i)
     {
-        BUS* busptr = psdb.get_bus(get_converter_ac_bus(i));
+        BUS* busptr = psdb.get_pointer_to_ac_bus(get_converter_ac_bus(i));
         if(busptr!=NULL)
             in_zone = in_zone or busptr->is_in_zone(zone);
         if(in_zone)
@@ -3760,14 +3760,14 @@ void VSC_HVDC::export_dc_bus_voltage_with_network_ordering()
 complex<double> VSC_HVDC::get_converter_ac_voltage_in_pu_with_ac_bus_number(unsigned int bus)
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
     return busptr->get_positive_sequence_complex_voltage_in_pu();
 }
 
 complex<double> VSC_HVDC::get_converter_ac_voltage_in_kV_with_ac_bus_number(unsigned int bus)
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    BUS* busptr = psdb.get_bus(bus);
+    BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
     return busptr->get_positive_sequence_complex_voltage_in_kV();
 }
 

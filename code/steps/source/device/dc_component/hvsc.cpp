@@ -146,7 +146,7 @@ void HVSC::set_converter_ac_bus(const unsigned int acbus)
     converter_ac_bus = acbus;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    converter_busptr = psdb.get_bus(acbus);
+    converter_busptr = psdb.get_pointer_to_ac_bus(acbus);
 }
 
 void HVSC::set_converter_station_number(const unsigned int station)
@@ -764,7 +764,7 @@ complex<double> HVSC::get_converter_initial_ac_current_in_pu_on_system_base_in_x
     complex<double> It = get_converter_initial_ac_current_in_kA_in_xy_axis();
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* bus_ptr = psdb.get_bus(get_converter_ac_bus());
+    BUS* bus_ptr = psdb.get_pointer_to_ac_bus(get_converter_ac_bus());
     BUS& bus = *bus_ptr;
 
     double Sbase = psdb.get_system_base_power_in_MVA();
@@ -780,7 +780,7 @@ complex<double> HVSC::get_converter_initial_ac_current_in_pu_on_converter_base_i
     complex<double> It = get_converter_initial_ac_current_in_kA_in_xy_axis();
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* bus_ptr = psdb.get_bus(get_converter_ac_bus());
+    BUS* bus_ptr = psdb.get_pointer_to_ac_bus(get_converter_ac_bus());
     BUS& bus = *bus_ptr;
 
     double Sbase = get_converter_rated_capacity_in_MVA();
@@ -821,7 +821,7 @@ double HVSC::get_initial_pll_angle_in_rad()
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* bus_ptr = psdb.get_bus(get_converter_ac_bus());
+    BUS* bus_ptr = psdb.get_pointer_to_ac_bus(get_converter_ac_bus());
     BUS& bus = *bus_ptr;
     double angle_in_rad = bus.get_positive_sequence_angle_in_rad();
     return angle_in_rad;

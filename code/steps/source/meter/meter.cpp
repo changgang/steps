@@ -623,44 +623,44 @@ void METER::set_device_pointer(DEVICE_ID device_id)
         {
             TERMINAL terminal = device_id.get_device_terminal();
             vector<unsigned int> tbuses = terminal.get_buses();
-            deviceptr = (DEVICE*) psdb.get_bus(tbuses[0]);
+            deviceptr = (DEVICE*) psdb.get_pointer_to_ac_bus(tbuses[0]);
             break;
         }
         case STEPS_GENERATOR:
-            deviceptr = (DEVICE*) psdb.get_generator(device_id);
+            deviceptr = (DEVICE*) psdb.get_pointer_to_generator(device_id);
             break;
         case STEPS_WT_GENERATOR:
-            deviceptr = (DEVICE*) psdb.get_wt_generator(device_id);
+            deviceptr = (DEVICE*) psdb.get_pointer_to_wt_generator(device_id);
             break;
         case STEPS_PV_UNIT:
-            deviceptr = (DEVICE*) psdb.get_pv_unit(device_id);
+            deviceptr = (DEVICE*) psdb.get_pointer_to_pv_unit(device_id);
             break;
         case STEPS_ENERGY_STORAGE:
-            deviceptr = (DEVICE*) psdb.get_energy_storage(device_id);
+            deviceptr = (DEVICE*) psdb.get_pointer_to_energy_storage(device_id);
             break;
         case STEPS_SV_SOURCE:
-            deviceptr = (DEVICE*) psdb.get_sv_source(device_id);
+            deviceptr = (DEVICE*) psdb.get_pointer_to_sv_source(device_id);
             break;
         case STEPS_LOAD:
-            deviceptr = (DEVICE*) psdb.get_load(device_id);
+            deviceptr = (DEVICE*) psdb.get_pointer_to_load(device_id);
             break;
         case STEPS_AC_LINE:
-            deviceptr = (DEVICE*) psdb.get_ac_line(device_id);
+            deviceptr = (DEVICE*) psdb.get_pointer_to_ac_line(device_id);
             break;
         case STEPS_TRANSFORMER:
-            deviceptr = (DEVICE*) psdb.get_transformer(device_id);
+            deviceptr = (DEVICE*) psdb.get_pointer_to_transformer(device_id);
             break;
         case STEPS_LCC_HVDC2T:
-            deviceptr = (DEVICE*) psdb.get_lcc_hvdc2t(device_id);
+            deviceptr = (DEVICE*) psdb.get_pointer_to_lcc_hvdc2t(device_id);
             break;
         case STEPS_VSC_HVDC:
-            deviceptr = (DEVICE*) psdb.get_vsc_hvdc(device_id);
+            deviceptr = (DEVICE*) psdb.get_pointer_to_vsc_hvdc(device_id);
             break;
         case STEPS_HYBRID_DC:
-            deviceptr = (DEVICE*) psdb.get_mt_hvdc(device_id);
+            deviceptr = (DEVICE*) psdb.get_pointer_to_mt_hvdc(device_id);
             break;
         case STEPS_EQUIVALENT_DEVICE:
-            deviceptr = (DEVICE*) psdb.get_equivalent_device(device_id);
+            deviceptr = (DEVICE*) psdb.get_pointer_to_equivalent_device(device_id);
             break;
         default:
             break;

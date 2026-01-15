@@ -11,7 +11,7 @@ int api_get_vsc_hvdc_integer_data(char* vsc_name, char* device_type, char* param
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(vsc_name);
     DEVICE_ID did = vsc_hvdc->get_device_id();
     if(vsc_hvdc != NULL)
     {
@@ -118,7 +118,7 @@ void api_set_vsc_hvdc_integer_data(char* vsc_name, char* device_type, char* para
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(vsc_name);
     DEVICE_ID did = vsc_hvdc->get_device_id();
     if(vsc_hvdc != NULL)
     {
@@ -251,7 +251,7 @@ double api_get_vsc_hvdc_float_data(char* vsc_name, char* device_type, char* para
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(vsc_name);
     DEVICE_ID did = vsc_hvdc->get_device_id();
     if(vsc_hvdc != NULL)
     {
@@ -441,7 +441,7 @@ void api_set_vsc_hvdc_float_data(char* vsc_name, char* device_type, char* parame
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(vsc_name);
     DEVICE_ID did = vsc_hvdc->get_device_id();
     if(vsc_hvdc != NULL)
     {
@@ -638,7 +638,7 @@ const char* api_get_vsc_hvdc_string_data(char* vsc_name, char* device_type, char
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(vsc_name);
     DEVICE_ID did = vsc_hvdc->get_device_id();
     if(vsc_hvdc != NULL)
     {
@@ -697,7 +697,7 @@ void api_set_vsc_hvdc_string_data(char* vsc_name, char* device_type, char* param
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(vsc_name);
     DEVICE_ID did = vsc_hvdc->get_device_id();
     if(vsc_hvdc != NULL)
     {
@@ -740,7 +740,7 @@ bool api_get_vsc_hvdc_boolean_data(char* vsc_name, char* device_type, char* para
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(vsc_name);
     DEVICE_ID did = vsc_hvdc->get_device_id();
     if(vsc_hvdc != NULL)
     {
@@ -777,7 +777,7 @@ void api_set_vsc_hvdc_boolean_data(char* vsc_name, char* device_type, char* para
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(vsc_name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(vsc_name);
     DEVICE_ID did = vsc_hvdc->get_device_id();
     if(vsc_hvdc != NULL)
     {

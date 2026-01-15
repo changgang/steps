@@ -304,7 +304,7 @@ void MODEL::set_device_id(DEVICE_ID did)
         toolkit->show_information_with_leading_time_stamp(osstream);
     }*/
 
-    device_pointer = psdb.get_nonbus_device(did);
+    device_pointer = psdb.get_pointer_to_nonbus_device(did);
 
     if(device_pointer!=NULL)
     {

@@ -11,7 +11,7 @@ const char* api_get_vsc_hvdc_related_model_name(char* name, char* model_type, un
 	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(name);
     if(vsc_hvdc==NULL)
     {
         show_vsc_hvdc_not_exist_with_api(name, __FUNCTION__);
@@ -42,7 +42,7 @@ double api_get_vsc_hvdc_related_model_float_parameter(char* name, char* model_ty
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(name);
     if(vsc_hvdc==NULL)
     {
         show_vsc_hvdc_not_exist_with_api(name, __FUNCTION__);
@@ -79,7 +79,7 @@ void api_set_vsc_hvdc_related_model_float_parameter(char* name, char* model_type
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(name);
     if(vsc_hvdc==NULL)
     {
         show_vsc_hvdc_not_exist_with_api(name, __FUNCTION__);
@@ -112,7 +112,7 @@ unsigned int api_get_vsc_hvdc_related_model_float_parameter_count(char* name, ch
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(name);
     if(vsc_hvdc==NULL)
     {
         show_vsc_hvdc_not_exist_with_api(name, __FUNCTION__);
@@ -146,7 +146,7 @@ const char* api_get_vsc_hvdc_related_model_float_parameter_name(char* name, char
     string par_name = "";
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    VSC_HVDC* vsc_hvdc = psdb.get_vsc_hvdc(name);
+    VSC_HVDC* vsc_hvdc = psdb.get_pointer_to_vsc_hvdc(name);
     if(vsc_hvdc==NULL)
     {
         show_vsc_hvdc_not_exist_with_api(name, __FUNCTION__);

@@ -699,7 +699,7 @@ void BPA_IMEXPORTER::set_area_swing_bus()
             string area_name = data.substr(3,10);
 
             unsigned int area_number = psdb.area_name2area_number(area_name);
-            AREA* area = psdb.get_area(area_number);
+            AREA* area = psdb.get_pointer_to_area(area_number);
             if(area !=NULL)
             {
                 string slack_bus_name = data.substr(13, 8);
@@ -780,7 +780,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
             unsigned int owner_number = psdb.owner_name2owner_number(owner_name);
             load.set_owner_number(owner_number);
 
-            BUS* bus = psdb.get_bus(bus_number);
+            BUS* bus = psdb.get_pointer_to_ac_bus(bus_number);
             if(bus==NULL)
                 continue;
 
@@ -831,7 +831,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
             did.set_device_terminal(terminal);
             did.set_device_identifier_index(get_index_of_string("1"));
 
-            LOAD* load = psdb.get_load(did);
+            LOAD* load = psdb.get_pointer_to_load(did);
             if(load==NULL)
                 continue;
 
@@ -1094,8 +1094,8 @@ void BPA_IMEXPORTER::load_ac_line_data()
                     owner = line.get_owner_of_index(0);
                     if(owner!=0)
                     {
-                        BUS* ibus_ptr = psdb.get_bus(ibus);
-                        BUS* jbus_ptr = psdb.get_bus(jbus);
+                        BUS* ibus_ptr = psdb.get_pointer_to_ac_bus(ibus);
+                        BUS* jbus_ptr = psdb.get_pointer_to_ac_bus(jbus);
                         if(ibus_ptr!=NULL and jbus_ptr!=NULL)
                         {
                             unsigned int iowner = ibus_ptr->get_owner_number();
@@ -1210,8 +1210,8 @@ void BPA_IMEXPORTER::load_ac_line_data()
                     owner = line.get_owner_of_index(0);
                     if(owner!=0)
                     {
-                        BUS* ibus_ptr = psdb.get_bus(ibus);
-                        BUS* jbus_ptr = psdb.get_bus(jbus);
+                        BUS* ibus_ptr = psdb.get_pointer_to_ac_bus(ibus);
+                        BUS* jbus_ptr = psdb.get_pointer_to_ac_bus(jbus);
                         if(ibus_ptr!=NULL and jbus_ptr!=NULL)
                         {
                             unsigned int iowner = ibus_ptr->get_owner_number();
@@ -1276,7 +1276,7 @@ void BPA_IMEXPORTER::load_ac_line_data()
             did.set_device_terminal(terminal);
             did.set_device_identifier_index(get_index_of_string(identifier));
 
-            AC_LINE* line = psdb.get_ac_line(did);
+            AC_LINE* line = psdb.get_pointer_to_ac_line(did);
             if(line==NULL)
                 continue;
 
@@ -1384,8 +1384,8 @@ void BPA_IMEXPORTER::load_transformer_data()
                     owner = trans.get_owner_of_index(0);
                     if(owner!=0)
                     {
-                        BUS* primary_bus_ptr = psdb.get_bus(primary_bus);
-                        BUS* secondary_bus_ptr = psdb.get_bus(secondary_bus);
+                        BUS* primary_bus_ptr = psdb.get_pointer_to_ac_bus(primary_bus);
+                        BUS* secondary_bus_ptr = psdb.get_pointer_to_ac_bus(secondary_bus);
                         if(primary_bus_ptr!=NULL and secondary_bus_ptr!=NULL)
                         {
                             unsigned int primary_bus_owner = primary_bus_ptr->get_owner_number();
@@ -1496,7 +1496,7 @@ void BPA_IMEXPORTER::load_transformer_data()
             did.set_device_terminal(terminal);
             did.set_device_identifier_index(get_index_of_string(identifier));
 
-            TRANSFORMER* trans = psdb.get_transformer(did);
+            TRANSFORMER* trans = psdb.get_pointer_to_transformer(did);
             if(trans==NULL)
                 continue;
 
@@ -1700,7 +1700,7 @@ void BPA_IMEXPORTER::load_lcc_hvdc2t_data()
             terminal.append_bus(inverter_grid_side_bus);
             did.set_device_terminal(terminal);
 
-            LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(did);
+            LCC_HVDC2T* hvdc_ptr = psdb.get_pointer_to_lcc_hvdc2t(did);
 
             string bus_names_of_two_converters = rectifier_grid_side_bus_name+","+inverter_grid_side_bus_name;
             if( hvdc_ptr != NULL)
@@ -1817,7 +1817,7 @@ void BPA_IMEXPORTER::load_lcc_hvdc2t_data()
             terminal.append_bus(inverter_grid_side_bus);
             did.set_device_terminal(terminal);
 
-            LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(did);   //
+            LCC_HVDC2T* hvdc_ptr = psdb.get_pointer_to_lcc_hvdc2t(did);   //
 
             if(hvdc_ptr == NULL)
                 continue;
@@ -1940,7 +1940,7 @@ void BPA_IMEXPORTER::load_lcc_hvdc2t_data()
                 terminal.append_bus(inverter_grid_side_bus);
                 did.set_device_terminal(terminal);
 
-                LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(did);
+                LCC_HVDC2T* hvdc_ptr = psdb.get_pointer_to_lcc_hvdc2t(did);
 
                 if( hvdc_ptr==NULL)
                     continue;
@@ -2043,7 +2043,7 @@ void BPA_IMEXPORTER::load_lcc_hvdc2t_data()
                 terminal.append_bus(inverter_grid_side_bus);
                 did.set_device_terminal(terminal);
 
-                LCC_HVDC2T* hvdc_ptr = psdb.get_lcc_hvdc2t(did);
+                LCC_HVDC2T* hvdc_ptr = psdb.get_pointer_to_lcc_hvdc2t(did);
 
                 if(hvdc_ptr==NULL)
                     continue;
@@ -2437,7 +2437,7 @@ string BPA_IMEXPORTER::export_bus_data() const
         osstream<<" ";
 
         string owner_name = "";
-        OWNER* owner = psdb.get_owner(owner_number);
+        OWNER* owner = psdb.get_pointer_to_owner(owner_number);
         if(owner!=NULL)
             owner_name = owner->get_owner_name();
 
@@ -2446,7 +2446,7 @@ string BPA_IMEXPORTER::export_bus_data() const
         osstream<<convert_data_into_bpa_format(base_voltage,"F4.0");
 
         string zone_name = "";
-        ZONE* zone = psdb.get_zone(zone_number);
+        ZONE* zone = psdb.get_pointer_to_zone(zone_number);
         if(zone!=NULL)
             zone_name = zone->get_zone_name();
 
@@ -2571,11 +2571,11 @@ string BPA_IMEXPORTER::export_ac_line_data() const
         double y_shunt_receiving = line->get_shunt_positive_sequence_y_at_receiving_side_in_pu().imag();
 
         string owner_name = "";
-        OWNER* owner = psdb.get_owner(owner_number);
+        OWNER* owner = psdb.get_pointer_to_owner(owner_number);
         if(owner!=NULL)
             owner_name = owner->get_owner_name();
 
-        BUS* bus = psdb.get_bus(sending_side_bus_number);
+        BUS* bus = psdb.get_pointer_to_ac_bus(sending_side_bus_number);
         if(bus==NULL)
             return "";
 
@@ -2586,7 +2586,7 @@ string BPA_IMEXPORTER::export_ac_line_data() const
         if(meter_end_bus==receiving_side_bus_number)
             meter_end = 2;
 
-        bus = psdb.get_bus(receiving_side_bus_number);
+        bus = psdb.get_pointer_to_ac_bus(receiving_side_bus_number);
         if(bus==NULL)
             return "";
 
@@ -3080,8 +3080,8 @@ string BPA_IMEXPORTER::export_lcc_hvdc2t_data() const
         unsigned int rectifier_grid_bus_number=hvdc->get_converter_bus(RECTIFIER);
         unsigned int inverter_grid_bus_number=hvdc->get_converter_bus(INVERTER);
 
-        BUS* rectifier_grid_bus = psdb.get_bus(rectifier_grid_bus_number);
-        BUS* inverter_grid_bus = psdb.get_bus(inverter_grid_bus_number);
+        BUS* rectifier_grid_bus = psdb.get_pointer_to_ac_bus(rectifier_grid_bus_number);
+        BUS* inverter_grid_bus = psdb.get_pointer_to_ac_bus(inverter_grid_bus_number);
 
         if(rectifier_grid_bus==NULL||inverter_grid_bus==NULL)
             continue;

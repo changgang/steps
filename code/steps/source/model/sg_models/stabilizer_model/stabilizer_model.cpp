@@ -233,7 +233,7 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(unsigned int si
             }
             case 2:
             {
-                BUS* busptr = psdb.get_bus(bus);
+                BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
                 if(busptr!=NULL)
                 {
                     DEVICE_ID did = busptr->get_device_id();
@@ -268,7 +268,7 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(unsigned int si
             }
             case 5:
             {
-                BUS* busptr = psdb.get_bus(bus);
+                BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
                 if(busptr!=NULL)
                 {
                     DEVICE_ID did = busptr->get_device_id();
@@ -279,7 +279,7 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(unsigned int si
             }
             case 6:
             {
-                BUS* busptr = psdb.get_bus(bus);
+                BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
                 if(busptr!=NULL)
                 {
                     DEVICE_ID did = busptr->get_device_id();
@@ -323,7 +323,7 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_device_id(unsigned 
             case 4:
             case 7:
             {
-                GENERATOR* gen = psdb.get_generator(did);
+                GENERATOR* gen = psdb.get_pointer_to_generator(did);
                 if(gen!=NULL)
                 {
                     signal.set_device_id(did);
@@ -338,7 +338,7 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_device_id(unsigned 
                 TERMINAL terminal= did.get_device_terminal();
                 vector<unsigned int> buses = terminal.get_buses();
                 unsigned int bus = buses[0];
-                BUS* busptr = psdb.get_bus(bus);
+                BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
                 if(busptr!=NULL)
                 {
                     DEVICE_ID did = busptr->get_device_id();

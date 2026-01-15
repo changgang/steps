@@ -188,7 +188,7 @@ bool PVGU1::setup_model_with_steps_string_vector(vector<string>& data)
             DEVICE_ID did = get_pv_unit_device_id(ibus, id);
             STEPS& toolkit = get_toolkit();
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            PV_UNIT* pv = psdb.get_pv_unit(did);
+            PV_UNIT* pv = psdb.get_pointer_to_pv_unit(did);
             if(pv!=NULL)
             {
                 set_converter_activer_current_command_T_in_s(t_IPcmd);

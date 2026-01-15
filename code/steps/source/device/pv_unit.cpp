@@ -605,7 +605,7 @@ complex<double> PV_UNIT::get_complex_dq_axis_current_in_pu_for_short_circuit_sol
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* busptr = psdb.get_bus(get_source_bus());
+    BUS* busptr = psdb.get_pointer_to_ac_bus(get_source_bus());
     double sbase = psdb.get_system_base_power_in_MVA();
 
     double K = get_support_coefficient_of_converter_reactive_current_during_LVRT();
@@ -655,7 +655,7 @@ complex<double> PV_UNIT::get_positive_sequence_complex_injection_current_in_pu_f
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* busptr = psdb.get_bus(get_source_bus());
+    BUS* busptr = psdb.get_pointer_to_ac_bus(get_source_bus());
     double deg_V = busptr->get_positive_sequence_angle_in_deg();
 
     complex<double> Idq = get_complex_dq_axis_current_in_pu_for_short_circuit_solver();
@@ -678,7 +678,7 @@ complex<double> PV_UNIT::get_negative_sequence_complex_injection_current_in_pu_f
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
-    BUS* busptr = psdb.get_bus(get_source_bus());
+    BUS* busptr = psdb.get_pointer_to_ac_bus(get_source_bus());
 
     double mbase = get_mbase_in_MVA();
     double In = mbase/sbase;

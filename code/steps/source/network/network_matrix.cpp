@@ -3633,7 +3633,7 @@ void NETWORK_MATRIX::add_const_speed_wtg_to_positve_sequence_network(const WT_GE
         complex<double> Z1 = wt_gen.get_motor_positive_sequence_impedance_in_pu();
         complex<double> z = Z1/mbase*sbase;
 
-        BUS* busptr = psdb.get_bus(bus);
+        BUS* busptr = psdb.get_pointer_to_ac_bus(bus);
         double v = busptr->get_positive_sequence_voltage_in_pu();
         complex<double> static_power = wt_gen.get_static_power_in_MVA();
 
@@ -5011,7 +5011,7 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
         for(unsigned int j=0; j!=nbus; ++j)
         {
             physical_bus = islands[i][j];
-            bus = psdb.get_bus(physical_bus);
+            bus = psdb.get_pointer_to_ac_bus(physical_bus);
             unsigned int area = bus->get_area_number();
             areas_in_island.insert(area);
         }
@@ -5032,7 +5032,7 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
         for(unsigned int j=0; j!=nbus; ++j)
         {
             physical_bus = islands[i][j];
-            bus = psdb.get_bus(physical_bus);
+            bus = psdb.get_pointer_to_ac_bus(physical_bus);
             unsigned int area = bus->get_area_number();
             osstream<<physical_bus<<" ["<<bus->get_bus_name()<<"  "<<bus->get_base_voltage_in_kV()<<"kV] AREA "<<area<<"["<<psdb.area_number2area_name(area)<<"]";
             if(bus->get_bus_type()==SLACK_TYPE)
@@ -5051,7 +5051,7 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
                 for(unsigned int j=0; j!=nbus; ++j)
                 {
                     physical_bus = islands[i][j];
-                    bus = psdb.get_bus(physical_bus);
+                    bus = psdb.get_pointer_to_ac_bus(physical_bus);
                     bus->set_bus_type(OUT_OF_SERVICE);
                 }
                 osstream<<"All buses in island "<<i<<" are set as OUT OF SERVICE.";
@@ -5084,7 +5084,7 @@ void NETWORK_MATRIX::save_network_islands_to_file(string filename)
             for(unsigned int j=0; j!=nbus; ++j)
             {
                 physical_bus = islands[i][j];
-                bus = psdb.get_bus(physical_bus);
+                bus = psdb.get_pointer_to_ac_bus(physical_bus);
                 unsigned int area = bus->get_area_number();
                 areas_in_island.insert(area);
             }
@@ -5103,7 +5103,7 @@ void NETWORK_MATRIX::save_network_islands_to_file(string filename)
             {
                 bus_count ++;
                 physical_bus = islands[i][j];
-                bus = psdb.get_bus(physical_bus);
+                bus = psdb.get_pointer_to_ac_bus(physical_bus);
                 unsigned int area = bus->get_area_number();
                 unsigned int zone = bus->get_zone_number();
                 file<<bus_count<<","<<physical_bus<<","<<bus->get_bus_name()<<","

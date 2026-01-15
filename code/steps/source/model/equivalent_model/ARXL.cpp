@@ -70,7 +70,7 @@ void ARXL::set_output_line(DEVICE_ID did, unsigned int meter_side)
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
     if(line==NULL)
     {
         osstream<<"Warning. "<<did.get_compound_device_name()<<" is not found in power system database when setting up ARXL model.";
@@ -463,7 +463,7 @@ void ARXL::switch_output_to_equivalent_device()
 
     DEVICE_ID did = p_meters[0].get_device_id();
 
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
     unsigned int arxl_bus;
     //unsigned int other_bus;
     complex<double> arxl_power, other_power;
@@ -548,7 +548,7 @@ string ARXL::get_standard_psse_string(bool export_internal_bus_number) const
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = p_meters[0].get_device_id();
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
 
     unsigned int send_bus = line->get_sending_side_bus();
     unsigned int recv_bus = line->get_receiving_side_bus();
@@ -637,7 +637,7 @@ string ARXL::get_line_meter_string(const METER& meter) const
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = meter.get_device_id();
-    AC_LINE* line = psdb.get_ac_line(did);
+    AC_LINE* line = psdb.get_pointer_to_ac_line(did);
     data += num2str(line->get_sending_side_bus())+",";
     data += num2str(line->get_receiving_side_bus())+",";
     data += "\""+line->get_identifier()+"\",";
@@ -666,7 +666,7 @@ string ARXL::get_transformer_meter_string(const METER& meter) const
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = meter.get_device_id();
-    TRANSFORMER* trans = psdb.get_transformer(did);
+    TRANSFORMER* trans = psdb.get_pointer_to_transformer(did);
     data += num2str(trans->get_winding_bus(PRIMARY_SIDE))+",";
     data += num2str(trans->get_winding_bus(SECONDARY_SIDE))+",";
     data += "\""+trans->get_identifier()+"\",";
@@ -693,7 +693,7 @@ string ARXL::get_bus_meter_string(const METER& meter) const
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = meter.get_device_id();
-    BUS* bus = psdb.get_bus(did);
+    BUS* bus = psdb.get_pointer_to_ac_bus(did);
     data += num2str(bus->get_bus_number());
 
     return data;
@@ -719,7 +719,7 @@ string ARXL::get_generator_meter_string(const METER& meter) const
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = meter.get_device_id();
-    GENERATOR* gen = psdb.get_generator(did);
+    GENERATOR* gen = psdb.get_pointer_to_generator(did);
     data += num2str(gen->get_generator_bus())+",";
     data += "\""+gen->get_identifier()+"\",";
 
@@ -740,7 +740,7 @@ string ARXL::get_load_meter_string(const METER& meter) const
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = meter.get_device_id();
-    LOAD* load = psdb.get_load(did);
+    LOAD* load = psdb.get_pointer_to_load(did);
     data += num2str(load->get_load_bus())+",";
     data += "\""+load->get_identifier()+"\",";
 
