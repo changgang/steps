@@ -277,7 +277,7 @@ class MT_HVDC : public NONBUS_DEVICE
         HVSC* get_vsc_converter_with_name(string name);
         HVSC* get_vsc_converter_with_index(unsigned int index);
         vector<HVSC*> get_vsc_converters_connect_to_station(unsigned int station_number);
-        HVSC* get_current_voltage_vsc_converter(unsigned int station_number);
+        HVSC* get_current_vsc_converter_with_top_priority(unsigned int station_number);
         vector<HVSC*> get_vsc_connected_to_ac_bus(unsigned int bus);
         unsigned int get_vsc_converter_ac_bus(unsigned int index) const;
 
@@ -413,10 +413,10 @@ class MT_HVDC : public NONBUS_DEVICE
         void show_converter_power();
 
         //dynamic
-        virtual void set_model(MODEL* model);
-        virtual void set_lcc_converter_model(HLCC_MODEL* model);
-        virtual void set_vsc_converter_model(HVSC_MODEL* model);
-        virtual void set_dc_network_model(MT_DC_GRID_MODEL* model);
+        virtual void set_model(MODEL* model_ptr);
+        virtual void set_lcc_converter_model(HLCC_MODEL* model_ptr);
+        virtual void set_vsc_converter_model(HVSC_MODEL* model_ptr);
+        virtual void set_dc_network_model(MT_DC_GRID_MODEL* model_ptr);
         virtual MODEL* get_model_of_type(string model_type, unsigned int index=0);
         virtual MT_DC_GRID_MODEL* get_mtdc_network_model();
         vector<HLCC_MODEL*> get_all_hlcc_models();

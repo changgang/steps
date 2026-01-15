@@ -349,50 +349,62 @@ void MT_HVDC::save() const
     return did;
 }
 
-void MT_HVDC::set_model(MODEL* model)
+void MT_HVDC::set_model(MODEL* model_ptr)
 {
-    if(model != NULL and model->has_allowed_device_type(STEPS_HYBRID_DC))
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    if(model_ptr != NULL)
     {
-        model->set_device_id(get_device_id());
-        if(model->get_model_type()=="MT HVDC LCC MODEL")
+        MODEL& model = *model_ptr;
+        if(model.has_allowed_device_type(STEPS_HYBRID_DC))
         {
-            set_lcc_converter_model((HLCC_MODEL*) model);
-            model->allocate_model_variables();
-            model->prepare_model_data_table();
-            model->prepare_model_internal_variable_table();
-            return;
+            model.set_device_id(get_device_id());
+            if(model.get_model_type()=="MT HVDC LCC MODEL")
+            {
+                set_lcc_converter_model((HLCC_MODEL*) model_ptr);
+                model.allocate_model_variables();
+                model.prepare_model_data_table();
+                model.prepare_model_internal_variable_table();
+                return;
+            }
+            if(model.get_model_type()=="MT HVDC VSC MODEL")
+            {
+                set_vsc_converter_model((HVSC_MODEL*) model_ptr);
+                model.allocate_model_variables();
+                model.prepare_model_data_table();
+                model.prepare_model_internal_variable_table();
+                return;
+            }
+            if(model.get_model_type()=="MT DC GRID MODEL")
+            {
+                set_dc_network_model((MT_DC_GRID_MODEL*) model_ptr);
+                model.allocate_model_variables();
+                model.prepare_model_data_table();
+                model.prepare_model_internal_variable_table();
+                return;
+            }
+            osstream<<"Waring. Multi-terminal HVDC model does not support device type of "<<device_type2string(STEPS_HYBRID_DC)
+                    <<" when trying to set dynamic model for "<<get_compound_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
-        if(model->get_model_type()=="MT HVDC VSC MODEL")
-        {
-            set_vsc_converter_model((HVSC_MODEL*) model);
-            model->allocate_model_variables();
-            model->prepare_model_data_table();
-            model->prepare_model_internal_variable_table();
-            return;
-        }
-        if(model->get_model_type()=="MT DC GRID MODEL")
-        {
-            set_dc_network_model((MT_DC_GRID_MODEL*) model);
-            model->allocate_model_variables();
-            model->prepare_model_data_table();
-            model->prepare_model_internal_variable_table();
-            return;
-        }
-        ostringstream osstream;
+    }
+    else
+    {
         osstream<<"Waring. Multi-terminal HVDC model is not given to set dynamic model for "<<get_compound_device_name();
-        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
-    };
+    }
 }
 
-void MT_HVDC::set_lcc_converter_model(HLCC_MODEL* model)
+void MT_HVDC::set_lcc_converter_model(HLCC_MODEL* model_ptr)
 {
-    if(model!=NULL)
+    if(model_ptr!=NULL)
     {
-        string converter_name = model->get_model_converter_name();
-        HLCC* lcc = get_lcc_converter_with_name(converter_name);
-        lcc->set_model(model);
-        model->set_hlcc_pointer(lcc);;
+        HLCC_MODEL& model = *model_ptr;
+        string converter_name = model.get_model_converter_name();
+        HLCC* lcc_ptr = get_lcc_converter_with_name(converter_name);
+        model.set_hlcc_pointer(lcc_ptr);
+        HLCC& lcc = *lcc_ptr;
+        lcc.set_model(model_ptr);
     }
     else
     {
@@ -403,29 +415,29 @@ void MT_HVDC::set_lcc_converter_model(HLCC_MODEL* model)
     }
 }
 
-void MT_HVDC::set_vsc_converter_model(HVSC_MODEL* model)
+void MT_HVDC::set_vsc_converter_model(HVSC_MODEL* model_ptr)
 {
-    STEPS& toolkit = get_toolkit();
-    ostringstream osstream;
-    if(model!=NULL)
+    if(model_ptr!=NULL)
     {
-        string converter_name = model->get_model_converter_name();
-        HVSC* vsc = get_vsc_converter_with_name(converter_name);
-        vsc->set_model(model);
-        model->set_hvsc_pointer(vsc);
+        HVSC_MODEL& model = *model_ptr;
+        string converter_name = model.get_model_converter_name();
+        HVSC* vsc_ptr = get_vsc_converter_with_name(converter_name);
+        model.set_hvsc_pointer(vsc_ptr);
+        HVSC& vsc = *vsc_ptr;
+        vsc.set_model(model_ptr);
     }
     else
     {
+        ostringstream osstream;
         osstream<<"Waring. VSC model is not given to set dynamic model for VSC converter";
+        STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
-void MT_HVDC::set_dc_network_model(MT_DC_GRID_MODEL* model)
+void MT_HVDC::set_dc_network_model(MT_DC_GRID_MODEL* model_ptr)
 {
-    if(model!=NULL)
-    {
-        this->mtdc_network_model = model;
-    }
+    if(model_ptr!=NULL)
+        mtdc_network_model = model_ptr;
 }
 
 MODEL* MT_HVDC::get_model_of_type(string model_type, unsigned int index)
@@ -438,7 +450,7 @@ MODEL* MT_HVDC::get_model_of_type(string model_type, unsigned int index)
     if(model_type=="MT DC GRID MODEL")
         return get_mtdc_network_model();
 
-    return NULL;;
+    return NULL;
 }
 
 MT_DC_GRID_MODEL* MT_HVDC::get_mtdc_network_model()
@@ -528,12 +540,12 @@ void MT_HVDC::set_dc_line_count(unsigned int n)
 
 void MT_HVDC::set_dc_base_voltage(const double vbase)
 {
-    this->dc_base_voltage = vbase;
+    dc_base_voltage = vbase;
 }
 
 void MT_HVDC::set_dc_system_max_iteration_in_powerflow(const unsigned int n)
 {
-    this->max_iteration = n;
+    max_iteration = n;
     unsigned int n_vsc = Hvsc.size();
     for(unsigned int i=0;i!=n_vsc;i++)
     {
@@ -543,7 +555,7 @@ void MT_HVDC::set_dc_system_max_iteration_in_powerflow(const unsigned int n)
 
 void MT_HVDC::set_dc_system_allow_power_mismatch_in_powerflow(const double pmis)
 {
-    this->allowed_power_mismatch = pmis;
+    allowed_power_mismatch = pmis;
     unsigned int n_vsc = Hvsc.size();
     for(unsigned int i=0;i!=n_vsc;i++)
     {
@@ -703,13 +715,13 @@ unsigned int MT_HVDC::get_name_index() const
 void MT_HVDC::set_identifier(const string hdc_id)
 {
     string hdc_id_temp = trim_string(hdc_id);
-    this->identifier_index = get_index_of_string(hdc_id_temp);
+    identifier_index = get_index_of_string(hdc_id_temp);
 }
 
 void MT_HVDC::set_name(const string name)
 {
     string new_name = trim_string(name);
-    this->name_index = get_index_of_string(name);
+    name_index = get_index_of_string(name);
 }
 
 string MT_HVDC::get_name() const
@@ -774,7 +786,8 @@ DC_TERMINAL* MT_HVDC::get_dc_terminal_with_name(string name)
     unsigned int n = terminals.size();
     for(unsigned int i=0;i!=n;i++)
     {
-        string tname= terminals[i]->get_terminal_name();
+        DC_TERMINAL& terminal = *(terminals[i]);
+        string tname= terminal.get_terminal_name();
         if(tname==name)
             return terminals[i];
     }
@@ -799,8 +812,9 @@ DC_TERMINAL* MT_HVDC::get_dc_terminal_with_terminal_number(unsigned int terminal
     unsigned int n = terminals.size();
     for(unsigned int i=0;i!=n;i++)
     {
-        unsigned int terminal = terminals[i]->get_terminal_number();
-        if(terminal==terminal_number)
+        DC_TERMINAL& terminal = *(terminals[i]);
+        unsigned int terminal_num = terminal.get_terminal_number();
+        if(terminal_num==terminal_number)
             return terminals[i];
     }
     osstream<<"NO TERMIANL with TERMINAL NUMBER: "<<terminal_number;
@@ -816,8 +830,9 @@ DC_TERMINAL* MT_HVDC::get_dc_terminal_with_dc_bus_number(unsigned int dc_bus_num
     unsigned int n = terminals.size();
     for(unsigned int i=0;i!=n;i++)
     {
-        unsigned int dcbus = terminals[i]->get_terminal_dc_bus_number();
-        if(dcbus==dc_bus_number)
+        DC_TERMINAL& terminal = *(terminals[i]);
+        unsigned int dcbus_num = terminal.get_terminal_dc_bus_number();
+        if(dcbus_num==dc_bus_number)
             return terminals[i];
     }
     osstream<<"NO TERMIANL CONNECTED TO DC BUS: "<<dc_bus_number;
@@ -966,7 +981,8 @@ DC_STATION* MT_HVDC::get_dc_station_with_station_number(unsigned int station_num
     unsigned int n = all_stations.size();
     for(unsigned int i=0;i!=n;i++)
     {
-        unsigned int number = all_stations[i]->get_station_number();
+        DC_STATION& station = *(all_stations[i]);
+        unsigned int number = station.get_station_number();
         if(number==station_number)
             return all_stations[i];
     }
@@ -983,7 +999,8 @@ DC_STATION* MT_HVDC::get_dc_station_with_name(string name)
     unsigned int n = all_stations.size();
     for(unsigned int i=0;i!=n;i++)
     {
-        string station_name = all_stations[i]->get_station_name();
+        DC_STATION& station = *(all_stations[i]);
+        string station_name = station.get_station_name();
         if(station_name==name)
             return all_stations[i];
     }
@@ -1409,13 +1426,11 @@ HLCC* MT_HVDC::get_lcc_converter_with_dc_bus_number(unsigned int dc_bus)
 
     for(unsigned int i=0;i!=nlcc;i++)
     {
-        HLCC* lcc = lccs[i];
-        unsigned int dc_number = lcc->get_converter_dc_bus();
-
+        HLCC* lcc_ptr = lccs[i];
+        HLCC& lcc = *lcc_ptr;
+        unsigned int dc_number = lcc.get_converter_dc_bus();
         if(dc_number == dc_bus)
-        {
-            return lcc;
-        }
+            return lcc_ptr;
     }
     osstream << "no lcc converter connected to dc bus"<<dc_bus;
     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -1427,8 +1442,9 @@ unsigned int MT_HVDC::get_lcc_angle_control_number_of_hcm(unsigned int station_n
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    DC_STATION_STRUCTURE structure = station->get_station_structure();
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    DC_STATION_STRUCTURE structure = station.get_station_structure();
     unsigned int n_angle = 0;
     if(structure==LCC_HCM)
     {
@@ -1436,24 +1452,23 @@ unsigned int MT_HVDC::get_lcc_angle_control_number_of_hcm(unsigned int station_n
         unsigned int n_lcc = lccs.size();
         if(n_lcc>2)
         {
-            osstream<<"ONLY 2 LCC CONVERTERS ARE SUPPORTED IN STATION"<<station->get_station_name()<<" IN LCC HCM MODE ";
+            osstream<<"ONLY 2 LCC CONVERTERS ARE SUPPORTED IN STATION"<<station.get_station_name()<<" IN LCC HCM MODE ";
             toolkit.show_information_with_leading_time_stamp(osstream);
             return 0;
         }
 
         for(unsigned int i=0;i!=n_lcc;i++)
         {
-            HLCC_CONTROL_MODE mode = lccs[i]->get_control_mode();
+            HLCC& lcc = *(lccs[i]);
+            HLCC_CONTROL_MODE mode = lcc.get_control_mode();
             if(mode==LCC_CONSTANR_FIRING_ANGLE_MODE)
-            {
                 n_angle++;
-            }
         }
         return n_angle;
     }
     else
     {
-        osstream<<"STATION: "<<station->get_station_name()<<" is not in the HCM mode";
+        osstream<<"STATION: "<<station.get_station_name()<<" is not in the HCM mode";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 0;
     }
@@ -1465,21 +1480,23 @@ HLCC* MT_HVDC::get_lcc_converter_angle_fixed_of_HCM_station(unsigned int station
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    DC_STATION_STRUCTURE structure = station->get_station_structure();
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    DC_STATION_STRUCTURE structure = station.get_station_structure();
     if(structure==LCC_HCM)
     {
         vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
         unsigned int n_lcc = lccs.size();
         if(n_lcc>2)
         {
-            osstream<<"ONLY 2 LCC CONVERTERS ARE SUPPORTED IN STATION"<<station->get_station_name()<<" IN LCC HCM MODE ";
+            osstream<<"ONLY 2 LCC CONVERTERS ARE SUPPORTED IN STATION"<<station.get_station_name()<<" IN LCC HCM MODE ";
             toolkit.show_information_with_leading_time_stamp(osstream);
 
         }
         for(unsigned int i=0;i!=n_lcc;i++)
         {
-            HLCC_CONTROL_MODE mode = lccs[i]->get_control_mode();
+            HLCC& lcc = *(lccs[i]);
+            HLCC_CONTROL_MODE mode = lcc.get_control_mode();
             if(mode==LCC_CONSTANR_FIRING_ANGLE_MODE)
             {
                 return lccs[i];
@@ -1494,21 +1511,23 @@ HLCC* MT_HVDC::get_lcc_converter_angle_slack_of_HCM_station(unsigned int station
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    DC_STATION_STRUCTURE structure = station->get_station_structure();
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    DC_STATION_STRUCTURE structure = station.get_station_structure();
     if(structure==LCC_HCM)
     {
         vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
         unsigned int n_lcc = lccs.size();
         if(n_lcc>2)
         {
-            osstream<<"ONLY 2 LCC CONVERTERS ARE SUPPORTED IN STATION"<<station->get_station_name()<<" IN LCC HCM MODE ";
+            osstream<<"ONLY 2 LCC CONVERTERS ARE SUPPORTED IN STATION"<<station.get_station_name()<<" IN LCC HCM MODE ";
             toolkit.show_information_with_leading_time_stamp(osstream);
 
         }
         for(unsigned int i=0;i!=n_lcc;i++)
         {
-            HLCC_CONTROL_MODE mode = lccs[i]->get_control_mode();
+            HLCC& lcc = *(lccs[i]);
+            HLCC_CONTROL_MODE mode = lcc.get_control_mode();
             if(mode==LCC_CONSTANT_VOLTAGE_MODE)
             {
                 return lccs[i];
@@ -1939,9 +1958,7 @@ vector<HVSC*> MT_HVDC::get_all_vsc_converters()
     all_vsc.clear();
     all_vsc.reserve(n);
     for(unsigned int i=0;i!=n;i++)
-    {
         all_vsc.push_back(&(Hvsc[i]));
-    }
     return all_vsc;
 }
 
@@ -1967,9 +1984,7 @@ HVSC* MT_HVDC::get_vsc_converter_with_name(string name)
     {
         string vsc_name = Hvsc[i].get_converter_name();
         if(vsc_name==name)
-        {
             return &(Hvsc[i]);
-        }
     }
     osstream<<"NO VSC CONVERTER WITH NAME: "<<name;
     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -1993,14 +2008,12 @@ vector<HVSC*> MT_HVDC::get_vsc_converters_connect_to_station(unsigned int statio
     {
         unsigned int station = Hvsc[i].get_converter_station_number();
         if(station==station_number)
-        {
             vscs.push_back(&(Hvsc[i]));
-        }
     }
     return vscs;
 }
 
-HVSC* MT_HVDC::get_current_voltage_vsc_converter(unsigned int station_number)
+HVSC* MT_HVDC::get_current_vsc_converter_with_top_priority(unsigned int station_number)
 {
     vector<HVSC*> vscs;
     vscs.clear();
@@ -2010,22 +2023,18 @@ HVSC* MT_HVDC::get_current_voltage_vsc_converter(unsigned int station_number)
 
     HVSC* voltage_converter = vscs[0];
     if(n==1)
-    {
         return voltage_converter;
-    }
     else
     {
         voltage_converter = vscs[0];
         for(unsigned int i=0;i!=n-1;i++)
         {
-            HVSC* vsc1 = vscs[i];
-            HVSC* vsc2 = vscs[i+1];
-            unsigned int priority1 = vsc1->get_priority();
-            unsigned int priority2 = vsc2->get_priority();
+            HVSC& vsc1 = *(vscs[i]);
+            HVSC& vsc2 = *(vscs[i+1]);
+            unsigned int priority1 = vsc1.get_priority();
+            unsigned int priority2 = vsc2.get_priority();
             if(priority1>priority2)
-            {
-                voltage_converter = vsc2;
-            }
+                voltage_converter = &vsc2;
         }
         return voltage_converter;
     }
@@ -2119,9 +2128,7 @@ vector<DC_BUS*> MT_HVDC::get_all_dc_buses()
     unsigned int n = get_dc_bus_count();
     all_dc_buses.reserve(n);
     for(unsigned int i=0;i!=n;i++)
-    {
         all_dc_buses.push_back(&(Dcbus[i]));
-    }
     return all_dc_buses;
 
 }
@@ -2157,10 +2164,10 @@ DC_BUS* MT_HVDC::get_dc_bus_with_bus_number(unsigned int number)
     vector<DC_BUS*> all_dc_buses = get_all_dc_buses();
     for(unsigned int i=0;i!=n;i++)
     {
-        DC_BUS* dcbus = all_dc_buses[i];
-        unsigned int bus_number = dcbus->get_dc_bus_number();
+        DC_BUS& dcbus = *(all_dc_buses[i]);
+        unsigned int bus_number = dcbus.get_dc_bus_number();
         if (bus_number == number)
-            return dcbus;
+            return &dcbus;
     }
     osstream<<"No dc bus with bus number: "<<number;
     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -2169,8 +2176,9 @@ DC_BUS* MT_HVDC::get_dc_bus_with_bus_number(unsigned int number)
 
 DC_BUS* MT_HVDC::get_dc_bus_with_terminal_number(unsigned int terminal_number)
 {
-    DC_TERMINAL* terminal = get_dc_terminal_with_terminal_number(terminal_number);
-    unsigned int dc_bus_number = terminal->get_terminal_dc_bus_number();
+    DC_TERMINAL* terminal_ptr = get_dc_terminal_with_terminal_number(terminal_number);
+    DC_TERMINAL& terminal = *terminal_ptr;
+    unsigned int dc_bus_number = terminal.get_terminal_dc_bus_number();
     DC_BUS* dcbus = get_dc_bus_with_bus_number(dc_bus_number);
     return dcbus;
 }
@@ -2182,10 +2190,11 @@ unsigned int MT_HVDC::get_number_of_P_node()
     unsigned int n_p = 0;
     for(unsigned int i=0;i!=nbus;i++)
     {
-        DC_BUS* dc_bus = dc_buses[i];
-        unsigned int bus_number = dc_bus->get_dc_bus_number();
-        HLCC* lcc = get_lcc_converter_with_dc_bus_number(bus_number);
-        HLCC_CONTROL_MODE mode = lcc->get_control_mode();
+        DC_BUS& dc_bus = *(dc_buses[i]);
+        unsigned int bus_number = dc_bus.get_dc_bus_number();
+        HLCC* lcc_ptr = get_lcc_converter_with_dc_bus_number(bus_number);
+        HLCC& lcc = *lcc_ptr;
+        HLCC_CONTROL_MODE mode = lcc.get_control_mode();
         if(mode == LCC_CONSTANT_POWER_MODE)
         {
             n_p++;
@@ -2201,10 +2210,11 @@ unsigned int MT_HVDC::get_number_of_I_node()
     unsigned int n_i = 0;
     for(unsigned int i=0;i!=nbus;i++)
     {
-        DC_BUS* dc_bus = dc_buses[i];
-        unsigned int bus_number = dc_bus->get_dc_bus_number();
-        HLCC* lcc = get_lcc_converter_with_dc_bus_number(bus_number);
-        HLCC_CONTROL_MODE mode = lcc->get_control_mode();
+        DC_BUS& dc_bus = *(dc_buses[i]);
+        unsigned int bus_number = dc_bus.get_dc_bus_number();
+        HLCC* lcc_ptr = get_lcc_converter_with_dc_bus_number(bus_number);
+        HLCC& lcc = *lcc_ptr;
+        HLCC_CONTROL_MODE mode = lcc.get_control_mode();
         if(mode == LCC_CONSTANT_CURRENT_MODE)
         {
             n_i++;
@@ -2220,10 +2230,11 @@ unsigned int MT_HVDC::get_number_of_P_and_I_node()
     unsigned int n_pi = 0;
     for(unsigned int i=0;i!=nbus;i++)
     {
-        DC_BUS* dc_bus = dc_buses[i];
-        unsigned int bus_number = dc_bus->get_dc_bus_number();
-        HLCC* lcc = get_lcc_converter_with_dc_bus_number(bus_number);
-        HLCC_CONTROL_MODE mode = lcc->get_control_mode();
+        DC_BUS& dc_bus = *(dc_buses[i]);
+        unsigned int bus_number = dc_bus.get_dc_bus_number();
+        HLCC* lcc_ptr = get_lcc_converter_with_dc_bus_number(bus_number);
+        HLCC& lcc = *lcc_ptr;
+        HLCC_CONTROL_MODE mode = lcc.get_control_mode();
         if((mode == LCC_CONSTANT_POWER_MODE) or (mode == LCC_CONSTANT_CURRENT_MODE))
         {
             n_pi++;
@@ -2239,10 +2250,11 @@ unsigned int MT_HVDC::get_number_of_angle_node()
     unsigned int n_angle = 0;
     for(unsigned int i=0;i!=nbus;i++)
     {
-        DC_BUS* dc_bus = dc_buses[i];
-        unsigned int bus_number = dc_bus->get_dc_bus_number();
-        HLCC* lcc = get_lcc_converter_with_dc_bus_number(bus_number);
-        HLCC_CONTROL_MODE mode = lcc->get_control_mode();
+        DC_BUS& dc_bus = *(dc_buses[i]);
+        unsigned int bus_number = dc_bus.get_dc_bus_number();
+        HLCC* lcc_ptr = get_lcc_converter_with_dc_bus_number(bus_number);
+        HLCC& lcc = *lcc_ptr;
+        HLCC_CONTROL_MODE mode = lcc.get_control_mode();
         if(mode == LCC_CONSTANR_FIRING_ANGLE_MODE)
         {
             n_angle++;
@@ -2260,7 +2272,8 @@ unsigned int MT_HVDC::get_number_of_vsc_P_node()
     unsigned int n_vsc_p = 0;
     for(unsigned int i=0;i!=nbus;i++)
     {
-        DC_BUS_TYPE type = dc_buses[i]->get_dc_bus_type();
+        DC_BUS& dc_bus = *(dc_buses[i]);
+        DC_BUS_TYPE type = dc_bus.get_dc_bus_type();
         if(type == DC_VSC_P_NODE)
         {
             n_vsc_p++;
@@ -2459,11 +2472,12 @@ DC_LINE* MT_HVDC::get_dc_line_with_ibus_and_jbus(unsigned int ibus,unsigned int 
     vector<DC_LINE*> lines = get_all_dc_lines();
     for(unsigned int i=0;i!=n;i++)
     {
-        DC_LINE* line = lines[i];
-        unsigned int sending_bus = line->get_sending_side_bus_number();
-        unsigned int receiving_bus = line->get_receiving_side_bus_number();
+        DC_LINE* line_ptr = lines[i];
+        DC_LINE& line = *line_ptr;
+        unsigned int sending_bus = line.get_sending_side_bus_number();
+        unsigned int receiving_bus = line.get_receiving_side_bus_number();
         if( (ibus == sending_bus) && (jbus == receiving_bus) )
-            return line;
+            return line_ptr;
     }
     osstream<<"No dc line with ibus: "<<ibus<<"  and jbus: "<<jbus;
     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -2479,10 +2493,11 @@ vector<DC_LINE*> MT_HVDC::get_dc_lines_with_ibus(unsigned int ibus)
     lines_with_ibus.clear();
     for(unsigned int i=0;i!=n;i++)
     {
-        DC_LINE* line = lines[i];
-        unsigned int sending_bus = line->get_sending_side_bus_number();
+        DC_LINE* line_ptr = lines[i];
+        DC_LINE& line = *line_ptr;
+        unsigned int sending_bus = line.get_sending_side_bus_number();
         if(ibus == sending_bus)
-            lines_with_ibus.push_back(line);
+            lines_with_ibus.push_back(line_ptr);
 
     }
     return lines_with_ibus;
@@ -2496,10 +2511,11 @@ vector<DC_LINE*> MT_HVDC::get_dc_lines_with_jbus(unsigned int jbus)
     lines_with_jbus.clear();
     for(unsigned int i=0;i!=n;i++)
     {
-        DC_LINE* line = lines[i];
-        unsigned int receiving_bus = line->get_receiving_side_bus_number();
+        DC_LINE* line_ptr = lines[i];
+        DC_LINE& line = *line_ptr;
+        unsigned int receiving_bus = line.get_receiving_side_bus_number();
         if(jbus == receiving_bus)
-            lines_with_jbus.push_back(line);
+            lines_with_jbus.push_back(line_ptr);
 
     }
     return lines_with_jbus;
@@ -2588,19 +2604,22 @@ bool MT_HVDC::check_control_mode_change_flag()
     {
         if(lccs[i]->get_control_mode_changed_flag()==true)
         {
+            HLCC& lcc = *(lccs[i]);
             is_control_mode_change = true;
-            unsigned int station_number = lccs[i]->get_converter_station_number();
-            DC_STATION* station = get_dc_station_with_station_number(station_number);
-            station->set_station_mode(DC_ANGLE_STATION);
+            unsigned int station_number = lcc.get_converter_station_number();
+            DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+            DC_STATION& station = *station_ptr;
+            station.set_station_mode(DC_ANGLE_STATION);
 
-            DC_TERMINAL* terminal = get_dc_terminal_with_terminal_number(station->get_station_number());
-            terminal->set_terminal_mode(DC_ANGLE_TERMINAL);
+            DC_TERMINAL* terminal_ptr = get_dc_terminal_with_terminal_number(station.get_station_number());
+            DC_TERMINAL& terminal = *terminal_ptr;
+            terminal.set_terminal_mode(DC_ANGLE_TERMINAL);
 
             ostringstream osstream;
-            osstream<<"The CONTROL MODE OF STATION: "<<station_number<<"  IS CHANGED TO :" <<station->get_station_mode();
+            osstream<<"The CONTROL MODE OF STATION: "<<station_number<<"  IS CHANGED TO :" <<station.get_station_mode();
             show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
-            osstream<<"The CONTROL MODE OF TERMINAL: "<<terminal->get_terminal_number()<<"  IS CHANGED TO :" <<terminal->get_terminal_mode();
+            osstream<<"The CONTROL MODE OF TERMINAL: "<<terminal.get_terminal_number()<<"  IS CHANGED TO :" <<terminal.get_terminal_mode();
             show_information_with_leading_time_stamp_with_default_toolkit(osstream);
         }
     }
@@ -2662,8 +2681,9 @@ bool MT_HVDC::solve_dc_network()
     for(unsigned int i=0;i!=n_umis;i++)
     {
         unsigned int bus_number = inphno.get_physical_bus_number_of_internal_bus_number(i);
-        DC_BUS* bus = get_dc_bus_with_bus_number(bus_number);
-        double voltage = bus->get_dc_bus_voltage_in_kV();
+        DC_BUS* bus_ptr = get_dc_bus_with_bus_number(bus_number);
+        DC_BUS& bus = *bus_ptr;
+        double voltage = bus.get_dc_bus_voltage_in_kV();
         u_bus[i] = voltage;
     }
 
@@ -2700,10 +2720,10 @@ bool MT_HVDC::solve_dc_network()
             for(unsigned int i=0;i!=n_umis;i++)
             {
                 unsigned int bus_number = inphno.get_physical_bus_number_of_internal_bus_number(i);
-                DC_BUS* dcbus = get_dc_bus_with_bus_number(bus_number);
-
+                DC_BUS* dcbus_ptr = get_dc_bus_with_bus_number(bus_number);
+                DC_BUS& dcbus = *dcbus_ptr;
                 u_bus[i]-=u_mismactch[i];
-                dcbus->set_dc_bus_voltage_in_kV(u_bus[i]);
+                dcbus.set_dc_bus_voltage_in_kV(u_bus[i]);
             }
             iteration_count++;
         }
@@ -2732,11 +2752,12 @@ void MT_HVDC::solve_converters()
     unsigned int n_terminal = terminals.size();
     for(unsigned int i=0;i!=n_terminal;i++)
     {
-        if(terminals[i]->get_status()==false)
+        DC_TERMINAL& terminal = *(terminals[i]);
+        if(terminal.get_status()==false)
             continue;
 
-        unsigned int terminal_number = terminals[i]->get_terminal_number();
-        DC_TERMINAL_MODE tmode = terminals[i]->get_terminal_mode();
+        unsigned int terminal_number = terminal.get_terminal_number();
+        DC_TERMINAL_MODE tmode = terminal.get_terminal_mode();
         if(tmode==DC_P_TERMIANL)
         {
             solve_converters_of_P_terminal(terminal_number);
@@ -2767,44 +2788,48 @@ void MT_HVDC::solve_converters()
 
 void MT_HVDC::solve_converters_of_P_terminal(unsigned int terminal_number)
 {
-    DC_TERMINAL* terminal = get_dc_terminal_with_terminal_number(terminal_number);
-    unsigned int dcbus_number = terminal->get_terminal_dc_bus_number();
-    DC_BUS* dcbus = get_dc_bus_with_bus_number(dcbus_number);
-    double Udc = dcbus->get_dc_bus_voltage_in_kV();
-    double Idc = dcbus->get_dc_bus_current_in_kA();
+    DC_TERMINAL* terminal_ptr = get_dc_terminal_with_terminal_number(terminal_number);
+    DC_TERMINAL& terminal = *terminal_ptr;
+    unsigned int dcbus_number = terminal.get_terminal_dc_bus_number();
+    DC_BUS* dcbus_ptr = get_dc_bus_with_bus_number(dcbus_number);
+    DC_BUS& dcbus = *dcbus_ptr;
+    double Udc = dcbus.get_dc_bus_voltage_in_kV();
+    double Idc = dcbus.get_dc_bus_current_in_kA();
 
-    double P_terminal = dcbus->get_dc_bus_power_in_MW();
+    double P_terminal = dcbus.get_dc_bus_power_in_MW();
 
 
     vector<DC_STATION*> stations = get_dc_stations_connect_to_terminal(terminal_number);
     unsigned int n_station = stations.size();
     for(unsigned int j=0;j!=n_station;j++)
     {
-        if(stations[j]->get_status()==false)
+        DC_STATION& station = *(stations[j]);
+        if(station.get_status()==false)
             continue;
 
-        unsigned int station_number = stations[j]->get_station_number();
+        unsigned int station_number = station.get_station_number();
         double P_station = get_active_power_of_power_station(station_number);
         double U_station = Udc*P_station/P_terminal;
 
-        DC_STATION_STRUCTURE structure = stations[j]->get_station_structure();
+        DC_STATION_STRUCTURE structure = station.get_station_structure();
         if(structure==LCC_CASCADE)
         {
-            //vector<HLCC*> lccs = stations[j]->get_lcc_converters_in_dc_station_with_lcc_cascade();
+            //vector<HLCC*> lccs = station.get_lcc_converters_in_dc_station_with_lcc_cascade();
             vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
             unsigned int n_lcc = lccs.size();
             for(unsigned int i=0;i!=n_lcc;i++)
             {
-                if(lccs[i]->get_status()==true)
+                HLCC& lcc = *(lccs[i]);
+                if(lcc.get_status()==true)
                 {
-                    double P_lcc = lccs[i]->get_command_pdc_in_MW();
+                    double P_lcc = lcc.get_command_pdc_in_MW();
                     double U_lcc = U_station*P_lcc/P_station;
 
                     //osstream<<"Voltage of LCC is: "<< U_lcc;
                     //toolkit.show_information_with_leading_time_stamp(osstream);
-                    lccs[i]->set_idc_in_kA(Idc);
-                    lccs[i]->set_udc_in_kV(U_lcc);
-                    lccs[i]->solve_converter_to_AC(U_lcc,Idc);
+                    lcc.set_idc_in_kA(Idc);
+                    lcc.set_udc_in_kV(U_lcc);
+                    lcc.solve_converter_to_AC(U_lcc,Idc);
                 }
             }
         }
@@ -2815,12 +2840,13 @@ void MT_HVDC::solve_converters_of_P_terminal(unsigned int terminal_number)
             unsigned int n_vsc = vscs.size();
             for(unsigned int i=0;i!=n_vsc;i++)
             {
-                if(vscs[i]->get_status())
+                HVSC& vsc = *(vscs[i]);
+                if(vsc.get_status())
                 {
-                    double P_vsc = vscs[i]->get_converter_P_to_DC_bus_MW();
+                    double P_vsc = vsc.get_converter_P_to_DC_bus_MW();
                     double I_vsc = Idc*P_vsc/P_station;
-                    vscs[i]->set_udc_in_kV(U_station);
-                    vscs[i]->set_idc_in_kA(I_vsc);
+                    vsc.set_udc_in_kV(U_station);
+                    vsc.set_idc_in_kA(I_vsc);
                 }
             }
         }
@@ -2832,11 +2858,13 @@ void MT_HVDC::solve_converters_of_I_terminal(unsigned int terminal_number)
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
-    DC_TERMINAL* terminal = get_dc_terminal_with_terminal_number(terminal_number);
-    unsigned int dcbus_number = terminal->get_terminal_dc_bus_number();
-    DC_BUS* dcbus = get_dc_bus_with_bus_number(dcbus_number);
-    double Udc = dcbus->get_dc_bus_voltage_in_kV();
-    double Idc = dcbus->get_dc_bus_current_in_kA();
+    DC_TERMINAL* terminal_ptr = get_dc_terminal_with_terminal_number(terminal_number);
+    DC_TERMINAL& terminal = *terminal_ptr;
+    unsigned int dcbus_number = terminal.get_terminal_dc_bus_number();
+    DC_BUS* dcbus_ptr = get_dc_bus_with_bus_number(dcbus_number);
+    DC_BUS& dcbus = *dcbus_ptr;
+    double Udc = dcbus.get_dc_bus_voltage_in_kV();
+    double Idc = dcbus.get_dc_bus_current_in_kA();
 
     double U_terminal = Udc;
 
@@ -2846,13 +2874,14 @@ void MT_HVDC::solve_converters_of_I_terminal(unsigned int terminal_number)
     double U_station = U_terminal/n_station;
     for(unsigned int j=0;j!=n_station;j++)
     {
-        if(stations[j]->get_status()==false)
+        DC_STATION& station = *(stations[j]);
+        if(station.get_status()==false)
             continue;
-        unsigned int station_number = stations[j]->get_station_number();
-        DC_STATION_STRUCTURE structure = stations[j]->get_station_structure();
+        unsigned int station_number = station.get_station_number();
+        DC_STATION_STRUCTURE structure = station.get_station_structure();
         if(structure==LCC_CASCADE)
         {
-            //vector<HLCC*> lccs = stations[j]->get_lcc_converters_in_dc_station_with_lcc_cascade();
+            //vector<HLCC*> lccs = station.get_lcc_converters_in_dc_station_with_lcc_cascade();
             vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
             unsigned int n_lcc = lccs.size();
 
@@ -2860,13 +2889,14 @@ void MT_HVDC::solve_converters_of_I_terminal(unsigned int terminal_number)
             {
                 double U_lcc = U_station/n_lcc;
                 double I_lcc = Idc;
-                lccs[i]->set_udc_in_kV(U_lcc);
-                lccs[i]->set_idc_in_kA(I_lcc);
-                lccs[i]->solve_converter_to_AC(U_lcc,I_lcc);
+                HLCC& lcc = *(lccs[i]);
+                lcc.set_udc_in_kV(U_lcc);
+                lcc.set_idc_in_kA(I_lcc);
+                lcc.solve_converter_to_AC(U_lcc,I_lcc);
 
-                //lccs[i]->solve_lcc_with_tap_and_angle(U_lcc,I_lcc);
+                //lcc.solve_lcc_with_tap_and_angle(U_lcc,I_lcc);
 
-                //osstream<<"LCC:"<<lccs[i]->get_converter_name()<<"solve with udc:"<<U_lcc<<"and idc:"<<I_lcc;
+                //osstream<<"LCC:"<<lcc.get_converter_name()<<"solve with udc:"<<U_lcc<<"and idc:"<<I_lcc;
                 //toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -2883,61 +2913,67 @@ void MT_HVDC::solve_converters_of_U_terminal(unsigned int terminal_number)
 {
     ostringstream osstream;
 
-    DC_TERMINAL* terminal = get_dc_terminal_with_terminal_number(terminal_number);
-    unsigned int dcbus_number = terminal->get_terminal_dc_bus_number();
-    DC_BUS* dcbus = get_dc_bus_with_bus_number(dcbus_number);
-    double Udc = dcbus->get_dc_bus_voltage_in_kV();
-    double Idc = dcbus->get_dc_bus_current_in_kA();
+    DC_TERMINAL* terminal_ptr = get_dc_terminal_with_terminal_number(terminal_number);
+    DC_TERMINAL& terminal = *terminal_ptr;
+    unsigned int dcbus_number = terminal.get_terminal_dc_bus_number();
+    DC_BUS* dcbus_ptr = get_dc_bus_with_bus_number(dcbus_number);
+    DC_BUS& dcbus = *dcbus_ptr;
+    double Udc = dcbus.get_dc_bus_voltage_in_kV();
+    double Idc = dcbus.get_dc_bus_current_in_kA();
 
     double U_terminal= Udc;
-    //vector<DC_STATION*> stations = terminal->get_dc_stations_in_terminal();
+    //vector<DC_STATION*> stations = terminal.get_dc_stations_in_terminal();
     vector<DC_STATION*> stations = get_dc_stations_connect_to_terminal(terminal_number);
     unsigned int n_station = stations.size();
     for(unsigned int j=0;j!=n_station;j++)
     {
-        if(stations[j]->get_status()==false)
+        DC_STATION& station = *(stations[j]);
+        if(station.get_status()==false)
             continue;
-        unsigned int station_number = stations[j]->get_station_number();
+        unsigned int station_number = station.get_station_number();
         //double U_station = get_voltage_of_voltage_station(station_number);
 
-        DC_STATION_STRUCTURE structure = stations[j]->get_station_structure();
+        DC_STATION_STRUCTURE structure = station.get_station_structure();
         if((structure==LCC_CASCADE) or (structure==LCC_HCM))
         {
-            //vector<HLCC*> lccs = stations[j]->get_lcc_converters_in_dc_station_with_lcc_cascade();
+            //vector<HLCC*> lccs = station.get_lcc_converters_in_dc_station_with_lcc_cascade();
             vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
             unsigned int n_lcc = lccs.size();
 
             for(unsigned int i=0;i!=n_lcc;i++)
             {
-                double U_lcc = lccs[i]->get_command_udc_in_kV();
+                HLCC& lcc = *(lccs[i]);
+                double U_lcc = lcc.get_command_udc_in_kV();
                 double I_lcc = Idc;
-                lccs[i]->set_udc_in_kV(U_lcc);
-                lccs[i]->set_idc_in_kA(I_lcc);
-                lccs[i]->solve_converter_to_AC(U_lcc,I_lcc);
+                lcc.set_udc_in_kV(U_lcc);
+                lcc.set_idc_in_kA(I_lcc);
+                lcc.solve_converter_to_AC(U_lcc,I_lcc);
 
-                //lccs[i]->solve_lcc_with_tap_and_angle(U_lcc,I_lcc);
+                //lcc.solve_lcc_with_tap_and_angle(U_lcc,I_lcc);
 
-                //osstream<<"LCC:"<<lccs[i]->get_converter_name()<<"solve with udc:"<<U_lcc<<"and idc:"<<I_lcc;
+                //osstream<<"LCC:"<<lcc.get_converter_name()<<"solve with udc:"<<U_lcc<<"and idc:"<<I_lcc;
                 //toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
 
         if(structure==VSC_PARALLEL)
         {
-            HVSC* vsc_voltage = get_current_voltage_vsc_converter(station_number);
+            HVSC* vsc_converter_ptr = get_current_vsc_converter_with_top_priority(station_number);
+            HVSC& vsc_converter = *vsc_converter_ptr;
             double U_station = get_voltage_of_voltage_station(station_number);
             double P_power_station = get_active_power_of_voltage_vsc_stations(station_number);
             double P_voltage_converter = U_station*Idc - P_power_station;
-            vsc_voltage->set_converter_P_to_DC_bus_MW(P_voltage_converter);
+            vsc_converter.set_converter_P_to_DC_bus_MW(P_voltage_converter);
             vector<HVSC*> vscs = get_vsc_converters_connect_to_station(station_number);
             unsigned int n_vsc = vscs.size();
             for(unsigned int i=0;i!=n_vsc;i++)
             {
-                vscs[i]->set_udc_in_kV(U_station);
-                double Pdc = vscs[i]->get_converter_P_to_DC_bus_MW();
-                vscs[i]->set_idc_in_kA(Pdc/U_station);
+                HVSC& vsc = *(vscs[i]);
+                vsc.set_udc_in_kV(U_station);
+                double Pdc = vsc.get_converter_P_to_DC_bus_MW();
+                vsc.set_idc_in_kA(Pdc/U_station);
             }
-            vsc_voltage->solve_ac_active_power_of_udc_control(P_voltage_converter);
+            vsc_converter.solve_ac_active_power_of_udc_control(P_voltage_converter);
 
         }
     }
@@ -2949,11 +2985,13 @@ void MT_HVDC::solve_converters_of_ANGLE_terminal(unsigned int terminal_number)
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     ostringstream osstream;
 
-    DC_TERMINAL* terminal = get_dc_terminal_with_terminal_number(terminal_number);
-    unsigned int dcbus_number = terminal->get_terminal_dc_bus_number();
-    DC_BUS* dcbus = get_dc_bus_with_bus_number(dcbus_number);
-    double Udc = dcbus->get_dc_bus_voltage_in_kV();
-    double Idc = dcbus->get_dc_bus_current_in_kA();
+    DC_TERMINAL* terminal_ptr = get_dc_terminal_with_terminal_number(terminal_number);
+    DC_TERMINAL& terminal = *terminal_ptr;
+    unsigned int dcbus_number = terminal.get_terminal_dc_bus_number();
+    DC_BUS* dcbus_ptr = get_dc_bus_with_bus_number(dcbus_number);
+    DC_BUS& dcbus = *dcbus_ptr;
+    double Udc = dcbus.get_dc_bus_voltage_in_kV();
+    double Idc = dcbus.get_dc_bus_current_in_kA();
 
     double U_terminal = Udc;
 
@@ -2963,13 +3001,14 @@ void MT_HVDC::solve_converters_of_ANGLE_terminal(unsigned int terminal_number)
     double U_station = U_terminal/n_station;
     for(unsigned int j=0;j!=n_station;j++)
     {
-        if(stations[j]->get_status()==false)
+        DC_STATION& station = *(stations[j]);
+        if(station.get_status()==false)
             continue;
-        unsigned int station_number = stations[j]->get_station_number();
-        DC_STATION_STRUCTURE structure = stations[j]->get_station_structure();
+        unsigned int station_number = station.get_station_number();
+        DC_STATION_STRUCTURE structure = station.get_station_structure();
         if(structure==LCC_CASCADE)
         {
-            //vector<HLCC*> lccs = stations[j]->get_lcc_converters_in_dc_station_with_lcc_cascade();
+            //vector<HLCC*> lccs = station.get_lcc_converters_in_dc_station_with_lcc_cascade();
             vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
             unsigned int n_lcc = lccs.size();
 
@@ -2977,9 +3016,10 @@ void MT_HVDC::solve_converters_of_ANGLE_terminal(unsigned int terminal_number)
             {
                 double U_lcc = U_station/n_lcc;
                 double I_lcc = Idc;
-                lccs[i]->set_udc_in_kV(U_lcc);
-                lccs[i]->set_idc_in_kA(I_lcc);
-                lccs[i]->solve_lcc_with_tap_and_angle(U_lcc,I_lcc);
+                HLCC& lcc = *(lccs[i]);
+                lcc.set_udc_in_kV(U_lcc);
+                lcc.set_idc_in_kA(I_lcc);
+                lcc.solve_lcc_with_tap_and_angle(U_lcc,I_lcc);
             }
         }
         if(structure==LCC_HCM)
@@ -2987,19 +3027,21 @@ void MT_HVDC::solve_converters_of_ANGLE_terminal(unsigned int terminal_number)
             unsigned int n_angle = get_lcc_angle_control_number_of_hcm(station_number);
             if(n_angle==1)
             {
-                HLCC* lcc_angle = get_lcc_converter_angle_fixed_of_HCM_station(station_number);
-                HLCC* lcc_voltage = get_lcc_converter_angle_slack_of_HCM_station(station_number);
+                HLCC* lcc_angle_ptr = get_lcc_converter_angle_fixed_of_HCM_station(station_number);
+                HLCC* lcc_voltage_ptr = get_lcc_converter_angle_slack_of_HCM_station(station_number);
+                HLCC& lcc_angle = *lcc_angle_ptr;
+                HLCC& lcc_voltage = *lcc_voltage_ptr;
 
-                double v_voltage = lcc_voltage->get_command_udc_in_kV();
+                double v_voltage = lcc_voltage.get_command_udc_in_kV();
                 double v_angle = Udc-v_voltage;
 
-                lcc_angle->set_udc_in_kV(v_angle);
-                lcc_angle->set_idc_in_kA(Idc);
-                lcc_angle->solve_lcc_with_tap_and_angle(v_angle,Idc);
+                lcc_angle.set_udc_in_kV(v_angle);
+                lcc_angle.set_idc_in_kA(Idc);
+                lcc_angle.solve_lcc_with_tap_and_angle(v_angle,Idc);
 
-                lcc_voltage->set_udc_in_kV(v_voltage);
-                lcc_voltage->set_idc_in_kA(Idc);
-                lcc_voltage->solve_converter_to_AC(v_voltage,Idc);
+                lcc_voltage.set_udc_in_kV(v_voltage);
+                lcc_voltage.set_idc_in_kA(Idc);
+                lcc_voltage.solve_converter_to_AC(v_voltage,Idc);
             }
             else if(n_angle==2)
             {
@@ -3010,29 +3052,29 @@ void MT_HVDC::solve_converters_of_ANGLE_terminal(unsigned int terminal_number)
                 {
                     double U_lcc = 0.0;
                     double I_lcc = Idc;
-                    HLCC* lcc = lccs[i];
-                    double n_bridge = lcc->get_brideg_number();
-                    double vbase_grid = lcc->get_converter_transformer_grid_side_base_voltage_in_kV();
-                    double vbase_converter = lcc->get_converter_transformer_converter_side_base_voltage_in_kV();
+                    HLCC& lcc = *(lccs[i]);
+                    double n_bridge = lcc.get_brideg_number();
+                    double vbase_grid = lcc.get_converter_transformer_grid_side_base_voltage_in_kV();
+                    double vbase_converter = lcc.get_converter_transformer_converter_side_base_voltage_in_kV();
                     double k = vbase_grid/vbase_converter;
 
-                    double tap = lcc->get_converter_transformer_tap_in_pu();
-                    double ang_deg = lcc->get_command_firing_angle();
+                    double tap = lcc.get_converter_transformer_tap_in_pu();
+                    double ang_deg = lcc.get_command_firing_angle();
                     double ang_rad = deg2rad(ang_deg);
                     double cos_ang = steps_cos(ang_rad);
-                    double vdrop = lcc->get_voltage_drop_per_bridge_in_kV();
-                    complex<double> z = lcc->get_converter_transformer_Z_in_ohm();
+                    double vdrop = lcc.get_voltage_drop_per_bridge_in_kV();
+                    complex<double> z = lcc.get_converter_transformer_Z_in_ohm();
                     double r = z.real();
                     double x = z.imag();
-                    double vac = psdb.get_bus_positive_sequence_voltage_in_kV(lcc->get_converter_ac_bus());
+                    double vac = psdb.get_bus_positive_sequence_voltage_in_kV(lcc.get_converter_ac_bus());
 
                     double req = THREE_OVER_PI*x + 2*r;
                     U_lcc = n_bridge*(THREE_SQRT2_OVER_PI*vac*cos_ang/k/tap-I_lcc*req-vdrop);
 
 
-                    lcc->set_idc_in_kA(I_lcc);
-                    lcc->set_udc_in_kV(U_lcc);
-                    lcc->solve_lcc_with_tap_and_angle(U_lcc,I_lcc);
+                    lcc.set_idc_in_kA(I_lcc);
+                    lcc.set_udc_in_kV(U_lcc);
+                    lcc.solve_lcc_with_tap_and_angle(U_lcc,I_lcc);
                 }
             }
             else
@@ -3066,37 +3108,38 @@ void MT_HVDC::initialize_dc_bus_type()
     unsigned int n_bus = dc_buses.size();
     for(unsigned int i=0;i!=n_bus;i++)
     {
-        unsigned int dc_bus_number = dc_buses[i]->get_dc_bus_number();
-        DC_BUS* dc_bus = get_dc_bus_with_bus_number(dc_bus_number);
-        DC_TERMINAL* dc_terminal = get_dc_terminal_with_dc_bus_number(dc_bus_number);
-        if(dc_terminal==NULL)
+        DC_BUS& dc_bus = *(dc_buses[i]);
+        unsigned int dc_bus_number = dc_bus.get_dc_bus_number();
+        DC_TERMINAL* dc_terminal_ptr = get_dc_terminal_with_dc_bus_number(dc_bus_number);
+        if(dc_terminal_ptr==NULL)
         {
-            dc_bus->set_dc_bus_type(DC_NOCON_BUS);//BUS WITH NO CONVERTER
+            dc_bus.set_dc_bus_type(DC_NOCON_BUS);//BUS WITH NO CONVERTER
         }
         else
         {
-            DC_TERMINAL_MODE tmode = dc_terminal->get_terminal_mode();
+            DC_TERMINAL& dc_terminal = *dc_terminal_ptr;
+            DC_TERMINAL_MODE tmode = dc_terminal.get_terminal_mode();
             if(tmode == DC_P_TERMIANL)
             {
-                dc_bus->set_dc_bus_type(DC_P_NODE);
+                dc_bus.set_dc_bus_type(DC_P_NODE);
             }
             else if(tmode==DC_I_TERMINAL)
             {
-                dc_bus->set_dc_bus_type(DC_I_NODE);
+                dc_bus.set_dc_bus_type(DC_I_NODE);
             }
             else if(tmode==DC_U_TERMINAL)
             {
-                dc_bus->set_dc_bus_type(DC_U_NODE);
+                dc_bus.set_dc_bus_type(DC_U_NODE);
             }
             else if(tmode==DC_ANGLE_TERMINAL)
             {
-                dc_bus->set_dc_bus_type(DC_ANGLE_NODE);
+                dc_bus.set_dc_bus_type(DC_ANGLE_NODE);
             }
             else
             {
-                osstream<<"Control mode of DC terminal: "<<dc_terminal->get_terminal_number()<<" is not supported in STEPS";
+                osstream<<"Control mode of DC terminal: "<<dc_terminal.get_terminal_number()<<" is not supported in STEPS";
                 toolkit.show_information_with_leading_time_stamp(osstream);
-                dc_bus->set_dc_bus_type(DC_NOCON_BUS);
+                dc_bus.set_dc_bus_type(DC_NOCON_BUS);
             }
         }
     }
@@ -3108,40 +3151,41 @@ void MT_HVDC::initialize_dc_power()
     unsigned int n_bus = dc_buses.size();
     for(unsigned int i=0;i!=n_bus;i++)
     {
-        unsigned int dc_bus_number = dc_buses[i]->get_dc_bus_number();
-        DC_BUS* dc_bus = get_dc_bus_with_bus_number(dc_bus_number);
-        DC_BUS_TYPE type = dc_bus->get_dc_bus_type();
+        DC_BUS& dc_bus = *(dc_buses[i]);
+        unsigned int dc_bus_number = dc_bus.get_dc_bus_number();
+        DC_BUS_TYPE type = dc_bus.get_dc_bus_type();
 
         if(type == DC_NOCON_BUS)
-            dc_bus->set_dc_bus_power_in_MW(0.0);
+            dc_bus.set_dc_bus_power_in_MW(0.0);
         else
         {
-            DC_TERMINAL* dc_terminal = get_dc_terminal_with_dc_bus_number(dc_bus_number);
-            unsigned int terminal_number = dc_terminal->get_terminal_number();
+            DC_TERMINAL* dc_terminal_ptr = get_dc_terminal_with_dc_bus_number(dc_bus_number);
+            DC_TERMINAL& dc_terminal = *dc_terminal_ptr;
+            unsigned int terminal_number = dc_terminal.get_terminal_number();
             if(type==DC_P_NODE)
             {
                 double Pref = get_active_power_of_power_terminal(terminal_number);
-                dc_bus->set_dc_bus_power_in_MW(Pref);
+                dc_bus.set_dc_bus_power_in_MW(Pref);
             }
             else if(type==DC_I_NODE)
             {
                 double Idc = get_current_of_current_terminal(terminal_number);
-                double Udc = dc_bus->get_dc_bus_voltage_in_kV();
+                double Udc = dc_bus.get_dc_bus_voltage_in_kV();
                 double Pref = Idc*Udc;
-                dc_bus->set_dc_bus_power_in_MW(Pref);
+                dc_bus.set_dc_bus_power_in_MW(Pref);
             }
             else if(type==DC_ANGLE_NODE)
             {
                 double Pref = get_active_power_of_angle_terminal(terminal_number);
-                dc_bus->set_dc_bus_power_in_MW(Pref);; ;
+                dc_bus.set_dc_bus_power_in_MW(Pref);; ;
             }
             else if(type==DC_U_NODE)
             {
-                dc_bus->set_dc_bus_power_in_MW(0.0);
+                dc_bus.set_dc_bus_power_in_MW(0.0);
             }
             else
             {
-                dc_bus->set_dc_bus_power_in_MW(0.0);
+                dc_bus.set_dc_bus_power_in_MW(0.0);
             }
         }
     }
@@ -3155,28 +3199,29 @@ void MT_HVDC::initialize_dc_voltage()
     unsigned int n_bus = dc_buses.size();
     for(unsigned int i=0;i!=n_bus;i++)
     {
-        DC_BUS* dc_bus = dc_buses[i];
-        unsigned int dc_bus_number = dc_bus->get_dc_bus_number();
+        DC_BUS& dc_bus = *(dc_buses[i]);
+        unsigned int dc_bus_number = dc_bus.get_dc_bus_number();
 
-        DC_BUS_TYPE type = dc_bus->get_dc_bus_type();
+        DC_BUS_TYPE type = dc_bus.get_dc_bus_type();
         if(type==DC_U_NODE)
         {
-            DC_TERMINAL* dc_terminal = get_dc_terminal_with_dc_bus_number(dc_bus_number);
-            if(dc_terminal==NULL)
+            DC_TERMINAL* dc_terminal_ptr = get_dc_terminal_with_dc_bus_number(dc_bus_number);
+            if(dc_terminal_ptr==NULL)
             {
                 osstream<<"Erro for powerflow initialization of DC bus:"<<dc_bus_number<<" with U mode bu no termianl is connected";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 return;
             }
-            unsigned int terminal_number = dc_terminal->get_terminal_number();
+            DC_TERMINAL& dc_terminal = *dc_terminal_ptr;
+            unsigned int terminal_number = dc_terminal.get_terminal_number();
 
             double Uref = get_voltage_of_voltage_terminal(terminal_number);
-            dc_bus->set_dc_bus_voltage_in_kV(Uref);
+            dc_bus.set_dc_bus_voltage_in_kV(Uref);
         }
         else
         {
             double Uref = get_dc_base_voltage();
-            dc_bus->set_dc_bus_voltage_in_kV(Uref);
+            dc_bus.set_dc_bus_voltage_in_kV(Uref);
         }
 
     }
@@ -3188,7 +3233,8 @@ void MT_HVDC::initialize_vsc_converters()
     unsigned int n = vscs.size();
     for(unsigned int i=0;i!=n;i++)
     {
-        vscs[i]->initialize_power_stations();
+        HVSC& vsc = *(vscs[i]);
+        vsc.initialize_power_stations();
     }
 }
 
@@ -3198,14 +3244,15 @@ void MT_HVDC::initialize_lcc_converters()
     unsigned int n = lccs.size();
     for(unsigned int i=0;i!=n;i++)
     {
-        lccs[i]->set_control_mode_change_flag(false);
-        HLCC_CONTROL_MODE mode = lccs[i]->get_control_mode();
+        HLCC& lcc = *(lccs[i]);
+        lcc.set_control_mode_change_flag(false);
+        HLCC_CONTROL_MODE mode = lcc.get_control_mode();
         if(mode==LCC_CONSTANR_FIRING_ANGLE_MODE)
         {
-            double min_tap = lccs[i]->get_converter_transformer_min_tap_in_pu();
-            double angle = lccs[i]->get_command_firing_angle();
-            lccs[i]->set_converter_transformer_tap_in_pu(min_tap);
-            lccs[i]->set_firing_angle_in_deg(angle);
+            double min_tap = lcc.get_converter_transformer_min_tap_in_pu();
+            double angle = lcc.get_command_firing_angle();
+            lcc.set_converter_transformer_tap_in_pu(min_tap);
+            lcc.set_firing_angle_in_deg(angle);
         }
     }
 }
@@ -3220,10 +3267,11 @@ void MT_HVDC::initialize_physical_internal_bus_pair()
         unsigned int internal_bus_number = 0;
         for(unsigned int i=0;i!=n_dcbus;i++)
         {
-            DC_BUS_TYPE type = dc_buses[i]->get_dc_bus_type();
+            DC_BUS& dc_bus = *(dc_buses[i]);
+            DC_BUS_TYPE type = dc_bus.get_dc_bus_type();
             if(type==DC_P_NODE)
             {
-                unsigned int bus_number = dc_buses[i]->get_dc_bus_number();
+                unsigned int bus_number = dc_bus.get_dc_bus_number();
                 inphno.set_physical_internal_bus_number_pair(bus_number, internal_bus_number);
                 ++internal_bus_number;
             }
@@ -3231,10 +3279,11 @@ void MT_HVDC::initialize_physical_internal_bus_pair()
 
         for(unsigned int i=0;i!=n_dcbus;i++)
         {
-            DC_BUS_TYPE type = dc_buses[i]->get_dc_bus_type();
+            DC_BUS& dc_bus = *(dc_buses[i]);
+            DC_BUS_TYPE type = dc_bus.get_dc_bus_type();
             if(type==DC_I_NODE)
             {
-                unsigned int bus_number = dc_buses[i]->get_dc_bus_number();
+                unsigned int bus_number = dc_bus.get_dc_bus_number();
                 inphno.set_physical_internal_bus_number_pair(bus_number, internal_bus_number);
                 ++internal_bus_number;
             }
@@ -3242,10 +3291,11 @@ void MT_HVDC::initialize_physical_internal_bus_pair()
 
         for(unsigned int i=0;i!=n_dcbus;i++)
         {
-            DC_BUS_TYPE type = dc_buses[i]->get_dc_bus_type();
+            DC_BUS& dc_bus = *(dc_buses[i]);
+            DC_BUS_TYPE type = dc_bus.get_dc_bus_type();
             if(type==DC_ANGLE_NODE)
             {
-                unsigned int bus_number = dc_buses[i]->get_dc_bus_number();
+                unsigned int bus_number = dc_bus.get_dc_bus_number();
                 inphno.set_physical_internal_bus_number_pair(bus_number, internal_bus_number);
                 ++internal_bus_number;
             }
@@ -3253,10 +3303,11 @@ void MT_HVDC::initialize_physical_internal_bus_pair()
 
         for(unsigned int i=0;i!=n_dcbus;i++)
         {
-            DC_BUS_TYPE type = dc_buses[i]->get_dc_bus_type();
+            DC_BUS& dc_bus = *(dc_buses[i]);
+            DC_BUS_TYPE type = dc_bus.get_dc_bus_type();
             if(type==DC_NOCON_BUS)
             {
-                unsigned int bus_number = dc_buses[i]->get_dc_bus_number();
+                unsigned int bus_number = dc_bus.get_dc_bus_number();
                 inphno.set_physical_internal_bus_number_pair(bus_number, internal_bus_number);
                 ++internal_bus_number;
             }
@@ -3264,10 +3315,11 @@ void MT_HVDC::initialize_physical_internal_bus_pair()
 
         for(unsigned int i=0;i!=n_dcbus;i++)
         {
-            DC_BUS_TYPE type = dc_buses[i]->get_dc_bus_type();
+            DC_BUS& dc_bus = *(dc_buses[i]);
+            DC_BUS_TYPE type = dc_bus.get_dc_bus_type();
             if(type==DC_U_NODE)
             {
-                unsigned int bus_number = dc_buses[i]->get_dc_bus_number();
+                unsigned int bus_number = dc_bus.get_dc_bus_number();
                 inphno.set_physical_internal_bus_number_pair(bus_number, internal_bus_number);
                 ++internal_bus_number;
             }
@@ -3306,11 +3358,12 @@ void MT_HVDC::add_dc_line_to_dc_network_matrix()
     unsigned int n = get_dc_line_count();
     for(unsigned int i=0;i!=n;i++)
     {
-        if(dclines[i]->get_status()==true)
+        DC_LINE& dcline = *(dclines[i]);
+        if(dcline.get_status()==true)
         {
-            unsigned int sending_bus = dclines[i]->get_sending_side_bus_number();
-            unsigned int receiving_bus = dclines[i]->get_receiving_side_bus_number();
-            double r = dclines[i]->get_line_R_in_ohm();
+            unsigned int sending_bus = dcline.get_sending_side_bus_number();
+            unsigned int receiving_bus = dcline.get_receiving_side_bus_number();
+            double r = dcline.get_line_R_in_ohm();
             double g = 1/r;
 
             unsigned int ibus = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
@@ -3360,20 +3413,21 @@ double MT_HVDC::get_active_power_of_power_terminal(unsigned int terminal_number)
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     double P_terminal = 0;
-    DC_TERMINAL* terminal = get_dc_terminal_with_terminal_number(terminal_number);
+    DC_TERMINAL* terminal_ptr = get_dc_terminal_with_terminal_number(terminal_number);
+    DC_TERMINAL& terminal = *terminal_ptr;
 
-    if(terminal->get_status()==false)
+    if(terminal.get_status()==false)
         return 0.0;
 
-    if(terminal->get_terminal_mode()==DC_P_TERMIANL)
+    if(terminal.get_terminal_mode()==DC_P_TERMIANL)
     {
         vector<DC_STATION*> stations = get_dc_stations_connect_to_terminal(terminal_number);
         unsigned int n = stations.size();
         for(unsigned int i=0;i!=n;i++)
         {
-            DC_STATION* station = stations[i];
-            DC_STATION_MODE smode = station->get_station_mode();
-            unsigned int station_number = station->get_station_number();
+            DC_STATION& station = *(stations[i]);
+            DC_STATION_MODE smode = station.get_station_mode();
+            unsigned int station_number = station.get_station_number();
             if(smode==DC_P_STATION)
             {
                 double P_station = get_active_power_of_power_station(station_number);
@@ -3382,7 +3436,7 @@ double MT_HVDC::get_active_power_of_power_terminal(unsigned int terminal_number)
             }
             else
             {
-                osstream<<"Erro! Conflict modes between station: "<<station_number<<" in power terminal:"<<terminal->get_terminal_name();
+                osstream<<"Erro! Conflict modes between station: "<<station_number<<" in power terminal:"<<terminal.get_terminal_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -3390,7 +3444,7 @@ double MT_HVDC::get_active_power_of_power_terminal(unsigned int terminal_number)
     }
     else
     {
-        osstream<<"Erro! DC terminal "<<terminal->get_terminal_name()<<" is not in power mode";
+        osstream<<"Erro! DC terminal "<<terminal.get_terminal_name()<<" is not in power mode";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
@@ -3403,25 +3457,26 @@ double MT_HVDC::get_active_power_of_power_station(unsigned int station_number)
     ostringstream osstream;
 
     double P_station = 0.0;
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    if(station->get_status()==false)
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    if(station.get_status()==false)
         return 0.0;
 
-    DC_STATION_STRUCTURE type = station->get_station_structure();
+    DC_STATION_STRUCTURE type = station.get_station_structure();
     if(type==LCC_CASCADE)
     {
         vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
         unsigned int n_lcc = lccs.size();
         for(unsigned int i=0;i!=n_lcc;i++)
         {
-            HLCC* lcc = lccs[i];
-            if(lcc->get_control_mode()!=LCC_CONSTANT_POWER_MODE)
+            HLCC& lcc = *(lccs[i]);
+            if(lcc.get_control_mode()!=LCC_CONSTANT_POWER_MODE)
             {
-                osstream<<"Erro! Control mode of LCC:"<<lcc->get_converter_name()<<" in station: "<<station_number<<" conflict with station power mode";
+                osstream<<"Erro! Control mode of LCC:"<<lcc.get_converter_name()<<" in station: "<<station_number<<" conflict with station power mode";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 return 0.0;
             }
-            double P_lcc = lcc->get_command_pdc_in_MW();
+            double P_lcc = lcc.get_command_pdc_in_MW();
             P_station = P_station+P_lcc;
         }
         return P_station;
@@ -3433,17 +3488,17 @@ double MT_HVDC::get_active_power_of_power_station(unsigned int station_number)
         unsigned n_vsc = vscs.size();
         for(unsigned int i=0;i!=n_vsc;i++)
         {
-            HVSC* vsc = vscs[i];
-            if(vsc->get_converter_d_axis_control_mode()!=VSC_CONSTANT_AC_ACTIVE_POWER_MODE)
+            HVSC& vsc = *(vscs[i]);
+            if(vsc.get_converter_d_axis_control_mode()!=VSC_CONSTANT_AC_ACTIVE_POWER_MODE)
             {
-                osstream<<"Erro! Control mode of VSC:"<<vsc->get_converter_name()<<" in station: "<<station_number<<" conflict with station power mode";
+                osstream<<"Erro! Control mode of VSC:"<<vsc.get_converter_name()<<" in station: "<<station_number<<" conflict with station power mode";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 return 0.0;
             }
-            double Pac_vsc = vsc->get_converter_P_to_AC_bus_MW();
-            double Qac_vsc = vsc->get_converter_Q_to_AC_bus_Mvar();
-            double P_vsc = vsc->solve_dc_power_of_p_control(Pac_vsc, Qac_vsc);
-            //osstream<<"POWER OF "<<vsc->get_converter_name()<<"Pac_vsc= "<<Pac_vsc<<" Qac_vsc="<<Qac_vsc;
+            double Pac_vsc = vsc.get_converter_P_to_AC_bus_MW();
+            double Qac_vsc = vsc.get_converter_Q_to_AC_bus_Mvar();
+            double P_vsc = vsc.solve_dc_power_of_p_control(Pac_vsc, Qac_vsc);
+            //osstream<<"POWER OF "<<vsc.get_converter_name()<<"Pac_vsc= "<<Pac_vsc<<" Qac_vsc="<<Qac_vsc;
             //toolkit.show_information_with_leading_time_stamp(osstream);
             P_station = P_station+P_vsc;
         }
@@ -3456,14 +3511,14 @@ double MT_HVDC::get_active_power_of_power_station(unsigned int station_number)
         unsigned int n_lcc = lccs.size();
         for(unsigned int i=0;i!=n_lcc;i++)
         {
-            HLCC* lcc = lccs[i];
-            if(lcc->get_control_mode()!=LCC_CONSTANT_POWER_MODE)
+            HLCC& lcc = *(lccs[i]);
+            if(lcc.get_control_mode()!=LCC_CONSTANT_POWER_MODE)
             {
-                osstream<<"Erro! Control mode of LCC:"<<lcc->get_converter_name()<<" in station: "<<station_number<<" conflict with station power mode";
+                osstream<<"Erro! Control mode of LCC:"<<lcc.get_converter_name()<<" in station: "<<station_number<<" conflict with station power mode";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 return 0.0;
             }
-            double P_lcc = lcc->get_command_pdc_in_MW();
+            double P_lcc = lcc.get_command_pdc_in_MW();
             P_station = P_station+P_lcc;
         }
         return P_station;
@@ -3477,27 +3532,33 @@ double MT_HVDC::get_current_of_current_terminal(unsigned int terminal_number)
     ostringstream osstream;
     double I_terminal = 0.0;
     double min_I_terminal = 0.0;
-    DC_TERMINAL* terminal = get_dc_terminal_with_terminal_number(terminal_number);
-    if(terminal->get_status()==false)
+    DC_TERMINAL* terminal_ptr = get_dc_terminal_with_terminal_number(terminal_number);
+    DC_TERMINAL& terminal = *terminal_ptr;
+
+    if(terminal.get_status()==false)
         return 0.0;
 
-    if(terminal->get_terminal_mode()==DC_I_TERMINAL)
+    if(terminal.get_terminal_mode()==DC_I_TERMINAL)
     {
         vector<DC_STATION*> stations = get_dc_stations_connect_to_terminal(terminal_number);
         unsigned int n = stations.size();
         if(n==1)
         {
-            I_terminal = get_current_of_current_station(stations[0]->get_station_number());
+            DC_STATION& station_first = *(stations[0]);
+            I_terminal = get_current_of_current_station(station_first.get_station_number());
         }
         else
         {
-            min_I_terminal = get_current_of_current_station(stations[0]->get_station_number());
+            DC_STATION& station_first = *(stations[0]);
+            min_I_terminal = get_current_of_current_station(station_first.get_station_number());
             for(unsigned int i=0;i!=n;i++)
             {
-                double idc_station = get_current_of_current_station(stations[i]->get_station_number());
+
+                DC_STATION& station = *(stations[i]);
+                double idc_station = get_current_of_current_station(station.get_station_number());
                 if((abs(idc_station)<abs(min_I_terminal))&&(idc_station!=0))
                 {
-                    osstream<<"Warning! Station command current in terminal"<< terminal->get_terminal_name()<<"is inconsistent and the station current is set:"<<idc_station;
+                    osstream<<"Warning! Station command current in terminal"<< terminal.get_terminal_name()<<"is inconsistent and the station current is set:"<<idc_station;
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     min_I_terminal = idc_station;
                 }
@@ -3508,7 +3569,7 @@ double MT_HVDC::get_current_of_current_terminal(unsigned int terminal_number)
     }
     else
     {
-        osstream<<"Erro! DC terminal "<<terminal->get_terminal_name()<<" is not in current mode";
+        osstream<<"Erro! DC terminal "<<terminal.get_terminal_name()<<" is not in current mode";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
@@ -3519,18 +3580,19 @@ double MT_HVDC::get_current_of_current_station(unsigned int station_number)
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     double I_station = 0.0;
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    DC_STATION_STRUCTURE type = station->get_station_structure();
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    DC_STATION_STRUCTURE type = station.get_station_structure();
     if(type==LCC_CASCADE)
     {
         vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
         unsigned int n_lcc = lccs.size();
         for(unsigned int i=0;i!=n_lcc;i++)
         {
-            HLCC* lcc = lccs[i];
-            if(lcc->get_control_mode()!=LCC_CONSTANT_CURRENT_MODE)
+            HLCC& lcc = *(lccs[i]);
+            if(lcc.get_control_mode()!=LCC_CONSTANT_CURRENT_MODE)
             {
-                osstream<<"Control mode of LCC: "<<lcc->get_converter_name()<<"in station: "<<station->get_station_name()<<" conflict with station current mode";
+                osstream<<"Control mode of LCC: "<<lcc.get_converter_name()<<"in station: "<<station.get_station_name()<<" conflict with station current mode";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 return 0.0;
             }
@@ -3538,18 +3600,21 @@ double MT_HVDC::get_current_of_current_station(unsigned int station_number)
 
         if(n_lcc==1)
         {
-            I_station=lccs[0]->get_command_idc_in_kA();
+            HLCC& lcc_first = *(lccs[0]);
+            I_station=lcc_first.get_command_idc_in_kA();
             return I_station;
         }
         else
         {
-            double min_idc = lccs[0]->get_command_idc_in_kA();
+            HLCC& lcc_first = *(lccs[0]);
+            double min_idc = lcc_first.get_command_idc_in_kA();
             for(unsigned int i=0;i!=n_lcc-1;i++)
             {
-                double idc_lcc = lccs[i]->get_command_idc_in_kA();
+                HLCC& lcc = *(lccs[i]);
+                double idc_lcc = lcc.get_command_idc_in_kA();
                 if((abs(idc_lcc)<abs(min_idc)) && (idc_lcc!=0))
                 {
-                    osstream<<"The dc current command of LCC in station "<<station->get_station_name()<<"is inconsistent and the station current is set:"<<idc_lcc;
+                    osstream<<"The dc current command of LCC in station "<<station.get_station_name()<<"is inconsistent and the station current is set:"<<idc_lcc;
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     min_idc = idc_lcc;
                 }
@@ -3581,20 +3646,21 @@ double MT_HVDC::get_voltage_of_voltage_terminal(unsigned int terminal_number)
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     double U_terminal = 0;
-    DC_TERMINAL* terminal = get_dc_terminal_with_terminal_number(terminal_number);
+    DC_TERMINAL* terminal_ptr = get_dc_terminal_with_terminal_number(terminal_number);
+    DC_TERMINAL& terminal = *terminal_ptr;
 
-    if(terminal->get_status()==false)
+    if(terminal.get_status()==false)
         return 0.0;
 
-    if(terminal->get_terminal_mode()==DC_U_TERMINAL)
+    if(terminal.get_terminal_mode()==DC_U_TERMINAL)
     {
         vector<DC_STATION*> stations = get_dc_stations_connect_to_terminal(terminal_number);
         unsigned int n = stations.size();
         for(unsigned int i=0;i!=n;i++)
         {
-            DC_STATION* station = stations[i];
-            DC_STATION_MODE smode = station->get_station_mode();
-            unsigned int station_number = station->get_station_number();
+            DC_STATION& station = *(stations[i]);
+            DC_STATION_MODE smode = station.get_station_mode();
+            unsigned int station_number = station.get_station_number();
             if(smode==DC_U_STATION)
             {
                 double U_station = get_voltage_of_voltage_station(station_number);
@@ -3611,7 +3677,7 @@ double MT_HVDC::get_voltage_of_voltage_terminal(unsigned int terminal_number)
     }
     else
     {
-        osstream<<"Erro! DC terminal "<<terminal->get_terminal_name()<<" is not in voltage mode";
+        osstream<<"Erro! DC terminal "<<terminal.get_terminal_name()<<" is not in voltage mode";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 0.0;;
     }
@@ -3622,26 +3688,27 @@ double MT_HVDC::get_voltage_of_voltage_station(unsigned int station_number)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
 
-    if(station->get_status()==false)
+    if(station.get_status()==false)
         return 0.0;
     double U_station = 0.0;
-    DC_STATION_STRUCTURE type = station->get_station_structure();
+    DC_STATION_STRUCTURE type = station.get_station_structure();
     if((type==LCC_CASCADE) or (type==LCC_HCM))
     {
         vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
         unsigned int n_lcc = lccs.size();
         for(unsigned int i=0;i!=n_lcc;i++)
         {
-            HLCC* lcc = lccs[i];
-            if(lcc->get_control_mode()!=LCC_CONSTANT_VOLTAGE_MODE)
+            HLCC& lcc = *(lccs[i]);
+            if(lcc.get_control_mode()!=LCC_CONSTANT_VOLTAGE_MODE)
             {
-                osstream<<"Erro! Control mode of LCC:"<<lcc->get_converter_name()<<" in station: "<<station_number<<" conflict with station power mode";
+                osstream<<"Erro! Control mode of LCC:"<<lcc.get_converter_name()<<" in station: "<<station_number<<" conflict with station power mode";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 return 0.0;
             }
-            double U_lcc = lcc->get_command_udc_in_kV();
+            double U_lcc = lcc.get_command_udc_in_kV();
             U_station = U_station+U_lcc;
         }
         return U_station;
@@ -3650,8 +3717,9 @@ double MT_HVDC::get_voltage_of_voltage_station(unsigned int station_number)
     if(type==VSC_PARALLEL)
     {
 
-        HVSC* vsc = get_current_voltage_vsc_converter(station_number);
-        double udc = vsc->get_converter_Udc_command();
+        HVSC* vsc_ptr = get_current_vsc_converter_with_top_priority(station_number);
+        HVSC& vsc = *vsc_ptr;
+        double udc = vsc.get_converter_Udc_command();
         return udc;
     }
     return 0.0;
@@ -3661,10 +3729,11 @@ double MT_HVDC::get_active_power_of_voltage_vsc_stations(unsigned int station_nu
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    if(station->get_station_structure()!=VSC_PARALLEL)
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    if(station.get_station_structure()!=VSC_PARALLEL)
     {
-        osstream<<"DC station: "<<station->get_station_name()<<"is not VSC station";
+        osstream<<"DC station: "<<station.get_station_name()<<"is not VSC station";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
@@ -3675,12 +3744,13 @@ double MT_HVDC::get_active_power_of_voltage_vsc_stations(unsigned int station_nu
     for(unsigned int i=0;i!=n_vsc;i++)
     {
         double P_vsc = 0.0;
-        HVSC_D_CONTROL_MODE dmode = vscs[i]->get_converter_d_axis_control_mode();
+        HVSC& vsc = *(vscs[i]);
+        HVSC_D_CONTROL_MODE dmode = vsc.get_converter_d_axis_control_mode();
         if(dmode==VSC_CONSTANT_AC_ACTIVE_POWER_MODE)
         {
-            double Pac = vscs[i]->get_converter_P_to_AC_bus_MW();
-            double Qac = vscs[i]->get_converter_Q_to_AC_bus_Mvar();
-            P_vsc = vscs[i]->solve_dc_power_of_p_control(Pac,Qac);
+            double Pac = vsc.get_converter_P_to_AC_bus_MW();
+            double Qac = vsc.get_converter_Q_to_AC_bus_Mvar();
+            P_vsc = vsc.solve_dc_power_of_p_control(Pac,Qac);
             P+=P_vsc;
 
         }
@@ -3703,8 +3773,9 @@ double MT_HVDC::get_active_power_of_angle_terminal(unsigned int terminal_number)
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     ostringstream osstream;
-    DC_TERMINAL* terminal = get_dc_terminal_with_terminal_number(terminal_number);
-    if(terminal->get_status()==false)
+    DC_TERMINAL* terminal_ptr = get_dc_terminal_with_terminal_number(terminal_number);
+    DC_TERMINAL& terminal = *terminal_ptr;
+    if(terminal.get_status()==false)
         return 0.0;
 
     double P_terminal = 0.0;
@@ -3712,31 +3783,32 @@ double MT_HVDC::get_active_power_of_angle_terminal(unsigned int terminal_number)
     unsigned int n_station = stations.size();
     if(n_station==1)
     {
-        DC_STATION* station = stations[0];
-        unsigned int station_number = station->get_station_number();
-        DC_STATION_STRUCTURE structure = station->get_station_structure();
+        DC_STATION& station = *(stations[0]);
+        unsigned int station_number = station.get_station_number();
+        DC_STATION_STRUCTURE structure = station.get_station_structure();
         if(structure==LCC_CASCADE)
         {
             vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
-            HLCC* lcc = lccs[0];
+            HLCC& lcc = *(lccs[0]);
             unsigned int n_lcc = lccs.size();
-            DC_BUS* dcbus = get_dc_bus_with_terminal_number(terminal_number);
-            double vdc = dcbus->get_dc_bus_voltage_in_kV();
-            double vac = psdb.get_bus_positive_sequence_voltage_in_kV(lcc->get_converter_ac_bus());
+            DC_BUS* dcbus_ptr = get_dc_bus_with_terminal_number(terminal_number);
+            DC_BUS& dcbus = *dcbus_ptr;
+            double vdc = dcbus.get_dc_bus_voltage_in_kV();
+            double vac = psdb.get_bus_positive_sequence_voltage_in_kV(lcc.get_converter_ac_bus());
 
-            unsigned int n_bridge = lcc->get_brideg_number();
-            double vbase_grid = lcc->get_converter_transformer_grid_side_base_voltage_in_kV();
-            double vbase_converter = lcc->get_converter_transformer_converter_side_base_voltage_in_kV();
+            unsigned int n_bridge = lcc.get_brideg_number();
+            double vbase_grid = lcc.get_converter_transformer_grid_side_base_voltage_in_kV();
+            double vbase_converter = lcc.get_converter_transformer_converter_side_base_voltage_in_kV();
             double k = vbase_grid/vbase_converter;
-            double tap = lcc->get_converter_transformer_tap_in_pu();
+            double tap = lcc.get_converter_transformer_tap_in_pu();
 
-            double ang_in_deg = lcc->get_command_firing_angle();
+            double ang_in_deg = lcc.get_command_firing_angle();
             double ang_in_rad = deg2rad(ang_in_deg);
             double cos_ang = steps_cos(ang_in_rad);
 
-            double vdrop = lcc->get_voltage_drop_per_bridge_in_kV();
+            double vdrop = lcc.get_voltage_drop_per_bridge_in_kV();
 
-            complex<double> Z = lcc->get_converter_transformer_Z_in_ohm();
+            complex<double> Z = lcc.get_converter_transformer_Z_in_ohm();
             double r = Z.real();
             double x = Z.imag();
 
@@ -3754,7 +3826,7 @@ double MT_HVDC::get_active_power_of_angle_terminal(unsigned int terminal_number)
             unsigned int n_lcc = lccs.size();
             if(n_lcc!=2)
             {
-                osstream<<"Erro! Only 2 converters with HCM mode is not supported in terminal "<<terminal->get_terminal_name();
+                osstream<<"Erro! Only 2 converters with HCM mode is not supported in terminal "<<terminal.get_terminal_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 return 0.0;
             }
@@ -3787,31 +3859,35 @@ double MT_HVDC::get_active_power_of_HCM_terminal_with_1_angle_fixed(unsigned int
     ostringstream osstream;
 
     double P_station =0.0;
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    unsigned int terminal_number = station->get_terminal_number();
-    DC_BUS* dcbus =get_dc_bus_with_terminal_number(terminal_number);
-    double vdc = dcbus->get_dc_bus_voltage_in_kV();
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    unsigned int terminal_number = station.get_terminal_number();
+    DC_BUS* dcbus_ptr = get_dc_bus_with_terminal_number(terminal_number);
+    DC_BUS& dcbus = *dcbus_ptr;
+    double vdc = dcbus.get_dc_bus_voltage_in_kV();
 
-    HLCC* lcc_angle = get_lcc_converter_angle_fixed_of_HCM_station(station_number);
-    HLCC* lcc_voltage = get_lcc_converter_angle_slack_of_HCM_station(station_number);
+    HLCC* lcc_angle_ptr = get_lcc_converter_angle_fixed_of_HCM_station(station_number);
+    HLCC* lcc_voltage_ptr = get_lcc_converter_angle_slack_of_HCM_station(station_number);
+    HLCC& lcc_angle = *lcc_angle_ptr;
+    HLCC& lcc_voltage = *lcc_voltage_ptr;
 
-    unsigned int n_bridge = lcc_angle->get_brideg_number();
-    double vbase_grid = lcc_angle->get_converter_transformer_grid_side_base_voltage_in_kV();
-    double vbase_converter = lcc_angle->get_converter_transformer_converter_side_base_voltage_in_kV();
+    unsigned int n_bridge = lcc_angle.get_brideg_number();
+    double vbase_grid = lcc_angle.get_converter_transformer_grid_side_base_voltage_in_kV();
+    double vbase_converter = lcc_angle.get_converter_transformer_converter_side_base_voltage_in_kV();
     double k = vbase_grid/vbase_converter;
-    double tap = lcc_angle->get_converter_transformer_tap_in_pu();
+    double tap = lcc_angle.get_converter_transformer_tap_in_pu();
 
-    double ang_deg = lcc_angle->get_command_firing_angle();
+    double ang_deg = lcc_angle.get_command_firing_angle();
     double ang_rad = deg2rad(ang_deg);
     double cos_ang = steps_cos(ang_rad);
 
-    double vdrop = lcc_angle->get_voltage_drop_per_bridge_in_kV();
-    complex<double> z = lcc_angle->get_converter_transformer_Z_in_ohm();
+    double vdrop = lcc_angle.get_voltage_drop_per_bridge_in_kV();
+    complex<double> z = lcc_angle.get_converter_transformer_Z_in_ohm();
     double r = z.real();
     double x = z.imag();
-    double vac = psdb.get_bus_positive_sequence_voltage_in_kV(lcc_angle->get_converter_ac_bus());
+    double vac = psdb.get_bus_positive_sequence_voltage_in_kV(lcc_angle.get_converter_ac_bus());
 
-    double vdc1 = lcc_voltage->get_command_udc_in_kV();
+    double vdc1 = lcc_voltage.get_command_udc_in_kV();
 
     double req = THREE_OVER_PI*x + 2*r;
     double ueq = -(vdc-vdc1)/n_bridge+(THREE_SQRT2_OVER_PI*vac*cos_ang/k/tap-vdrop);
@@ -3830,50 +3906,52 @@ double MT_HVDC::get_active_power_of_HCM_terminal_with_2_angle_fixed(unsigned int
     ostringstream osstream;
 
     double P_station =0.0;
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    unsigned int terminal_number = station->get_terminal_number();
-    DC_BUS* dcbus =get_dc_bus_with_terminal_number(terminal_number);
-    double vdc = dcbus->get_dc_bus_voltage_in_kV();
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    unsigned int terminal_number = station.get_terminal_number();
+    DC_BUS* dcbus_ptr = get_dc_bus_with_terminal_number(terminal_number);
+    DC_BUS& dcbus = *dcbus_ptr;
+    double vdc = dcbus.get_dc_bus_voltage_in_kV();
 
     vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
-    HLCC* lcc1 = lccs[0];
-    HLCC* lcc2 = lccs[1];
+    HLCC& lcc1 = *(lccs[0]);
+    HLCC& lcc2 = *(lccs[1]);
 
-    unsigned int n_bridge1 = lcc1->get_brideg_number();
+    unsigned int n_bridge1 = lcc1.get_brideg_number();
 
-    double vbase_grid1 = lcc1->get_converter_transformer_grid_side_base_voltage_in_kV();
-    double vbase_converter1 = lcc1->get_converter_transformer_converter_side_base_voltage_in_kV();
+    double vbase_grid1 = lcc1.get_converter_transformer_grid_side_base_voltage_in_kV();
+    double vbase_converter1 = lcc1.get_converter_transformer_converter_side_base_voltage_in_kV();
     double k1 = vbase_grid1/vbase_converter1;
 
-    double tap1 = lcc1->get_converter_transformer_tap_in_pu();
+    double tap1 = lcc1.get_converter_transformer_tap_in_pu();
 
-    double ang_in_deg1 = lcc1->get_command_firing_angle();
+    double ang_in_deg1 = lcc1.get_command_firing_angle();
     double ang_in_rad1 = deg2rad(ang_in_deg1);
     double cos_ang1 = steps_cos(ang_in_rad1);
 
-    double vdrop1 = lcc1->get_voltage_drop_per_bridge_in_kV();
+    double vdrop1 = lcc1.get_voltage_drop_per_bridge_in_kV();
 
-    double vac1 = psdb.get_bus_positive_sequence_voltage_in_kV(lcc1->get_converter_ac_bus());
-    complex<double> z1 = lcc1->get_converter_transformer_Z_in_ohm();
+    double vac1 = psdb.get_bus_positive_sequence_voltage_in_kV(lcc1.get_converter_ac_bus());
+    complex<double> z1 = lcc1.get_converter_transformer_Z_in_ohm();
     double r1 = z1.real();
     double x1 = z1.imag();
 
-    unsigned int n_bridge2 = lcc2->get_brideg_number();
+    unsigned int n_bridge2 = lcc2.get_brideg_number();
 
-    double vbase_grid2 = lcc2->get_converter_transformer_grid_side_base_voltage_in_kV();
-    double vbase_converter2 = lcc2->get_converter_transformer_converter_side_base_voltage_in_kV();
+    double vbase_grid2 = lcc2.get_converter_transformer_grid_side_base_voltage_in_kV();
+    double vbase_converter2 = lcc2.get_converter_transformer_converter_side_base_voltage_in_kV();
     double k2 = vbase_grid2/vbase_converter2;
 
-    double tap2 = lcc2->get_converter_transformer_tap_in_pu();
+    double tap2 = lcc2.get_converter_transformer_tap_in_pu();
 
-    double ang_in_deg2 = lcc2->get_command_firing_angle();
+    double ang_in_deg2 = lcc2.get_command_firing_angle();
     double ang_in_rad2 = deg2rad(ang_in_deg2);
     double cos_ang2 = steps_cos(ang_in_rad2);
 
-    double vdrop2 = lcc2->get_voltage_drop_per_bridge_in_kV();
+    double vdrop2 = lcc2.get_voltage_drop_per_bridge_in_kV();
 
-    double vac2 = psdb.get_bus_positive_sequence_voltage_in_kV(lcc2->get_converter_ac_bus());
-    complex<double> z2 = lcc2->get_converter_transformer_Z_in_ohm();
+    double vac2 = psdb.get_bus_positive_sequence_voltage_in_kV(lcc2.get_converter_ac_bus());
+    complex<double> z2 = lcc2.get_converter_transformer_Z_in_ohm();
     double r2 = z2.real();
     double x2 = z2.imag();
 
@@ -3886,7 +3964,7 @@ double MT_HVDC::get_active_power_of_HCM_terminal_with_2_angle_fixed(unsigned int
     double Ieq = (-vdc+ueq1+ueq2)/(req1+req2);
     P_station = vdc*Ieq;
 
-    osstream<<"ACTIVE POWER OF HCM STATION "<<station->get_station_name()<<" WITH 2 LCC ANGLE FIXED IS "<<P_station;
+    osstream<<"ACTIVE POWER OF HCM STATION "<<station.get_station_name()<<" WITH 2 LCC ANGLE FIXED IS "<<P_station;
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     return P_station;
@@ -3901,31 +3979,35 @@ double MT_HVDC::get_jacobian_element_of_HCM_terminal_with_1_angle_fixed(unsigned
     ostringstream osstream;
 
     double der =0.0;
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    unsigned int terminal_number = station->get_terminal_number();
-    DC_BUS* dcbus =get_dc_bus_with_terminal_number(terminal_number);
-    double vdc = dcbus->get_dc_bus_voltage_in_kV();
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    unsigned int terminal_number = station.get_terminal_number();
+    DC_BUS* dcbus_ptr = get_dc_bus_with_terminal_number(terminal_number);
+    DC_BUS& dcbus = *dcbus_ptr;
+    double vdc = dcbus.get_dc_bus_voltage_in_kV();
 
-    HLCC* lcc_angle = get_lcc_converter_angle_fixed_of_HCM_station(station_number);
-    HLCC* lcc_voltage = get_lcc_converter_angle_slack_of_HCM_station(station_number);
+    HLCC* lcc_angle_ptr = get_lcc_converter_angle_fixed_of_HCM_station(station_number);
+    HLCC* lcc_voltage_ptr = get_lcc_converter_angle_slack_of_HCM_station(station_number);
+    HLCC& lcc_angle = *lcc_angle_ptr;
+    HLCC& lcc_voltage = *lcc_voltage_ptr;
 
-    unsigned int n_bridge = lcc_angle->get_brideg_number();
-    double vbase_grid = lcc_angle->get_converter_transformer_grid_side_base_voltage_in_kV();
-    double vbase_converter = lcc_angle->get_converter_transformer_converter_side_base_voltage_in_kV();
+    unsigned int n_bridge = lcc_angle.get_brideg_number();
+    double vbase_grid = lcc_angle.get_converter_transformer_grid_side_base_voltage_in_kV();
+    double vbase_converter = lcc_angle.get_converter_transformer_converter_side_base_voltage_in_kV();
     double k = vbase_grid/vbase_converter;
-    double tap = lcc_angle->get_converter_transformer_tap_in_pu();
+    double tap = lcc_angle.get_converter_transformer_tap_in_pu();
 
-    double ang_deg = lcc_angle->get_command_firing_angle();
+    double ang_deg = lcc_angle.get_command_firing_angle();
     double ang_rad = deg2rad(ang_deg);
     double cos_ang = steps_cos(ang_rad);
 
-    double vdrop = lcc_angle->get_voltage_drop_per_bridge_in_kV();
-    complex<double> z = lcc_angle->get_converter_transformer_Z_in_ohm();
+    double vdrop = lcc_angle.get_voltage_drop_per_bridge_in_kV();
+    complex<double> z = lcc_angle.get_converter_transformer_Z_in_ohm();
     double r = z.real();
     double x = z.imag();
-    double vac = psdb.get_bus_positive_sequence_voltage_in_kV(lcc_angle->get_converter_ac_bus());
+    double vac = psdb.get_bus_positive_sequence_voltage_in_kV(lcc_angle.get_converter_ac_bus());
 
-    double vdc1 = lcc_voltage->get_command_udc_in_kV();
+    double vdc1 = lcc_voltage.get_command_udc_in_kV();
 
     double req = THREE_OVER_PI*x + 2*r;
     double ueq = (-2*vdc+vdc1)/n_bridge+(THREE_SQRT2_OVER_PI*vac*cos_ang/k/tap-vdrop);
@@ -3942,50 +4024,52 @@ double MT_HVDC::get_jacobian_element_of_HCM_terminal_with_2_angle_fixed(unsigned
     ostringstream osstream;
 
     double der =0.0;
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    unsigned int terminal_number = station->get_terminal_number();
-    DC_BUS* dcbus =get_dc_bus_with_terminal_number(terminal_number);
-    double vdc = dcbus->get_dc_bus_voltage_in_kV();
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    unsigned int terminal_number = station.get_terminal_number();
+    DC_BUS* dcbus_ptr = get_dc_bus_with_terminal_number(terminal_number);
+    DC_BUS& dcbus = *dcbus_ptr;
+    double vdc = dcbus.get_dc_bus_voltage_in_kV();
 
     vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
-    HLCC* lcc1 = lccs[0];
-    HLCC* lcc2 = lccs[1];
+    HLCC& lcc1 = *(lccs[0]);
+    HLCC& lcc2 = *(lccs[1]);
 
-    unsigned int n_bridge1 = lcc1->get_brideg_number();
+    unsigned int n_bridge1 = lcc1.get_brideg_number();
 
-    double vbase_grid1 = lcc1->get_converter_transformer_grid_side_base_voltage_in_kV();
-    double vbase_converter1 = lcc1->get_converter_transformer_converter_side_base_voltage_in_kV();
+    double vbase_grid1 = lcc1.get_converter_transformer_grid_side_base_voltage_in_kV();
+    double vbase_converter1 = lcc1.get_converter_transformer_converter_side_base_voltage_in_kV();
     double k1 = vbase_grid1/vbase_converter1;
 
-    double tap1 = lcc1->get_converter_transformer_tap_in_pu();
+    double tap1 = lcc1.get_converter_transformer_tap_in_pu();
 
-    double ang_in_deg1 = lcc1->get_command_firing_angle();
+    double ang_in_deg1 = lcc1.get_command_firing_angle();
     double ang_in_rad1 = deg2rad(ang_in_deg1);
     double cos_ang1 = steps_cos(ang_in_rad1);
 
-    double vdrop1 = lcc1->get_voltage_drop_per_bridge_in_kV();
+    double vdrop1 = lcc1.get_voltage_drop_per_bridge_in_kV();
 
-    double vac1 = psdb.get_bus_positive_sequence_voltage_in_kV(lcc1->get_converter_ac_bus());
-    complex<double> z1 = lcc1->get_converter_transformer_Z_in_ohm();
+    double vac1 = psdb.get_bus_positive_sequence_voltage_in_kV(lcc1.get_converter_ac_bus());
+    complex<double> z1 = lcc1.get_converter_transformer_Z_in_ohm();
     double r1 = z1.real();
     double x1 = z1.imag();
 
-    unsigned int n_bridge2 = lcc2->get_brideg_number();
+    unsigned int n_bridge2 = lcc2.get_brideg_number();
 
-    double vbase_grid2 = lcc2->get_converter_transformer_grid_side_base_voltage_in_kV();
-    double vbase_converter2 = lcc2->get_converter_transformer_converter_side_base_voltage_in_kV();
+    double vbase_grid2 = lcc2.get_converter_transformer_grid_side_base_voltage_in_kV();
+    double vbase_converter2 = lcc2.get_converter_transformer_converter_side_base_voltage_in_kV();
     double k2 = vbase_grid2/vbase_converter2;
 
-    double tap2 = lcc2->get_converter_transformer_tap_in_pu();
+    double tap2 = lcc2.get_converter_transformer_tap_in_pu();
 
-    double ang_in_deg2 = lcc2->get_command_firing_angle();
+    double ang_in_deg2 = lcc2.get_command_firing_angle();
     double ang_in_rad2 = deg2rad(ang_in_deg2);
     double cos_ang2 = steps_cos(ang_in_rad2);
 
-    double vdrop2 = lcc2->get_voltage_drop_per_bridge_in_kV();
+    double vdrop2 = lcc2.get_voltage_drop_per_bridge_in_kV();
 
-    double vac2 = psdb.get_bus_positive_sequence_voltage_in_kV(lcc2->get_converter_ac_bus());
-    complex<double> z2 = lcc2->get_converter_transformer_Z_in_ohm();
+    double vac2 = psdb.get_bus_positive_sequence_voltage_in_kV(lcc2.get_converter_ac_bus());
+    complex<double> z2 = lcc2.get_converter_transformer_Z_in_ohm();
     double r2 = z2.real();
     double x2 = z2.imag();
 
@@ -4011,32 +4095,33 @@ double MT_HVDC::get_jacobian_element_of_angle_terminal(unsigned int terminal_num
     unsigned int n_station = stations.size();
     if(n_station==1)
     {
-        DC_STATION* station = stations[0];
-        unsigned int station_number = station->get_station_number();
-        //DC_STATION_MODE smode == station->get_station_mode();
-        DC_STATION_STRUCTURE structure = station->get_station_structure();
+        DC_STATION& station = *(stations[0]);
+        unsigned int station_number = station.get_station_number();
+        //DC_STATION_MODE smode == station.get_station_mode();
+        DC_STATION_STRUCTURE structure = station.get_station_structure();
         if(structure==LCC_CASCADE)
         {
             vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
-            HLCC* lcc = lccs[0];
+            HLCC& lcc = *(lccs[0]);
             unsigned int n_lcc = lccs.size();
-            DC_BUS* dcbus = get_dc_bus_with_terminal_number(terminal_number);
-            double vdc = dcbus->get_dc_bus_voltage_in_kV();
-            double vac = psdb.get_bus_positive_sequence_voltage_in_kV(lcc->get_converter_ac_bus());
+            DC_BUS* dcbus_ptr = get_dc_bus_with_terminal_number(terminal_number);
+            DC_BUS& dcbus = *dcbus_ptr;
+            double vdc = dcbus.get_dc_bus_voltage_in_kV();
+            double vac = psdb.get_bus_positive_sequence_voltage_in_kV(lcc.get_converter_ac_bus());
 
-            unsigned int n_bridge = lcc->get_brideg_number();
-            double vbase_grid = lcc->get_converter_transformer_grid_side_base_voltage_in_kV();
-            double vbase_converter = lcc->get_converter_transformer_converter_side_base_voltage_in_kV();
+            unsigned int n_bridge = lcc.get_brideg_number();
+            double vbase_grid = lcc.get_converter_transformer_grid_side_base_voltage_in_kV();
+            double vbase_converter = lcc.get_converter_transformer_converter_side_base_voltage_in_kV();
             double k = vbase_grid/vbase_converter;
-            double tap = lcc->get_converter_transformer_min_tap_in_pu();
+            double tap = lcc.get_converter_transformer_min_tap_in_pu();
 
-            double ang_in_deg = lcc->get_command_firing_angle();
+            double ang_in_deg = lcc.get_command_firing_angle();
             double ang_in_rad = deg2rad(ang_in_deg);
             double cos_ang = steps_cos(ang_in_rad);
 
-            double vdrop = lcc->get_voltage_drop_per_bridge_in_kV();
+            double vdrop = lcc.get_voltage_drop_per_bridge_in_kV();
 
-            complex<double> Z = lcc->get_converter_transformer_Z_in_ohm();
+            complex<double> Z = lcc.get_converter_transformer_Z_in_ohm();
             double r = Z.real();
             double x = Z.imag();
 
@@ -4081,7 +4166,8 @@ unsigned int MT_HVDC::get_number_of_dc_u_bus()
     unsigned int n = dc_buses.size();
     for(unsigned int i=0;i!=n;i++)
     {
-        DC_BUS_TYPE type = dc_buses[i]->get_dc_bus_type();
+        DC_BUS& dc_bus = *(dc_buses[i]);
+        DC_BUS_TYPE type = dc_bus.get_dc_bus_type();
         if(type==DC_U_NODE)
         {
             n_ubus++;
@@ -4112,15 +4198,16 @@ void MT_HVDC::calculate_raw_power_mismatch()
     {
         unsigned int bus_number = inphno.get_physical_bus_number_of_internal_bus_number(i);
         //DC_BUS* dc_bus = get_dc_bus_with_bus_number(bus_number);
-        DC_TERMINAL* terminal = get_dc_terminal_with_dc_bus_number(bus_number);
-        if(terminal==NULL)
+        DC_TERMINAL* terminal_ptr = get_dc_terminal_with_dc_bus_number(bus_number);
+        if(terminal_ptr==NULL)
         {
             double pmis = -bus_power[i];
             p_mismatch[i] = pmis;;
         }
         else
         {
-            unsigned int terminal_number = terminal->get_terminal_number();
+            DC_TERMINAL& terminal = *terminal_ptr;
+            unsigned int terminal_number = terminal.get_terminal_number();
             double Pc = get_dc_power_from_terminal(terminal_number);
 
             double pmis = Pc-bus_power[i];
@@ -4149,8 +4236,9 @@ void MT_HVDC::calculate_current_to_dc()
     for(int col=0;col!=nsize;col++)
     {
         unsigned int bus_number = inphno.get_physical_bus_number_of_internal_bus_number(col);
-        DC_BUS* dcbus = get_dc_bus_with_bus_number(bus_number);
-        double voltage = dcbus->get_dc_bus_voltage_in_kV();
+        DC_BUS* dcbus_ptr = get_dc_bus_with_bus_number(bus_number);
+        DC_BUS& dcbus = *dcbus_ptr;
+        double voltage = dcbus.get_dc_bus_voltage_in_kV();
         int k_end = dc_network_matrix.get_starting_index_of_column(col+1);
         for(int k=k_start;k<k_end;k++)
         {
@@ -4174,8 +4262,9 @@ void MT_HVDC::calculate_power_to_dc()
     for(unsigned int i=0;i!=nbus;i++)
     {
         unsigned int bus_no = inphno.get_physical_bus_number_of_internal_bus_number(i);
-        DC_BUS* dc_bus = get_dc_bus_with_bus_number(bus_no);
-        double voltage = dc_bus->get_dc_bus_voltage_in_kV();
+        DC_BUS* dc_bus_ptr = get_dc_bus_with_bus_number(bus_no);
+        DC_BUS& dc_bus = *dc_bus_ptr;
+        double voltage = dc_bus.get_dc_bus_voltage_in_kV();
         double i_bus = bus_current[i];
         bus_power[i] = voltage*i_bus;
     }
@@ -4184,9 +4273,10 @@ void MT_HVDC::calculate_power_to_dc()
 double MT_HVDC::get_dc_power_from_terminal(unsigned int bus_number)
 {
     double Pdc = 0.0;
-    DC_TERMINAL* terminal = get_dc_terminal_with_dc_bus_number(bus_number);
-    DC_TERMINAL_MODE tmode = terminal->get_terminal_mode();
-    unsigned int terminal_number = terminal->get_terminal_number();
+    DC_TERMINAL* terminal_ptr = get_dc_terminal_with_dc_bus_number(bus_number);
+    DC_TERMINAL& terminal = *terminal_ptr;
+    DC_TERMINAL_MODE tmode = terminal.get_terminal_mode();
+    unsigned int terminal_number = terminal.get_terminal_number();
 
     if(tmode==DC_P_TERMIANL)
     {
@@ -4196,8 +4286,9 @@ double MT_HVDC::get_dc_power_from_terminal(unsigned int bus_number)
     else if(tmode==DC_I_TERMINAL)
     {
         double Idc = get_current_of_current_terminal(terminal_number);
-        DC_BUS* bus = get_dc_bus_with_bus_number(bus_number);
-        double Udc = bus->get_dc_bus_voltage_in_kV();
+        DC_BUS* bus_ptr = get_dc_bus_with_bus_number(bus_number);
+        DC_BUS& bus = *bus_ptr;
+        double Udc = bus.get_dc_bus_voltage_in_kV();
         Pdc = Idc*Udc;
     }
     else if(tmode==DC_U_TERMINAL)
@@ -4284,10 +4375,11 @@ double MT_HVDC::calculate_jacobian_element(unsigned int row, unsigned int col)
 
     unsigned int ibus = inphno.get_physical_bus_number_of_internal_bus_number(row);
     unsigned int jbus = inphno.get_physical_bus_number_of_internal_bus_number(col);
-    DC_BUS* i_dcbus = get_dc_bus_with_bus_number(ibus);
+    DC_BUS* i_dcbus_ptr = get_dc_bus_with_bus_number(ibus);
     DC_BUS* j_dcbus = get_dc_bus_with_bus_number(jbus);
 
-    DC_BUS_TYPE type = i_dcbus->get_dc_bus_type();
+    DC_BUS& i_dcbus = *i_dcbus_ptr;
+    DC_BUS_TYPE type = i_dcbus.get_dc_bus_type();
     if((type==DC_P_NODE) or (type==DC_NOCON_BUS))
     {
         if(row==col)
@@ -4300,15 +4392,16 @@ double MT_HVDC::calculate_jacobian_element(unsigned int row, unsigned int col)
                 double temp_yij = dc_network_matrix.get_real_entry_value(temp_k);
 
                 int temp_jbus_number = inphno.get_physical_bus_number_of_internal_bus_number(temp_col);
-                DC_BUS* temp_jbus = get_dc_bus_with_bus_number(temp_jbus_number);
-                double temp_voltage = temp_jbus->get_dc_bus_voltage_in_kV();
+                DC_BUS* temp_jbus_ptr = get_dc_bus_with_bus_number(temp_jbus_number);
+                DC_BUS& temp_jbus = *temp_jbus_ptr;
+                double temp_voltage = temp_jbus.get_dc_bus_voltage_in_kV();
                 //osstream << "The  temp voltage of " <<temp_jbus<<"   is:   " <<temp_voltage << "The  temp yij of is:   " <<temp_yij;
                 //toolkit.show_information_with_leading_time_stamp(osstream);
                 der-=temp_yij*temp_voltage;
 
             }
             double yii = dc_network_matrix.get_real_entry_value(k);
-            double vii = i_dcbus->get_dc_bus_voltage_in_kV();
+            double vii = i_dcbus.get_dc_bus_voltage_in_kV();
             der = der-yii*vii;
             return der;
         }
@@ -4316,7 +4409,7 @@ double MT_HVDC::calculate_jacobian_element(unsigned int row, unsigned int col)
         else //row != col
         {
             double yij = dc_network_matrix.get_real_entry_value(k);
-            double voltage = i_dcbus->get_dc_bus_voltage_in_kV();
+            double voltage = i_dcbus.get_dc_bus_voltage_in_kV();
             der = -yij*voltage;
             return der;
         }
@@ -4333,18 +4426,20 @@ double MT_HVDC::calculate_jacobian_element(unsigned int row, unsigned int col)
                 double temp_yij = dc_network_matrix.get_real_entry_value(temp_k);
 
                 int temp_jbus_number = inphno.get_physical_bus_number_of_internal_bus_number(temp_col);
-                DC_BUS* temp_jbus = get_dc_bus_with_bus_number(temp_jbus_number);
-                double temp_voltage = temp_jbus->get_dc_bus_voltage_in_kV();
+                DC_BUS* temp_jbus_ptr = get_dc_bus_with_bus_number(temp_jbus_number);
+                DC_BUS& temp_jbus = *temp_jbus_ptr;
+                double temp_voltage = temp_jbus.get_dc_bus_voltage_in_kV();
 
                 der -= (temp_voltage*temp_yij);
             }
 
             double yii = dc_network_matrix.get_real_entry_value(k);
-            double vii = i_dcbus->get_dc_bus_voltage_in_kV();
+            double vii = i_dcbus.get_dc_bus_voltage_in_kV();
             der=der-yii*vii;
 
-            DC_TERMINAL* terminal = get_dc_terminal_with_dc_bus_number(ibus);
-            unsigned int terminal_number = terminal->get_terminal_number();
+            DC_TERMINAL* terminal_ptr = get_dc_terminal_with_dc_bus_number(ibus);
+            DC_TERMINAL& terminal = *terminal_ptr;
+            unsigned int terminal_number = terminal.get_terminal_number();
             double Iref = get_current_of_current_terminal(terminal_number);
             //osstream <<row<<" and " <<col<< " current of I " << Iref <<" der is "<<der;
             //toolkit.show_information_with_leading_time_stamp(osstream);
@@ -4354,7 +4449,7 @@ double MT_HVDC::calculate_jacobian_element(unsigned int row, unsigned int col)
         {
 
             double yij = dc_network_matrix.get_real_entry_value(k);
-            double voltage = i_dcbus->get_dc_bus_voltage_in_kV();
+            double voltage = i_dcbus.get_dc_bus_voltage_in_kV();
             der = -yij*voltage;
             return der;
         }
@@ -4372,18 +4467,20 @@ double MT_HVDC::calculate_jacobian_element(unsigned int row, unsigned int col)
                 double temp_yij = dc_network_matrix.get_real_entry_value(temp_k);
 
                 int temp_jbus_number = inphno.get_physical_bus_number_of_internal_bus_number(temp_col);
-                DC_BUS* temp_jbus = get_dc_bus_with_bus_number(temp_jbus_number);
-                double temp_voltage = temp_jbus->get_dc_bus_voltage_in_kV();
+                DC_BUS* temp_jbus_ptr = get_dc_bus_with_bus_number(temp_jbus_number);
+                DC_BUS& temp_jbus = *temp_jbus_ptr;
+                double temp_voltage = temp_jbus.get_dc_bus_voltage_in_kV();
 
                 der -= (temp_voltage*temp_yij);
             }
 
             double yii = dc_network_matrix.get_real_entry_value(k);
-            double vii = i_dcbus->get_dc_bus_voltage_in_kV();
+            double vii = i_dcbus.get_dc_bus_voltage_in_kV();
             der=der-yii*vii;
 
-            DC_TERMINAL* terminal = get_dc_terminal_with_dc_bus_number(ibus);
-            unsigned int terminal_number = terminal->get_terminal_number();
+            DC_TERMINAL* terminal_ptr = get_dc_terminal_with_dc_bus_number(ibus);
+            DC_TERMINAL& terminal = *terminal_ptr;
+            unsigned int terminal_number = terminal.get_terminal_number();
             double Iref = get_jacobian_element_of_angle_terminal(terminal_number);
             //osstream <<row<<" and " <<col<< " current of I " << Iref <<" der is "<<der;
             //toolkit.show_information_with_leading_time_stamp(osstream);
@@ -4393,7 +4490,7 @@ double MT_HVDC::calculate_jacobian_element(unsigned int row, unsigned int col)
         else
         {
             double yij = dc_network_matrix.get_real_entry_value(k);
-            double voltage = i_dcbus->get_dc_bus_voltage_in_kV();
+            double voltage = i_dcbus.get_dc_bus_voltage_in_kV();
             der = -yij*voltage;
             return der;;
         }
@@ -4456,9 +4553,9 @@ void MT_HVDC::show_bus_voltage()
     unsigned int nbus = get_dc_bus_count();
     for(unsigned int i=0;i!=nbus;i++)
     {
-        DC_BUS* dcbus = buses[i];
-        unsigned int bus_number = dcbus->get_dc_bus_number();
-        double vdc = dcbus->get_dc_bus_voltage_in_kV();
+        DC_BUS& dcbus = *(buses[i]);
+        unsigned int bus_number = dcbus.get_dc_bus_number();
+        double vdc = dcbus.get_dc_bus_voltage_in_kV();
         osstream << "Voltage of bus "<< bus_number << " is: "<< vdc;
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -4479,8 +4576,9 @@ void MT_HVDC::update_bus_current()
     for(int col=0;col!=nsize;col++)
     {
         unsigned int bus_number = inphno.get_physical_bus_number_of_internal_bus_number(col);
-        DC_BUS* dcbus = get_dc_bus_with_bus_number(bus_number);
-        double voltage = dcbus->get_dc_bus_voltage_in_kV();
+        DC_BUS* dcbus_ptr = get_dc_bus_with_bus_number(bus_number);
+        DC_BUS& dcbus = *dcbus_ptr;
+        double voltage = dcbus.get_dc_bus_voltage_in_kV();
 
         //osstream << "The voltage of internal " <<col <<"is: "<<voltage;
         //toolkit.show_information_with_leading_time_stamp(osstream);
@@ -4501,8 +4599,9 @@ void MT_HVDC::update_bus_current()
     for(unsigned int i=0;i!=nsize;i++)
     {
         unsigned int bus_number = inphno.get_physical_bus_number_of_internal_bus_number(i);
-        DC_BUS* bus = get_dc_bus_with_bus_number(bus_number);
-        bus->set_dc_bus_current_in_kA(idc_bus[i]);
+        DC_BUS* bus_ptr = get_dc_bus_with_bus_number(bus_number);
+        DC_BUS& bus = *bus_ptr;
+        bus.set_dc_bus_current_in_kA(idc_bus[i]);
         //osstream << "current of bus "<< bus_number << " is: "<< idc_bus[i];
         //toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -4511,23 +4610,26 @@ void MT_HVDC::update_bus_current()
     unsigned int n_line = lines.size();
     for(unsigned int i=0;i!=n_line;i++)
     {
-        unsigned int ibus_number = lines[i]->get_sending_side_bus_number();
-        unsigned int jbus_number = lines[i]->get_receiving_side_bus_number();
-        DC_BUS* ibus = get_dc_bus_with_bus_number(ibus_number);
-        DC_BUS* jbus = get_dc_bus_with_bus_number(jbus_number);
-        double line_r = lines[i]->get_line_R_in_ohm();
+        DC_LINE& line = *(lines[i]);
+        unsigned int ibus_number = line.get_sending_side_bus_number();
+        unsigned int jbus_number = line.get_receiving_side_bus_number();
+        DC_BUS* ibus_ptr = get_dc_bus_with_bus_number(ibus_number);
+        DC_BUS* jbus_ptr = get_dc_bus_with_bus_number(jbus_number);
+        DC_BUS& ibus = *ibus_ptr;
+        DC_BUS& jbus = *jbus_ptr;
+        double line_r = line.get_line_R_in_ohm();
 
-        double Ui = ibus->get_dc_bus_voltage_in_kV();
-        double Uj = jbus->get_dc_bus_voltage_in_kV();
+        double Ui = ibus.get_dc_bus_voltage_in_kV();
+        double Uj = jbus.get_dc_bus_voltage_in_kV();
         double Idc = (Ui-Uj)/line_r;
         double Pi = Ui*Idc;
         double Pj = Uj*Idc;
 
-        lines[i]->set_Udc_ibus_in_kV(Ui);
-        lines[i]->set_Udc_jbus_in_kV(Uj);
-        lines[i]->set_dc_line_current(Idc);
-        lines[i]->set_sending_side_power(Pi);
-        lines[i]->set_receiving_side_power(Pj);
+        line.set_Udc_ibus_in_kV(Ui);
+        line.set_Udc_jbus_in_kV(Uj);
+        line.set_dc_line_current(Idc);
+        line.set_sending_side_power(Pi);
+        line.set_receiving_side_power(Pj);
     }
 }
 
@@ -4540,10 +4642,10 @@ void MT_HVDC::update_bus_power()
     unsigned int nbus = get_dc_bus_count();
     for(unsigned int i=0;i!=nbus;i++)
     {
-        DC_BUS* dcbus = buses[i];
-        //unsigned int bus_number = dcbus->get_dc_bus_number();
-        double vdc = dcbus->get_dc_bus_voltage_in_kV();
-        double idc = dcbus->get_dc_bus_current_in_kA();
+        DC_BUS& dcbus = *(buses[i]);
+        //unsigned int bus_number = dcbus.get_dc_bus_number();
+        double vdc = dcbus.get_dc_bus_voltage_in_kV();
+        double idc = dcbus.get_dc_bus_current_in_kA();
         double pc = vdc*idc;
         //osstream << "lcc power of bus "<< bus_number << " is: "<< pc;
         //toolkit.show_information_with_leading_time_stamp(osstream);
@@ -4558,9 +4660,10 @@ void MT_HVDC::update_bus_power()
      unsigned int n_lcc = lccs.size();
      for(unsigned int i=0;i!=n_lcc;i++)
      {
-         double p_lcc = lccs[i]->get_converter_P_2_ac_bus();
-         double q_lcc = lccs[i]->get_converter_Q_2_ac_bus();
-         osstream<<"POWER TO AC BUS"<<lccs[i]->get_converter_ac_bus()<<" of LCC CONVERTER: "<<lccs[i]->get_converter_name()<<" is: "<<p_lcc<<" +j "<<q_lcc;
+         HLCC& lcc = *(lccs[i]);
+         double p_lcc = lcc.get_converter_P_2_ac_bus();
+         double q_lcc = lcc.get_converter_Q_2_ac_bus();
+         osstream<<"POWER TO AC BUS"<<lcc.get_converter_ac_bus()<<" of LCC CONVERTER: "<<lcc.get_converter_name()<<" is: "<<p_lcc<<" +j "<<q_lcc;
          toolkit.show_information_with_leading_time_stamp(osstream);
      }
 
@@ -4568,9 +4671,10 @@ void MT_HVDC::update_bus_power()
      unsigned int n_vsc = vscs.size();
      for(unsigned int i=0;i!=n_vsc;i++)
      {
-         double p_vsc = vscs[i]->get_converter_P_to_AC_bus_MW();
-         double q_vsc = vscs[i]->get_converter_Q_to_AC_bus_Mvar();
-         osstream<<"POWER TO AC BUS"<<vscs[i]->get_converter_ac_bus()<<" of VSC CONVERTER: "<<vscs[i]->get_converter_name()<<" is: "<<p_vsc<<" +j "<<q_vsc;
+         HVSC& vsc = *(vscs[i]);
+         double p_vsc = vsc.get_converter_P_to_AC_bus_MW();
+         double q_vsc = vsc.get_converter_Q_to_AC_bus_Mvar();
+         osstream<<"POWER TO AC BUS"<<vsc.get_converter_ac_bus()<<" of VSC CONVERTER: "<<vsc.get_converter_name()<<" is: "<<p_vsc<<" +j "<<q_vsc;
          toolkit.show_information_with_leading_time_stamp(osstream);
      }
  }
@@ -4581,8 +4685,9 @@ void MT_HVDC::initialize_vsc_station_udc_block(unsigned int station_number)
     //STEPS& toolkit = get_toolkit();
     //double ueq = 0.0;
 
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    DC_STATION_STRUCTURE structure = station->get_station_structure();
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    DC_STATION_STRUCTURE structure = station.get_station_structure();
     if(structure == VSC_PARALLEL)
     {
         double ceq = 0.0;
@@ -4590,19 +4695,23 @@ void MT_HVDC::initialize_vsc_station_udc_block(unsigned int station_number)
         unsigned int n_vsc = vscs.size();
         for(unsigned int i=0;i!=n_vsc;i++)
         {
-            HVSC_MODEL* model = vscs[i]->get_hvsc_model();
-            ceq = ceq + model->get_dc_voltage_block_ceq_in_uF()*1e-6;
+            HVSC& vsc = *(vscs[i]);
+            HVSC_MODEL* model_ptr = vsc.get_hvsc_model();
+            HVSC_MODEL& model = *model_ptr;
+            ceq = ceq + model.get_dc_voltage_block_ceq_in_uF()*1e-6;
         }
 
-        station->set_udc_block_ceq_in_F(ceq);
-        station->set_udc_block_initial_value(vscs[0]->get_udc_in_kV());
+        station.set_udc_block_ceq_in_F(ceq);
+        HVSC& vsc_first = *(vscs[0]);
+        station.set_udc_block_initial_value(vsc_first.get_udc_in_kV());
     }
 }
 void MT_HVDC::update_vsc_station_dynamic_ueq_input(unsigned int station_number)
 {
     //STEPS& toolkit = get_toolkit();
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    DC_STATION_STRUCTURE structure = station->get_station_structure();
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    DC_STATION_STRUCTURE structure = station.get_station_structure();
     if(structure == VSC_PARALLEL)
     {
 
@@ -4612,11 +4721,13 @@ void MT_HVDC::update_vsc_station_dynamic_ueq_input(unsigned int station_number)
         unsigned int n_vsc = vscs.size();
         for(unsigned int i=0;i!=n_vsc;i++)
         {
-            idc_to_network = idc_to_network + vscs[i]->get_idc_in_kA();
-            HVSC_MODEL* model = vscs[i]->get_hvsc_model();
-            idc_to_ceq = idc_to_ceq + model->get_converter_dynamic_current_from_converter_to_ceq_in_kA();
+            HVSC& vsc = *(vscs[i]);
+            idc_to_network = idc_to_network + vsc.get_idc_in_kA();
+            HVSC_MODEL* model_ptr = vsc.get_hvsc_model();
+            HVSC_MODEL& model = *model_ptr;
+            idc_to_ceq = idc_to_ceq + model.get_converter_dynamic_current_from_converter_to_ceq_in_kA();
         }
-        station->set_udc_block_input(idc_to_ceq-idc_to_network);
+        station.set_udc_block_input(idc_to_ceq-idc_to_network);
 
         //ostringstream osstream;
         //osstream<<"DC STATION NUMBER: "<<station_number<<" UPDATE WITH idc to ceq: "<<idc_to_ceq<<" and idc_to_network"<<idc_to_network;
@@ -4629,25 +4740,28 @@ void MT_HVDC::update_vsc_station_dynamic_ueq_input(unsigned int station_number)
 double MT_HVDC::get_dc_bus_ueq_in_dynamic_simulation(unsigned int dc_bus)
 {
     double ueq = 0.0;
-    DC_TERMINAL* terminal = get_dc_terminal_with_dc_bus_number(dc_bus);
-    double terminal_number = terminal->get_terminal_number();
+    DC_TERMINAL* terminal_ptr = get_dc_terminal_with_dc_bus_number(dc_bus);
+    DC_TERMINAL& terminal = *terminal_ptr;
+    double terminal_number = terminal.get_terminal_number();
     vector<DC_STATION*> stations = get_dc_stations_connect_to_terminal(terminal_number);
     unsigned int n_station = stations.size();
     for(unsigned int i=0;i!=n_station;i++)
     {
-        DC_STATION_STRUCTURE structure = stations[i]->get_station_structure();
+        DC_STATION& station = *(stations[i]);
+        DC_STATION_STRUCTURE structure = station.get_station_structure();
         if(structure==LCC_CASCADE)
         {
-            vector<HLCC*> lccs = get_lcc_converters_connect_to_station(stations[i]->get_station_number());
+            vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station.get_station_number());
             unsigned int n_lcc = lccs.size();
             for(unsigned int j=0;j!=n_lcc;j++)
             {
-                ueq = ueq + lccs[i]->get_lcc_converter_ueq_in_kV();
+                HLCC& lcc = *(lccs[i]);
+                ueq = ueq + lcc.get_lcc_converter_ueq_in_kV();
             }
         }
         if(structure == VSC_PARALLEL)
         {
-            double u_station = stations[i]->get_vsc_station_dynamic_udc_in_kV();
+            double u_station = station.get_vsc_station_dynamic_udc_in_kV();
             ueq = ueq + u_station;
         }
     }
@@ -4657,20 +4771,23 @@ double MT_HVDC::get_dc_bus_ueq_in_dynamic_simulation(unsigned int dc_bus)
 double MT_HVDC::get_dc_bus_req_in_dynamic_simulation(unsigned int dc_bus)
 {
     double req = 0.0;
-    DC_TERMINAL* terminal = get_dc_terminal_with_dc_bus_number(dc_bus);
-    double terminal_number = terminal->get_terminal_number();
+    DC_TERMINAL* terminal_ptr = get_dc_terminal_with_dc_bus_number(dc_bus);
+    DC_TERMINAL& terminal = *terminal_ptr;
+    double terminal_number = terminal.get_terminal_number();
     vector<DC_STATION*> stations = get_dc_stations_connect_to_terminal(terminal_number);
     unsigned int n_station = stations.size();
     for(unsigned int i=0;i!=n_station;i++)
     {
-        DC_STATION_STRUCTURE structure = stations[i]->get_station_structure();
+        DC_STATION& station = *(stations[i]);
+        DC_STATION_STRUCTURE structure = station.get_station_structure();
         if(structure==LCC_CASCADE)
         {
-            vector<HLCC*> lccs = get_lcc_converters_connect_to_station(stations[i]->get_station_number());
+            vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station.get_station_number());
             unsigned int n_lcc = lccs.size();
             for(unsigned int j=0;j!=n_lcc;j++)
             {
-                req = req + lccs[i]->get_lcc_converter_req_in_ohm();
+                HLCC& lcc = *(lccs[i]);
+                req = req + lcc.get_lcc_converter_req_in_ohm();
             }
         }
         if(structure == VSC_PARALLEL)
@@ -4717,9 +4834,12 @@ HLCC_MODEL* MT_HVDC::get_lcc_model_with_index(unsigned int index)
 
 HLCC_MODEL* MT_HVDC::get_lcc_model_with_name(string name)
 {
-    HLCC* lcc = get_lcc_converter_with_name(name);
-    if(lcc!=NULL)
-        return lcc->get_hlcc_model();
+    HLCC* lcc_ptr = get_lcc_converter_with_name(name);
+    if(lcc_ptr!=NULL)
+    {
+        HLCC& lcc = *lcc_ptr;
+        return lcc.get_hlcc_model();
+    }
     else
         return NULL;
 }
@@ -4734,9 +4854,12 @@ HVSC_MODEL* MT_HVDC::get_vsc_model_with_index(unsigned int index)
 
 HVSC_MODEL* MT_HVDC::get_vsc_model_with_index(string name)
 {
-    HVSC* vsc = get_vsc_converter_with_name(name);
-    if(vsc!=NULL)
-        return vsc->get_hvsc_model();
+    HVSC* vsc_ptr = get_vsc_converter_with_name(name);
+    if(vsc_ptr!=NULL)
+    {
+        HVSC& vsc = *vsc_ptr;
+        return vsc.get_hvsc_model();
+    }
     else
         return NULL;
 }
@@ -4751,7 +4874,7 @@ void MT_HVDC::run(DYNAMIC_MODE mode)
     unsigned int n_station = dc_stations.size();
     vector<HLCC_MODEL*> lcc_models = get_all_hlcc_models();
     vector<HVSC_MODEL*> vsc_models = get_all_hvsc_models();
-    MT_DC_GRID_MODEL* mtdc_model = get_mtdc_network_model();
+    MT_DC_GRID_MODEL* mtdc_model_ptr = get_mtdc_network_model();
     if(get_status()==true)
     {
         switch(mode)
@@ -4761,23 +4884,33 @@ void MT_HVDC::run(DYNAMIC_MODE mode)
                 for(unsigned int i=0;i!=n_lcc;i++)
                 {
                     if(lcc_models[i]!=NULL)
-                        lcc_models[i]->initialize();
+                    {
+                        HLCC_MODEL& lcc_model = *(lcc_models[i]);
+                        lcc_model.initialize();
+                    }
                 }
                 for(unsigned int i=0;i!=n_vsc;i++)
                 {
                     if(vsc_models[i]!=NULL)
-                        vsc_models[i]->initialize();;
+                    {
+                        HVSC_MODEL& vsc_model = *(vsc_models[i]);
+                        vsc_model.initialize();
+                    }
                 }
                 for(unsigned int i=0;i!=n_station;i++)
                 {
-                    if(dc_stations[i]->get_station_structure()==VSC_PARALLEL)
+                    DC_STATION& dc_station = *(dc_stations[i]);
+                    if(dc_station.get_station_structure()==VSC_PARALLEL)
                     {
-                        initialize_vsc_station_udc_block(dc_stations[i]->get_station_number());
-                        dc_stations[i]->initialize();
+                        initialize_vsc_station_udc_block(dc_station.get_station_number());
+                        dc_station.initialize();
                     }
                 }
-                if(mtdc_model!=NULL)
-                    mtdc_model->initialize();
+                if(mtdc_model_ptr!=NULL)
+                {
+                    MT_DC_GRID_MODEL& mtdc_model = *mtdc_model_ptr;
+                    mtdc_model.initialize();
+                }
                 break;
             }
 
@@ -4786,19 +4919,26 @@ void MT_HVDC::run(DYNAMIC_MODE mode)
                     for(unsigned int i=0;i!=n_lcc;i++)
                     {
                         if(lcc_models[i]!=NULL)
-                            lcc_models[i]->run(mode);
+                        {
+                            HLCC_MODEL& lcc_model = *(lcc_models[i]);
+                            lcc_model.run(mode);
+                        }
                     }
 
                     for(unsigned int i=0;i!=n_vsc;i++)
                     {
                         if(vsc_models[i]!=NULL)
-                            vsc_models[i]->run(mode);
+                        {
+                            HVSC_MODEL& vsc_model = *(vsc_models[i]);
+                            vsc_model.run(mode);
+                        }
                     }
 
                     for(unsigned int i=0;i!=n_station;i++)
                     {
-                        update_vsc_station_dynamic_ueq_input(dc_stations[i]->get_station_number());
-                        dc_stations[i]->run(mode);
+                        DC_STATION& dc_station = *(dc_stations[i]);
+                        update_vsc_station_dynamic_ueq_input(dc_station.get_station_number());
+                        dc_station.run(mode);
                     }
                     break;
                 }
@@ -4808,24 +4948,34 @@ void MT_HVDC::run(DYNAMIC_MODE mode)
                  for(unsigned int i=0;i!=n_lcc;i++)
                 {
                     if(lcc_models[i]!=NULL)
-                        lcc_models[i]->run(mode);
+                    {
+                        HLCC_MODEL& lcc_model = *(lcc_models[i]);
+                        lcc_model.run(mode);
+                    }
                 }
 
                 for(unsigned int i=0;i!=n_vsc;i++)
                 {
                     if(vsc_models[i]!=NULL)
-                        vsc_models[i]->run(mode);
+                    {
+                        HVSC_MODEL& vsc_model = *(vsc_models[i]);
+                        vsc_model.run(mode);
+                    }
                 }
 
                 for(unsigned int i=0;i!=n_station;i++)
                 {
-                    update_vsc_station_dynamic_ueq_input(dc_stations[i]->get_station_number());
-                    dc_stations[i]->run(mode);
+                    DC_STATION& dc_station = *(dc_stations[i]);
+                    update_vsc_station_dynamic_ueq_input(dc_station.get_station_number());
+                    dc_station.run(mode);
                 }
 
                 /*
-                if(mtdc_model!=NULL)
-                    mtdc_model->run(mode);
+                if(mtdc_model_ptr!=NULL)
+                {
+                    MT_DC_GRID_MODEL& mtdc_model = *mtdc_model_ptr;
+                    mtdc_model.run(mode);
+                }
 
                 update_converters_in_dynamic_simulation();
                 */
@@ -4844,12 +4994,16 @@ void MT_HVDC::solve_dynamic_dc_systems()
     unsigned int n_lcc = lcc_models.size();
     for(unsigned int i=0;i!=n_lcc;i++)
     {
-        lcc_models[i]->update_converters();
+        HLCC_MODEL& lcc_model = *(lcc_models[i]);
+        lcc_model.update_converters();
     }
 
-    MT_DC_GRID_MODEL* mtdc_model = get_mtdc_network_model();
-    if(mtdc_model!=NULL)
-            mtdc_model->run(DYNAMIC_UPDATE_MODE);
+    MT_DC_GRID_MODEL* mtdc_model_ptr = get_mtdc_network_model();
+    if(mtdc_model_ptr!=NULL)
+    {
+        MT_DC_GRID_MODEL& mtdc_model = *mtdc_model_ptr;
+        mtdc_model.run(DYNAMIC_UPDATE_MODE);
+    }
     update_converters_in_dynamic_simulation();
 }
 
@@ -4864,20 +5018,22 @@ void MT_HVDC::update_converters_in_dynamic_simulation()
         unsigned int bus_number = Dcbus[i].get_dc_bus_number();
         double Ubus = Dcbus[i].get_dc_bus_voltage_in_kV();
         double Ibus = Dcbus[i].get_dc_bus_current_in_kA();
-        DC_TERMINAL* terminal = get_dc_terminal_with_dc_bus_number(bus_number);
-        vector<DC_STATION*> stations = get_dc_stations_connect_to_terminal(terminal->get_terminal_number());
+        DC_TERMINAL* terminal_ptr = get_dc_terminal_with_dc_bus_number(bus_number);
+        DC_TERMINAL& terminal = *terminal_ptr;
+        vector<DC_STATION*> stations = get_dc_stations_connect_to_terminal(terminal.get_terminal_number());
         unsigned int n_station = stations.size();
         for(unsigned int j=0;j!=n_station;j++)
         {
-            DC_STATION_STRUCTURE structure = stations[j]->get_station_structure();
+            DC_STATION& station = *(stations[j]);
+            DC_STATION_STRUCTURE structure = station.get_station_structure();
             if((structure==LCC_CASCADE) or (structure==LCC_HCM))
             {
-                update_lcc_station_in_dynamic_simulation(stations[j]->get_station_number(),Ibus);
+                update_lcc_station_in_dynamic_simulation(station.get_station_number(),Ibus);
             }
 
             else
             {
-                update_vsc_station_in_dynamic_simulation(stations[j]->get_station_number(),Ibus);
+                update_vsc_station_in_dynamic_simulation(station.get_station_number(),Ibus);
             }
 
         }
@@ -4888,23 +5044,24 @@ void MT_HVDC::update_lcc_station_in_dynamic_simulation(unsigned int station_numb
 {
     ostringstream osstream;
     double Udc = 0.0;
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    DC_STATION_STRUCTURE structure = station->get_station_structure();
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    DC_STATION_STRUCTURE structure = station.get_station_structure();
     if(structure==LCC_CASCADE or structure==LCC_HCM)
     {
         vector<HLCC*> lccs = get_lcc_converters_connect_to_station(station_number);
         unsigned int n_lcc = lccs.size();
         for(unsigned int i=0;i!=n_lcc;i++)
         {
-            //
-            lccs[i]->set_idc_in_kA(Idc);
-            double ueq = lccs[i]->get_lcc_converter_ueq_in_kV();
-            double req = lccs[i]->get_lcc_converter_req_in_ohm();
+            HLCC& lcc = *(lccs[i]);
+            lcc.set_idc_in_kA(Idc);
+            double ueq = lcc.get_lcc_converter_ueq_in_kV();
+            double req = lcc.get_lcc_converter_req_in_ohm();
             Udc = ueq-Idc*req;
-            lccs[i]->set_udc_in_kV(Udc);
-            lccs[i]->solve_lcc_with_tap_and_angle(Udc,Idc);
+            lcc.set_udc_in_kV(Udc);
+            lcc.solve_lcc_with_tap_and_angle(Udc,Idc);
 
-            //osstream<<"LCC: "<<lccs[i]->get_converter_name()<<" UPADATE WITH UDC= "<<Udc<<"and Idc: "<<Idc<<" and angle = "<<lccs[i]->get_firing_angle_in_deg();
+            //osstream<<"LCC: "<<lcc.get_converter_name()<<" UPADATE WITH UDC= "<<Udc<<"and Idc: "<<Idc<<" and angle = "<<lcc.et_firing_angle_in_deg();
             //show_information_with_leading_time_stamp_with_default_toolkit(osstream);
             //cout<< fixed << setprecision(6)<<Udc<<endl;
             //cout<< fixed << setprecision(6)<<Idc<<endl;
@@ -4917,30 +5074,34 @@ void MT_HVDC::update_vsc_station_in_dynamic_simulation(unsigned int station_numb
 {
     ostringstream osstream;
 
-    DC_STATION* station = get_dc_station_with_station_number(station_number);
-    DC_STATION_STRUCTURE structure = station->get_station_structure();
+    DC_STATION* station_ptr = get_dc_station_with_station_number(station_number);
+    DC_STATION& station = *station_ptr;
+    DC_STATION_STRUCTURE structure = station.get_station_structure();
     if(structure == VSC_PARALLEL)
     {
         vector<HVSC*> vscs = get_vsc_converters_connect_to_station(station_number);
         unsigned int n_vsc = vscs.size();
-        DC_TERMINAL* terminal = get_dc_terminal_with_terminal_number(station->get_terminal_number());
-        DC_TERMINAL_MODE tmode = terminal->get_terminal_mode();
-        double Udc= station->get_vsc_station_dynamic_udc_in_kV();
+        DC_TERMINAL* terminal_ptr = get_dc_terminal_with_terminal_number(station.get_terminal_number());
+        DC_TERMINAL& terminal = *terminal_ptr;
+        DC_TERMINAL_MODE tmode = terminal.get_terminal_mode();
+        double Udc= station.get_vsc_station_dynamic_udc_in_kV();
         if(tmode==DC_P_TERMIANL)
         {
             double P_station = 0.0;
             for(unsigned int i=0;i!=n_vsc;i++)
             {
-                P_station += vscs[i]->get_converter_Pdc_command_in_MW();
+                HVSC& vsc = *(vscs[i]);
+                P_station += vsc.get_converter_Pdc_command_in_MW();
             }
             for(unsigned int i=0;i!=n_vsc;i++)
             {
-                vscs[i]->set_udc_in_kV(Udc);
-                double P_vsc = vscs[i]->get_converter_Pdc_command_in_MW();
+                HVSC& vsc = *(vscs[i]);
+                vsc.set_udc_in_kV(Udc);
+                double P_vsc = vsc.get_converter_Pdc_command_in_MW();
                 double I_vsc = Idc*P_vsc/P_station;
-                vscs[i]->set_idc_in_kA(I_vsc);
+                vsc.set_idc_in_kA(I_vsc);
                 /*
-                osstream<<"updata voltage of vsc: "<<vscs[i]->get_converter_name()<<"  with  udc =  "<<Udc<<"  and Idc = "<<I_vsc;
+                osstream<<"updata voltage of vsc: "<<vsc.get_converter_name()<<"  with  udc =  "<<Udc<<"  and Idc = "<<I_vsc;
                 show_information_with_leading_time_stamp_with_default_toolkit(osstream);
                 */
             }
@@ -4950,16 +5111,20 @@ void MT_HVDC::update_vsc_station_in_dynamic_simulation(unsigned int station_numb
             double ceq = 0.0;
             for(unsigned int i=0;i!=n_vsc;i++)
             {
-                HVSC_MODEL* model = vscs[i]->get_hvsc_model();
-                ceq = ceq + model->get_dc_voltage_block_ceq_in_uF()*1e-6;
+                HVSC& vsc = *(vscs[i]);
+                HVSC_MODEL* model_ptr = vsc.get_hvsc_model();
+                HVSC_MODEL& model = *model_ptr;
+                ceq = ceq + model.get_dc_voltage_block_ceq_in_uF()*1e-6;
             }
 
             for(unsigned int i=0;i!=n_vsc;i++)
             {
-                HVSC_MODEL* model = vscs[i]->get_hvsc_model();
-                double ceq_vsc = model->get_dc_voltage_block_ceq_in_uF()*1e-6;
-                vscs[i]->set_udc_in_kV(Udc);
-                vscs[i]->set_idc_in_kA(Idc*ceq_vsc/ceq);
+                HVSC& vsc = *(vscs[i]);
+                HVSC_MODEL* model_ptr = vsc.get_hvsc_model();
+                HVSC_MODEL& model = *model_ptr;
+                double ceq_vsc = model.get_dc_voltage_block_ceq_in_uF()*1e-6;
+                vsc.set_udc_in_kV(Udc);
+                vsc.set_idc_in_kA(Idc*ceq_vsc/ceq);
             }
 
         }
