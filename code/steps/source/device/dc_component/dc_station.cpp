@@ -63,7 +63,7 @@ void DC_STATION::clear()
  //SET
 void DC_STATION::set_station_name(const string name)
 {
-    this->station_name = name;
+    station_name = name;
 }
 
 void DC_STATION::set_station_number(const unsigned int station_number)
@@ -83,27 +83,27 @@ void DC_STATION::set_status(const bool status)
 
 void DC_STATION::set_station_structure(const DC_STATION_STRUCTURE structure)
 {
-    this->station_structure = structure;
+    station_structure = structure;
 }
 
 void DC_STATION::set_station_mode(const DC_STATION_MODE mode)
 {
-    this->station_mode = mode;
+    station_mode = mode;
 }
 
 void DC_STATION::set_station_cascade_lcc_number(const unsigned int n_lcc)
 {
-    this->n_cascade_lcc = n_lcc;
+    n_cascade_lcc = n_lcc;
 }
 
 void DC_STATION::set_station_parallel_vsc_number(const unsigned int n_vsc)
 {
-    this->n_parallel_vsc = n_vsc;
+    n_parallel_vsc = n_vsc;
 }
 
 void DC_STATION::set_vsc_station_dynamic_udc_in_kV(const double udc)
 {
-    this->vsc_station_dynamic_udc_in_kV = udc;
+    vsc_station_dynamic_udc_in_kV = udc;
 }
 
 
@@ -215,13 +215,13 @@ void DC_STATION::set_udc_block_ceq_in_F(double C)
 void DC_STATION::set_udc_block_input(double input)
 {
     if(get_station_structure()==VSC_PARALLEL)
-        this->Udc_input = input;
+        Udc_input = input;
 }
 
 void DC_STATION::set_udc_block_initial_value(double value)
 {
     if(get_station_structure()==VSC_PARALLEL)
-        this->Udc_initial_value = value;
+        Udc_initial_value = value;
 }
 
 

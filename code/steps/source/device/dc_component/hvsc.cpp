@@ -109,7 +109,7 @@ void HVSC::set_model(HVSC_MODEL* model)
 {
     if(model != NULL)
     {
-        this->hvsc_model = model;
+        hvsc_model = model;
     }
     else
     {
@@ -136,14 +136,14 @@ HVSC_MODEL* HVSC::get_model_of_type(string model_type, unsigned int index)
     return NULL;
 }
 
-HVSC_MODEL* HVSC::get_hvsc_model()
+HVSC_MODEL* HVSC::get_hvsc_model() const
 {
     return hvsc_model;
 }
 
 void HVSC::set_converter_ac_bus(const unsigned int acbus)
 {
-    this->converter_ac_bus = acbus;
+    converter_ac_bus = acbus;
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     converter_busptr = psdb.get_bus(acbus);
@@ -151,12 +151,12 @@ void HVSC::set_converter_ac_bus(const unsigned int acbus)
 
 void HVSC::set_converter_station_number(const unsigned int station)
 {
-    this->converter_station_number = station;
+    converter_station_number = station;
 }
 
 void HVSC::set_converter_dc_bus(const unsigned int dcbus)
 {
-    this->converter_dc_bus = dcbus;
+    converter_dc_bus = dcbus;
 }
 void HVSC::set_converter_name(const string name)
 {
@@ -175,99 +175,99 @@ void HVSC::set_priority(const unsigned int priority)
 
 void HVSC::set_converter_d_axis_control_mode(const HVSC_D_CONTROL_MODE dmode)
 {
-    this->d_control_mode = dmode;
+    d_control_mode = dmode;
 }
 
 void HVSC::set_converter_q_axis_control_mode(const HVSC_Q_CONTROL_MODE qmode)
 {
-    this->q_control_mode = qmode;
+    q_control_mode = qmode;
 }
 
 void HVSC::set_converter_loss_coefficient_A_in_kW(const double a)
 {
-    this->converter_loss_coefficient_A_in_kW = a;
+    converter_loss_coefficient_A_in_kW = a;
 }
 
 void HVSC::set_converter_loss_coefficient_B_in_kW_per_amp(const double b)
 {
-    this->converter_loss_coefficient_B_in_kW_per_amp = b;
+    converter_loss_coefficient_B_in_kW_per_amp = b;
 }
 
 void HVSC::set_converter_loss_coefficient_C_in_kW_per_amp_squard(const double c)
 {
-    this->converter_loss_coefficient_C_in_kW_per_amp_squard = c;
+    converter_loss_coefficient_C_in_kW_per_amp_squard = c;
 }
 
 void HVSC::set_converter_min_loss_in_kW(const double min_loss)
 {
-    this->min_converter_loss_in_kW = min_loss;
+    min_converter_loss_in_kW = min_loss;
 }
 void HVSC::set_converter_commutating_impedance(const complex<double> Z)
 {
-    this->converter_commutating_impedance = Z;
+    converter_commutating_impedance = Z;
 }
 
 void HVSC::set_converter_commutating_impedance_RC(const double R)
 {
-    this->converter_commutating_impedance.real(R);
+    converter_commutating_impedance.real(R);
 }
 
 void HVSC::set_converter_commutating_impedance_XC(const double X)
 {
-    this->converter_commutating_impedance.imag(X);
+    converter_commutating_impedance.imag(X);
 }
 
 void HVSC::set_udc_in_kV(const double udc)
 {
-    this->Udc_in_kV = udc;
+    Udc_in_kV = udc;
 }
 
 void HVSC::set_idc_in_kA(const double idc)
 {
-    this->Idc_in_kA = idc;
+    Idc_in_kA = idc;
 }
 
 void HVSC::set_converter_P_to_AC_bus_MW(const double P2AC)
 {
-    this->P_to_AC_bus_MW = P2AC;
+    P_to_AC_bus_MW = P2AC;
 }
 void HVSC::set_converter_Q_to_AC_bus_Mvar(const double Q2AC)
 {
-    this->Q_to_AC_bus_MVar = Q2AC;
+    Q_to_AC_bus_MVar = Q2AC;
 }
 
 void HVSC::set_converter_P_to_DC_bus_MW(const double P2DC)
 {
-    this->P_to_DC_bus_MW = P2DC;
+    P_to_DC_bus_MW = P2DC;
 }
 
 void HVSC::set_converter_Ploss_MW(const double Ploss)
 {
-    this->Ploss_MW = Ploss;
+    Ploss_MW = Ploss;
 }
 
 void HVSC::set_converter_Pac_command(const double pac)
 {
-    this->Pac_command_in_MW = pac;
+    Pac_command_in_MW = pac;
 }
 void HVSC::set_converter_Udc_command(const double udc)
 {
-    this->Udc_command_in_kV = udc;
+    Udc_command_in_kV = udc;
 }
 
 void HVSC::set_converter_Qac_command(const double qac)
 {
-    this->Qac_command_in_Mvar = qac;
+    Qac_command_in_Mvar = qac;
 }
 
 void HVSC::set_converter_Us_command(const double us)
 {
-    this->Us_command_in_kV = us;
+    Us_command_in_kV = us;
 }
 
 void HVSC::set_converter_rated_capacity_in_MVA(const double Sbase)
 {
-    this->converter_rated_capacity_in_MVA = Sbase;
+    converter_rated_capacity_in_MVA = Sbase;
 }
 
 void HVSC::set_converter_base_voltage_in_kV(const double Vbase)
@@ -277,12 +277,12 @@ void HVSC::set_converter_base_voltage_in_kV(const double Vbase)
 
 void HVSC::set_max_iteration_of_voltage_station_solution(const unsigned int n)
 {
-    this->max_iteration_of_voltage_station_solution = n;
+    max_iteration_of_voltage_station_solution = n;
 }
 
 void HVSC::set_allowed_max_p_in_MW_of_voltage_station_solution(const double p)
 {
-    this->allowed_max_p_in_MW_of_voltage_station_solution = p;
+    allowed_max_p_in_MW_of_voltage_station_solution = p;
 }
 //
 
@@ -442,8 +442,9 @@ double HVSC::get_converter_Us_command() const
 double HVSC::get_converter_nominal_ac_voltage_to_regulate() const
 {
     double us = get_converter_Us_command();
-    BUS* bus = get_converter_ac_bus_pointer();
-    double vbase = bus->get_base_voltage_in_kV();
+    BUS* bus_ptr = get_converter_ac_bus_pointer();
+    BUS& bus = *bus_ptr;
+    double vbase = bus.get_base_voltage_in_kV();
     return us/vbase;
 }
 
@@ -749,7 +750,6 @@ complex<double> HVSC::get_converter_initial_ac_current_in_kA_in_xy_axis()
 
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* bus = psdb.get_bus(get_converter_ac_bus());
     complex<double>  S = get_converter_initial_power_of_converter_AC_side();
     complex<double> Vac = psdb.get_bus_positive_sequence_complex_voltage_in_kV(get_converter_ac_bus());
     complex<double> It = conj(S/Vac/SQRT3);
@@ -764,10 +764,11 @@ complex<double> HVSC::get_converter_initial_ac_current_in_pu_on_system_base_in_x
     complex<double> It = get_converter_initial_ac_current_in_kA_in_xy_axis();
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* bus = psdb.get_bus(get_converter_ac_bus());
+    BUS* bus_ptr = psdb.get_bus(get_converter_ac_bus());
+    BUS& bus = *bus_ptr;
 
     double Sbase = psdb.get_system_base_power_in_MVA();
-    double Vbase = bus->get_base_voltage_in_kV();
+    double Vbase = bus.get_base_voltage_in_kV();
     double Ibase = Sbase/Vbase/SQRT3;
     complex<double> It_in_pu = It/Ibase;
     return It_in_pu;
@@ -779,10 +780,11 @@ complex<double> HVSC::get_converter_initial_ac_current_in_pu_on_converter_base_i
     complex<double> It = get_converter_initial_ac_current_in_kA_in_xy_axis();
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* bus = psdb.get_bus(get_converter_ac_bus());
+    BUS* bus_ptr = psdb.get_bus(get_converter_ac_bus());
+    BUS& bus = *bus_ptr;
 
     double Sbase = get_converter_rated_capacity_in_MVA();
-    double Vbase = bus->get_base_voltage_in_kV();
+    double Vbase = bus.get_base_voltage_in_kV();
     double Ibase = Sbase/Vbase/SQRT3;
     complex<double> It_in_pu = It/Ibase;
 
@@ -819,8 +821,9 @@ double HVSC::get_initial_pll_angle_in_rad()
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    BUS* bus = psdb.get_bus(get_converter_ac_bus());
-    double angle_in_rad = bus->get_positive_sequence_angle_in_rad();
+    BUS* bus_ptr = psdb.get_bus(get_converter_ac_bus());
+    BUS& bus = *bus_ptr;
+    double angle_in_rad = bus.get_positive_sequence_angle_in_rad();
     return angle_in_rad;
 }
 
@@ -833,11 +836,13 @@ double HVSC::get_initial_pll_angle_in_deg()
 
 double HVSC::get_vsc_converter_ueq_in_kV() const
 {
-    return hvsc_model->get_vsc_converter_ueq_in_kV();
+    HVSC_MODEL& hvsc_model_ref = *hvsc_model;
+    return hvsc_model_ref.get_vsc_converter_ueq_in_kV();
 }
 double HVSC::get_vsc_converter_req_in_ohm() const
 {
-    return hvsc_model->get_vsc_converter_ueq_in_kV();
+    HVSC_MODEL& hvsc_model_ref = *hvsc_model;
+    return hvsc_model_ref.get_vsc_converter_ueq_in_kV();
 }
 
 void HVSC::set_converter_Pdc_command_in_MW(double Pdc)
@@ -852,50 +857,61 @@ double HVSC::get_converter_Pdc_command_in_MW()
 
 complex<double> HVSC::get_converter_dynamic_ac_current_in_kA()
 {
-    return hvsc_model->get_converter_dynamic_current_from_ac_bus_to_converter_in_xy_axis_in_kA();
+    HVSC_MODEL& hvsc_model_ref = *hvsc_model;
+    return hvsc_model_ref.get_converter_dynamic_current_from_ac_bus_to_converter_in_xy_axis_in_kA();
 }
 
 complex<double> HVSC::get_converter_dynamic_ac_current_in_pu_on_system_base()
 {
-    return hvsc_model->get_converter_dynamic_current_from_ac_bus_to_converter_in_xy_axis_in_pu_on_system_base();
+    HVSC_MODEL& hvsc_model_ref = *hvsc_model;
+    return hvsc_model_ref.get_converter_dynamic_current_from_ac_bus_to_converter_in_xy_axis_in_pu_on_system_base();
 }
 
 complex<double> HVSC::get_converter_dynamic_complex_power_in_MVA()
 {
-    return hvsc_model->get_converter_dynamic_ac_complex_power();
+    HVSC_MODEL& hvsc_model_ref = *hvsc_model;
+    return hvsc_model_ref.get_converter_dynamic_ac_complex_power();
 }
 
 double HVSC::get_converter_dynamic_active_power_in_MW()
 {
-    return hvsc_model->get_converter_dynamic_active_power_in_MW();
+    HVSC_MODEL& hvsc_model_ref = *hvsc_model;
+    return hvsc_model_ref.get_converter_dynamic_active_power_in_MW();
 }
 
 double HVSC::get_converter_dynamic_reactive_power_in_Mvar()
 {
-    return hvsc_model->get_converter_dynamic_reactive_power_in_Mvar();
+    HVSC_MODEL& hvsc_model_ref = *hvsc_model;
+    return hvsc_model_ref.get_converter_dynamic_reactive_power_in_Mvar();
 }
 
 double HVSC::get_converter_dynamic_d_axis_current_in_pu_on_converter_base()
 {
-    complex<double> idq = hvsc_model->get_converter_dynamic_current_from_ac_bus_to_converter_in_dq_axis_in_pu_on_converter_base();
+    HVSC_MODEL& hvsc_model_ref = *hvsc_model;
+    complex<double> idq = hvsc_model_ref.get_converter_dynamic_current_from_ac_bus_to_converter_in_dq_axis_in_pu_on_converter_base();
     return idq.real();
 }
 double HVSC::get_converter_dynamic_q_axis_current_in_pu_on_converter_base()
 {
-    complex<double> idq = hvsc_model->get_converter_dynamic_current_from_ac_bus_to_converter_in_dq_axis_in_pu_on_converter_base();
+    HVSC_MODEL& hvsc_model_ref = *hvsc_model;
+    complex<double> idq = hvsc_model_ref.get_converter_dynamic_current_from_ac_bus_to_converter_in_dq_axis_in_pu_on_converter_base();
     return idq.imag();
 }
 double HVSC::get_converter_dynamic_d_axis_current_in_kA()
 {
     double id = get_converter_dynamic_d_axis_current_in_pu_on_converter_base();
     double sbase = get_converter_rated_capacity_in_MVA();
-    double vbase = get_converter_ac_bus_pointer()->get_base_voltage_in_kV();
+    BUS* bus_ptr = get_converter_ac_bus_pointer();
+    BUS& bus = *bus_ptr;
+    double vbase = bus.get_base_voltage_in_kV();
     return id*(sbase/(SQRT3*vbase));
 }
 double HVSC::get_converter_dynamic_q_axis_current_in_kA()
 {
     double iq = get_converter_dynamic_q_axis_current_in_pu_on_converter_base();
     double sbase = get_converter_rated_capacity_in_MVA();
-    double vbase = get_converter_ac_bus_pointer()->get_base_voltage_in_kV();
+    BUS* bus_ptr = get_converter_ac_bus_pointer();
+    BUS& bus = *bus_ptr;
+    double vbase = bus.get_base_voltage_in_kV();
     return iq*(sbase/(SQRT3*vbase));
 }

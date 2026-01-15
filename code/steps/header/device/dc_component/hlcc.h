@@ -24,16 +24,16 @@ class HLCC
         void set_toolkit(STEPS& toolkit);
         STEPS& get_toolkit() const;
 
-        virtual bool is_connected_to_bus(unsigned int bus) const;
-        virtual bool is_valid() const;
-        virtual void check();
-        virtual void clear();
-        virtual void report() const;
-        virtual void save() const;
+        bool is_connected_to_bus(unsigned int bus) const;
+        bool is_valid() const;
+        void check();
+        void clear();
+        void report() const;
+        void save() const;
 
-        virtual void set_model(HLCC_MODEL* model) ;
-        virtual HLCC_MODEL* get_model_of_type(string model_type, unsigned int index=0) ;
-        virtual HLCC_MODEL* get_hlcc_model();
+        void set_model(HLCC_MODEL* model) ;
+        HLCC_MODEL* get_model_of_type(string model_type, unsigned int index=0) ;
+        HLCC_MODEL* get_hlcc_model() const;
 
         //set
         void set_status(const bool status);
@@ -144,7 +144,6 @@ class HLCC
         double solve_inverter_beta_in_rad_with_gamma_in_deg_and_idc_in_kA(double gamma,double idc);
 
         //output
-        HLCC_MODEL* get_hlcc_model() const;
         double get_converter_dc_power_in_MW();
 
 
@@ -195,11 +194,11 @@ class HLCC
         bool is_control_mode_changed;
         bool converter_firing_angle_fixed;
 
-        double Sbase;
-        double Vbase;
-        double margin;
+        double Sbase_MVA;
+        double Vbase_kV;
+        double margin_pu;
 
-        HLCC_MODEL* model;
+        HLCC_MODEL* hlcc_model;
 
 };
 #endif // HVDC_H

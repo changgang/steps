@@ -72,13 +72,13 @@ void HLCC::clear()
     P2ac = 0.0;
     Q2ac = 0.0;
 
-    Sbase = 100;
-    Vbase = 100;
-    margin = 0.15;
+    Sbase_MVA = 100;
+    Vbase_kV = 100;
+    margin_pu = 0.15;
 
     converter_firing_angle_fixed = false;
     is_control_mode_changed = false;
-    model = NULL;
+    hlcc_model = NULL;
 
 }
 
@@ -121,7 +121,7 @@ void HLCC::set_model(HLCC_MODEL* model)
 {
     if(model != NULL)
     {
-        this->model = model;
+        hlcc_model = model;
     }
     else
     {
@@ -140,9 +140,9 @@ HLCC_MODEL* HLCC::get_model_of_type(string model_type, unsigned int index)
     return NULL;
 }
 
-HLCC_MODEL* HLCC::get_hlcc_model()
+HLCC_MODEL* HLCC::get_hlcc_model() const
 {
-    return model;
+    return hlcc_model;
 }
 
 void HLCC::set_status(const bool status)
@@ -156,7 +156,7 @@ void HLCC::set_converter_ac_bus(const unsigned int bus)
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     if (psdb.is_bus_exist(bus))
     {
-        this->converter_ac_bus = bus;
+        converter_ac_bus = bus;
         lcc_ac_busptr = psdb.get_bus(bus);
     }
     else
@@ -169,181 +169,179 @@ void HLCC::set_converter_ac_bus(const unsigned int bus)
 
 void HLCC::set_converter_station_number(const unsigned int station)
 {
-    this->converter_station_number = station;
+    converter_station_number = station;
 }
 
 void HLCC::set_converter_dc_bus(const unsigned int bus)
 {
-    this->converter_dc_bus = bus;
+    converter_dc_bus = bus;
 }
 
 void HLCC::set_converter_name(const string name)
 {
-    this->converter_name = name;
+    converter_name = name;
 }
 
 void HLCC::set_operating_mode(const HLCC_OPERATION_MODE omode)
 {
-    this->operating_mode = omode;
+    operating_mode = omode;
 }
 
 void HLCC::set_brideg_number(const unsigned int nbridge)
 {
-   this->bridge_number = nbridge;
+   bridge_number = nbridge;
 }
 
 void HLCC::set_voltage_drop_per_bridge_in_kV(const double vdrop)
 {
-    this->voltage_drop_per_bridge_in_kV = vdrop;
+    voltage_drop_per_bridge_in_kV = vdrop;
 }
 
 void HLCC::set_line_smoothing_L_in_H(const double lsmooth)
 {
-    this->smoothing_L_in_H = lsmooth;
+    smoothing_L_in_H = lsmooth;
 }
 
 void HLCC::set_line_smoothing_R_in_ohm(const double rsmooth)
 {
-    this->smoothing_R_in_ohm = rsmooth;
+    smoothing_R_in_ohm = rsmooth;
 }
 
 void HLCC::set_converter_transformer_grid_side_base_voltage_in_kV(const double vbase)
 {
-    this->converter_transformer_grid_side_base_voltage_in_kV = vbase;
+    converter_transformer_grid_side_base_voltage_in_kV = vbase;
 }
 
 void HLCC::set_converter_transformer_converter_side_base_voltage_in_kV(const double vbase)
 {
-    this->converter_transformer_converter_side_base_voltage_in_kV = vbase;
+    converter_transformer_converter_side_base_voltage_in_kV = vbase;
 }
 
 void HLCC::set_converter_transformer_R_in_ohm(const double rt)
 {
-    this->converter_transformer_Z_in_ohm.real(rt);
-    //this->converter_transformer_R_in_ohm = rt;
+    converter_transformer_Z_in_ohm.real(rt);
 }
 
 void HLCC::set_converter_transformer_X_in_ohm(const double xt)
 {
-    this->converter_transformer_Z_in_ohm.imag(xt);
-    //this->converter_transformer_X_in_ohm = xt;
+    converter_transformer_Z_in_ohm.imag(xt);
 }
 
 void HLCC::set_converter_transformer_Z_in_ohm(const complex<double> zt)
 {
-    this->converter_transformer_Z_in_ohm = zt;
+    converter_transformer_Z_in_ohm = zt;
 }
 
 void HLCC::set_converter_transformer_tap_in_pu(const double tap)
 {
-    this->converter_transformer_tap_in_pu = tap;
+    converter_transformer_tap_in_pu = tap;
 }
 
 void HLCC::set_converter_transformer_max_tap_in_pu(const double tapmax)
 {
-    this->converter_transformer_max_tap_in_pu = tapmax;
+    converter_transformer_max_tap_in_pu = tapmax;
 }
 
 void HLCC::set_converter_transformer_min_tap_in_pu(const double tapmin)
 {
-    this->converter_transformer_min_tap_in_pu = tapmin;
+    converter_transformer_min_tap_in_pu = tapmin;
 }
 
 void HLCC::set_converter_transformer_number_of_taps(const unsigned int ntap)
 {
-    this->converter_transformer_number_of_taps =ntap;
+    converter_transformer_number_of_taps =ntap;
 }
 
 void HLCC::set_firing_angle_in_deg(const double fangle)
 {
-    this->firing_angle_in_deg = fangle;
+    firing_angle_in_deg = fangle;
 }
 
 void HLCC::set_cos_firing_angle(const double cosf)
 {
-    this->cos_firing_angle = cosf;
+    cos_firing_angle = cosf;
     double fangle = steps_acos(cosf);
     set_firing_angle_in_deg(fangle);
 }
 
 void HLCC::set_max_firing_angle_in_deg(const double maxangle)
 {
-    this->max_firing_angle_in_deg = maxangle;
+    max_firing_angle_in_deg = maxangle;
 }
 
 void HLCC::set_min_firing_angle_in_deg(const double minangle)
 {
-    this->min_firing_angle_in_deg = minangle;
+    min_firing_angle_in_deg = minangle;
 }
 
 void HLCC::set_udc_in_kV(const double udc)
 {
-    this->udc_in_kV = udc;
+    udc_in_kV = udc;
 }
 
 void HLCC::set_idc_in_kA(const double idc)
 {
-    this->idc_in_kA = idc;
+    idc_in_kA = idc;
 }
 
 void HLCC::set_pdc_in_MW(const double pdc)
 {
-    this->pdc_in_MW = pdc;
+    pdc_in_MW = pdc;
 }
 
 void HLCC::set_command_udc_in_kV(const double udc)
 {
-    this->command_Udc_in_kV = udc;
+    command_Udc_in_kV = udc;
 }
 
 void HLCC::set_command_idc_in_kA(const double idc)
 {
-    this->command_Idc_in_kA = idc;
+    command_Idc_in_kA = idc;
 }
 
 void HLCC::set_command_pdc_in_MW(const double pdc)
 {
-    this->command_Pdc_in_MW = pdc;
+    command_Pdc_in_MW = pdc;
 }
 
 void HLCC::set_command_firing_angle(const double fangle)
 {
-    this->command_firing_angle_in_deg = fangle;
+    command_firing_angle_in_deg = fangle;
 }
 
 void HLCC::set_converter_P_2_ac_bus(const double Pac)
 {
-    this->P2ac = Pac;
+    P2ac = Pac;
 }
 
 void HLCC::set_converter_Q_2_ac_bus(const double Qac)
 {
-    this->Q2ac = Qac;
+    Q2ac = Qac;
 }
 
 void HLCC::set_control_mode(const HLCC_CONTROL_MODE mode)
 {
-    this->hlcc_control_mode = mode;
+    hlcc_control_mode = mode;
 }
 
 void HLCC::set_control_mode_change_flag(bool flag)
 {
-    this->is_control_mode_changed = flag;
+    is_control_mode_changed = flag;
 }
 
 void HLCC::set_converter_rated_capacity_in_MVA(double Sbase)
 {
-    this->Sbase = Sbase;
+    Sbase_MVA = Sbase;
 }
 
 void HLCC::set_converter_base_voltage_in_kV(double Vbase)
 {
-    this->Vbase = Vbase;
+    Vbase_kV = Vbase;
 }
 
 void HLCC::set_converter_current_margin_in_pu(double margin)
 {
-    this->margin = margin;
+    margin_pu = margin;
 }
 
 bool HLCC::get_status() const
@@ -370,6 +368,7 @@ string HLCC::get_converter_name() const
 {
     return converter_name;
 }
+
 HLCC_OPERATION_MODE HLCC::get_converter_operating_mode() const
 {
     return operating_mode;
@@ -613,16 +612,17 @@ bool HLCC::is_converter_firing_angle_fixed()
 
 double HLCC::get_converter_rated_capacity_in_MVA() const
 {
-    return Sbase;
+    return Sbase_MVA;
 }
+
 double HLCC::get_converter_base_voltage_in_kV() const
 {
-    return Vbase;
+    return Vbase_kV;
 }
 
 double HLCC::get_converter_current_margin_in_pu() const
 {
-    return margin;
+    return margin_pu;
 }
 
 void HLCC::solve_converter_to_AC(double udc,double idc)
@@ -866,11 +866,6 @@ double HLCC::solve_inverter_beta_in_rad_with_gamma_in_deg_and_idc_in_kA(double g
     }
 }
 
-HLCC_MODEL* HLCC::get_hlcc_model() const
-{
-    return model;
-}
-
 double HLCC::get_converter_dc_power_in_MW()
 {
     double udc = get_udc_in_kV();
@@ -881,39 +876,47 @@ double HLCC::get_converter_dc_power_in_MW()
 
 double HLCC::get_lcc_converter_ueq_in_kV() const
 {
-    return model->get_lcc_converter_ueq_in_kV();
+    HLCC_MODEL& hlcc_model_ref = *hlcc_model;
+    return hlcc_model_ref.get_lcc_converter_ueq_in_kV();
 }
 double HLCC::get_lcc_converter_req_in_ohm() const
 {
-    return model->get_lcc_converter_req_ohm();
+    HLCC_MODEL& hlcc_model_ref = *hlcc_model;
+    return hlcc_model_ref.get_lcc_converter_req_ohm();
 }
 
 complex<double> HLCC::get_converter_dynamic_ac_current_in_kA()
 {
-    return model->get_converter_ac_current_in_kA();
+    HLCC_MODEL& hlcc_model_ref = *hlcc_model;
+    return hlcc_model_ref.get_converter_ac_current_in_kA();
 }
 
 complex<double> HLCC::get_converter_dynamic_ac_current_in_pu_on_system_base()
 {
-    return model->get_converter_ac_current_in_pu_on_system_base();
+    HLCC_MODEL& hlcc_model_ref = *hlcc_model;
+    return hlcc_model_ref.get_converter_ac_current_in_pu_on_system_base();
 }
 
 double HLCC::get_dynamic_ang_ref_in_deg_of_cc()
 {
-    return model->get_converter_angle_ref_in_deg_of_cc();
+    HLCC_MODEL& hlcc_model_ref = *hlcc_model;
+    return hlcc_model_ref.get_converter_angle_ref_in_deg_of_cc();
 }
 
 double HLCC::get_dynamic_ang_ref_in_deg_of_cea()
 {
-    return model->get_converter_angle_ref_in_deg_of_cea();
+    HLCC_MODEL& hlcc_model_ref = *hlcc_model;
+    return hlcc_model_ref.get_converter_angle_ref_in_deg_of_cea();
 }
 
 double HLCC::get_dynamic_ang_ref_in_deg_of_cv()
 {
-    return model->get_converter_angle_ref_in_deg_of_cv();
+    HLCC_MODEL& hlcc_model_ref = *hlcc_model;
+    return hlcc_model_ref.get_converter_angle_ref_in_deg_of_cv();
 }
 
 double HLCC::get_dynamic_idc_ref_in_kA()
 {
-    return model->get_converter_idc_ref_in_kA();
+    HLCC_MODEL& hlcc_model_ref = *hlcc_model;
+    return hlcc_model_ref.get_converter_idc_ref_in_kA();
 }

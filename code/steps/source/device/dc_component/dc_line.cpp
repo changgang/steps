@@ -106,12 +106,12 @@ MODEL* DC_LINE::get_model_of_type(string model_type, unsigned int index)
 
 void DC_LINE::set_sending_side_bus(const unsigned int bus)
 {
-    this->sending_side_bus = bus;
+    sending_side_bus = bus;
 }
 
 void DC_LINE::set_receiving_side_bus(const unsigned int bus)
 {
-    this->receiving_side_bus = bus;
+    receiving_side_bus = bus;
 }
 
 void DC_LINE::set_dc_line_name(const string name)
@@ -126,41 +126,41 @@ void DC_LINE::set_status(const bool status)
 
 void DC_LINE::set_dc_network_simulation_time_step(const double t_dc)
 {
-    this->dc_simulation_time_step = t_dc;
+    dc_simulation_time_step = t_dc;
 }
 
 void DC_LINE::set_line_R_in_ohm(const double r)
 {
-    this->line_R_in_ohm = r;
+    line_R_in_ohm = r;
 }
 
 void DC_LINE::set_line_L_in_H(const double l)
 {
-    this->line_L_in_H = l;
+    line_L_in_H = l;
 }
 
 void DC_LINE::set_line_C_in_uF(const double c)
 {
-    this->line_C_in_uF = c;
+    line_C_in_uF = c;
 }
 
 void DC_LINE::set_sending_side_power(const double psend)
 {
-    this->P_send = psend;
+    P_send = psend;
 }
 
 void DC_LINE::set_Udc_ibus_in_kV(const double udc)
 {
-    this->Udc_ibus = udc;
+    Udc_ibus = udc;
 }
 void DC_LINE::set_Udc_jbus_in_kV(const double udc)
 {
-    this->Udc_jbus = udc;
+    Udc_jbus = udc;
 }
 
 void DC_LINE::set_receiving_side_power(const double prec)
 {
-    this->P_rec = prec;
+    P_rec = prec;
 }
 
 void DC_LINE::set_dc_line_current(const double idc)
@@ -170,37 +170,37 @@ void DC_LINE::set_dc_line_current(const double idc)
 
 void DC_LINE::set_i_RL_in_kA_on_sending_side(const double i1)
 {
-    this->i_RL_sending_side = i1;
+    i_RL_sending_side = i1;
 }
 
 void DC_LINE::set_i_RL_in_kA_on_receiving_side(const double i2)
 {
-    this->i_RL_receiving_side = i2;
+    i_RL_receiving_side = i2;
 }
 
 void DC_LINE::set_ic_in_kA_on_sending_side(const double ic1)
 {
-    this->ic_sending_side = ic1;
+    ic_sending_side = ic1;
 }
 
 void DC_LINE::set_ic_in_kA_on_receiving_side(const double ic2)
 {
-    this->ic_reciving_side = ic2;
+    ic_reciving_side = ic2;
 }
 
 void DC_LINE::set_dc_line_history_Ui_in_kV(const double Ui)
 {
-    this->history_Ui = Ui;
+    history_Ui = Ui;
 }
 
 void DC_LINE::set_dc_line_history_Uj_in_kV(const double Uj)
 {
-    this->history_Uj = Uj;
+    history_Uj = Uj;
 }
 
 void DC_LINE::set_dc_line_history_Uv_in_kV(const double Uv)
 {
-    this->history_Uv = Uv;
+    history_Uv = Uv;
 }
 
 unsigned int DC_LINE::get_sending_side_bus_number() const
@@ -316,22 +316,22 @@ double DC_LINE::get_virtual_bus_current()
 
 void DC_LINE::set_dc_line_fault_location(double location)
 {
-    this->fault_location = location;
+    fault_location = location;
 }
 
 void DC_LINE::set_dc_line_fault_R_in_ohm(double R)
 {
-    this->fault_R = R;
+    fault_R = R;
 }
 
 void DC_LINE::set_dc_line_fault_L_in_H(double L)
 {
-    this->fault_L = L;
+    fault_L = L;
 }
 
 void DC_LINE::set_dc_line_fault_C_in_uF(double C)
 {
-    this->fault_C = C;
+    fault_C = C;
 }
 
 double DC_LINE::get_line_dynamic_y_of_RL_in_S_in_implicit_trapezoid_method(double m)

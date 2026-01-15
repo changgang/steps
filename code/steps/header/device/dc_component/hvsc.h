@@ -21,13 +21,13 @@ class HVSC
         ~HVSC();
         void set_toolkit(STEPS& toolkit);
         STEPS& get_toolkit() const;
-        virtual bool is_connected_to_bus(unsigned int bus) const;
-        virtual bool is_valid() const;
-        virtual void check();
-        virtual void clear();
-        virtual void report() const;
-        virtual void save() const;
-        virtual DEVICE_ID get_device_id() const;
+        bool is_connected_to_bus(unsigned int bus) const;
+        bool is_valid() const;
+        void check();
+        void clear();
+        void report() const;
+        void save() const;
+        DEVICE_ID get_device_id() const;
 
         //set
         void set_converter_ac_bus(const unsigned int acbus);
@@ -125,7 +125,7 @@ class HVSC
         //dynamic
         void set_model(HVSC_MODEL* model) ;
         HVSC_MODEL* get_model_of_type(string model_type, unsigned int index=0) ;
-        HVSC_MODEL* get_hvsc_model();
+        HVSC_MODEL* get_hvsc_model() const;
 
         complex<double> get_converter_initial_power_of_converter_AC_side();
         complex<double> get_converter_initial_ac_current_in_kA_in_xy_axis();

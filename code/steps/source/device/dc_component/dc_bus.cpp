@@ -74,47 +74,47 @@ void DC_BUS::set_name(const string name)
 
 void DC_BUS::set_nominal_voltage(const double vn)
 {
-    this->nominal_voltage =vn;
+    nominal_voltage =vn;
 }
 
 void DC_BUS::set_dc_bus_number(const unsigned int number)
 {
-    this->dc_bus_number = number;
+    dc_bus_number = number;
 }
 
 void DC_BUS::set_dc_bus_voltage_in_kV(const double vdc)
 {
-    this->Vdc_kV = vdc;
+    Vdc_kV = vdc;
 }
 
 void DC_BUS::set_dc_bus_current_in_kA(const double idc)
 {
-    this->Idc_kA = idc;
+    Idc_kA = idc;
 }
 
 void DC_BUS::set_dc_bus_power_in_MW(const double pdc)
 {
-    this->Pdc_MW = pdc;
+    Pdc_MW = pdc;
 }
 
 void DC_BUS::set_dc_bus_area(const unsigned int area)
 {
-    this->dc_bus_area = area;
+    dc_bus_area = area;
 }
 
 void DC_BUS::set_dc_bus_zone(const unsigned int zone)
 {
-    this->dc_bus_zone = zone;
+    dc_bus_zone = zone;
 }
 
 void DC_BUS::set_dc_bus_type(const DC_BUS_TYPE type)
 {
-    this->dc_bus_type = type;
+    dc_bus_type = type;
 }
 
 void DC_BUS::set_dc_bus_dynamic_type(const DYNAMIC_DC_BUS_TYPE dy_type)
 {
-    this->dy_dc_bus_type = dy_type;
+    dy_dc_bus_type = dy_type;
 }
 
 //get

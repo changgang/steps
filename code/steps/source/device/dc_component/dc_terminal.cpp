@@ -58,7 +58,7 @@ MODEL* DC_TERMINAL::get_model_of_type(string model_type, unsigned int index)
 
 void DC_TERMINAL::set_terminal_name(const string name)
  {
-     this->terminal_name = name;
+     terminal_name = name;
  }
 
 void DC_TERMINAL::set_terminal_number(const unsigned int terminal_number)
@@ -68,7 +68,7 @@ void DC_TERMINAL::set_terminal_number(const unsigned int terminal_number)
 
 void DC_TERMINAL::set_terminal_dc_bus_number(const unsigned int dcbus)
 {
-    this->dcbus_number = dcbus;
+    dcbus_number = dcbus;
 }
 
 void DC_TERMINAL::set_status(const bool status)
@@ -78,7 +78,7 @@ void DC_TERMINAL::set_status(const bool status)
 
 void DC_TERMINAL::set_terminal_mode(const DC_TERMINAL_MODE mode)
 {
-    this->terminal_mode = mode;
+    terminal_mode = mode;
 }
 
 string DC_TERMINAL::get_terminal_name() const
