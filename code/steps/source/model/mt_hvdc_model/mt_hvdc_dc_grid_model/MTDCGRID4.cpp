@@ -48,25 +48,28 @@ string MTDCGRID4::get_model_name() const
 
 void MTDCGRID4::set_dc_network_simulation_time_step(double t_dc)
 {
-    this->dc_network_simulation_time_step = t_dc;
+    dc_network_simulation_time_step = t_dc;
 }
 
 void MTDCGRID4::set_is_dc_network_dynamics_consider(bool is_dc_dynamic_consider)
 {
-    this->is_dc_network_dynamic_considered = is_dc_dynamic_consider;
+    is_dc_network_dynamic_considered = is_dc_dynamic_consider;
 }
 
 DC_LINE* MTDCGRID4::get_dc_line_with_virtual_bus_number(unsigned int bus_number)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_LINE*> dc_lines = mtdc->get_all_dc_lines();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_LINE*> dc_lines = mtdc.get_all_dc_lines();
     unsigned int n_dcline = dc_lines.size();
     for(unsigned int i=0;i!=n_dcline;i++)
     {
-        DC_BUS* bus = dc_lines[i]->get_dc_line_virtual_bus();
-        if(bus->get_dc_bus_number()==bus_number)
+        DC_LINE& dc_line = *(dc_lines[i]);
+        DC_BUS* bus_ptr = dc_line.get_dc_line_virtual_bus();
+        DC_BUS& bus = *bus_ptr;
+        if(bus.get_dc_bus_number()==bus_number)
         {
             return dc_lines[i];
         }
@@ -80,15 +83,18 @@ DC_BUS* MTDCGRID4::get_virtual_bus_with_virtual_bus_number(unsigned int bus_numb
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_LINE*> dc_lines = mtdc->get_all_dc_lines();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_LINE*> dc_lines = mtdc.get_all_dc_lines();
     unsigned int n_dcline = dc_lines.size();
     for(unsigned int i=0;i!=n_dcline;i++)
     {
-        DC_BUS* bus = dc_lines[i]->get_dc_line_virtual_bus();
-        if(bus->get_dc_bus_number()==bus_number)
+        DC_LINE& dc_line = *(dc_lines[i]);
+        DC_BUS* bus_ptr = dc_line.get_dc_line_virtual_bus();
+        DC_BUS& bus = *bus_ptr;
+        if(bus.get_dc_bus_number()==bus_number)
         {
-            return bus;
+            return bus_ptr;
         }
     }
     osstream<<"NO DC VIRTUAL WITH VIRTUAL BUS NUMBER: "<<bus_number;
@@ -98,13 +104,15 @@ DC_BUS* MTDCGRID4::get_virtual_bus_with_virtual_bus_number(unsigned int bus_numb
 
 unsigned int MTDCGRID4::get_number_of_dc_buses_with_dynamic_UR_type()
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_BUS*> dc_buses = mtdc->get_all_dc_buses();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_BUS*> dc_buses = mtdc.get_all_dc_buses();
     unsigned int n_dcbus = dc_buses.size();
     unsigned int n_ur = 0;
     for(unsigned int i=0;i!=n_dcbus;i++)
     {
-        if(dc_buses[i]->get_dc_bus_dynamic_type()==DYNAMIC_DC_UR_BUS)
+        DC_BUS& dc_bus = *(dc_buses[i]);
+        if(dc_bus.get_dc_bus_dynamic_type()==DYNAMIC_DC_UR_BUS)
         {
             n_ur++;
         }
@@ -114,11 +122,13 @@ unsigned int MTDCGRID4::get_number_of_dc_buses_with_dynamic_UR_type()
 
 bool MTDCGRID4::is_internal_bus_in_U_type(unsigned int bus)
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
 
     unsigned int bus_number = dynamic_inphno_dc_buses.get_physical_bus_number_of_internal_bus_number(bus);
-    DC_BUS* dcbus = mtdc->get_dc_bus_with_bus_number(bus_number);
-    if((dcbus->get_dc_bus_dynamic_type())==DYNAMIC_DC_U_BUS)
+    DC_BUS* dcbus_ptr = mtdc.get_dc_bus_with_bus_number(bus_number);
+    DC_BUS& dcbus = *dcbus_ptr;
+    if((dcbus.get_dc_bus_dynamic_type())==DYNAMIC_DC_U_BUS)
     {
         return true;
     }
@@ -132,12 +142,14 @@ bool MTDCGRID4::is_internal_bus_in_U_type(unsigned int bus)
 bool MTDCGRID4::check_is_dc_line_fault_exit()
 {
     is_dc_line_fault_exit = false;
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_LINE*> dc_lines = mtdc->get_all_dc_lines();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_LINE*> dc_lines = mtdc.get_all_dc_lines();
     unsigned int n_dcline = dc_lines.size();
     for(unsigned int i=0;i!=n_dcline;i++)
     {
-        double fault_R = dc_lines[i]->get_dc_line_fault_R_in_ohm();
+        DC_LINE& dc_line = *(dc_lines[i]);
+        double fault_R = dc_line.get_dc_line_fault_R_in_ohm();
         if(fault_R == INFINITE_THRESHOLD)
         {
             ;
@@ -154,51 +166,58 @@ bool MTDCGRID4::check_is_dc_line_fault_exit()
 
 void MTDCGRID4::initialize_dc_buses()
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_BUS*> buses = mtdc->get_all_dc_buses();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_BUS*> buses = mtdc.get_all_dc_buses();
     unsigned int n_dcbus = buses.size();
     for(unsigned int i=0;i!=n_dcbus;i++)
     {
-        double req = mtdc->get_dc_bus_req_in_dynamic_simulation(buses[i]->get_dc_bus_number());
+        DC_BUS& bus = *(buses[i]);
+        double req = mtdc.get_dc_bus_req_in_dynamic_simulation(bus.get_dc_bus_number());
         if(req == 0)
         {
-            buses[i]->set_dc_bus_dynamic_type(DYNAMIC_DC_U_BUS);
+            bus.set_dc_bus_dynamic_type(DYNAMIC_DC_U_BUS);
         }
         else
         {
-            buses[i]->set_dc_bus_dynamic_type(DYNAMIC_DC_UR_BUS);
+            bus.set_dc_bus_dynamic_type(DYNAMIC_DC_UR_BUS);
         }
     }
 }
 
 void MTDCGRID4::initialize_dc_lines()
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_LINE*> dc_lines = mtdc->get_all_dc_lines();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_LINE*> dc_lines = mtdc.get_all_dc_lines();
     unsigned int n_dcline = dc_lines.size();
     double h_dc = get_dc_network_simulation_time_step();
-    //unsigned int n_dc_bus = mtdc->get_dc_bus_count();
+    //unsigned int n_dc_bus = mtdc.get_dc_bus_count();
     for(unsigned int i=0;i!=n_dcline;i++)
     {
-        dc_lines[i]->set_dc_network_simulation_time_step(h_dc);
+        DC_LINE& dc_line = *(dc_lines[i]);
+        dc_line.set_dc_network_simulation_time_step(h_dc);
 
-        unsigned int i_bus = dc_lines[i]->get_sending_side_bus_number();
-        unsigned int j_bus = dc_lines[i]->get_receiving_side_bus_number();
-        DC_BUS* ibus = mtdc->get_dc_bus_with_bus_number(i_bus);
-        DC_BUS* jbus = mtdc->get_dc_bus_with_bus_number(j_bus);
-        double ivoltage = ibus->get_dc_bus_voltage_in_kV();
-        double jvoltage = jbus->get_dc_bus_voltage_in_kV();
+        unsigned int i_busnumber = dc_line.get_sending_side_bus_number();
+        unsigned int j_busnumber = dc_line.get_receiving_side_bus_number();
+        DC_BUS* ibus_ptr = mtdc.get_dc_bus_with_bus_number(i_busnumber);
+        DC_BUS* jbus_ptr = mtdc.get_dc_bus_with_bus_number(j_busnumber);
+        DC_BUS& ibus = *ibus_ptr;
+        DC_BUS& jbus = *jbus_ptr;
+        double ivoltage = ibus.get_dc_bus_voltage_in_kV();
+        double jvoltage = jbus.get_dc_bus_voltage_in_kV();
 
-        double R = dc_lines[i]->get_line_R_in_ohm();
+        double R = dc_line.get_line_R_in_ohm();
         double idc = (ivoltage-jvoltage)/R;
-        dc_lines[i]->set_i_RL_in_kA_on_sending_side(idc);
+        dc_line.set_i_RL_in_kA_on_sending_side(idc);
     }
 }
 
 void MTDCGRID4::initialize_dynamic_physical_internal_dc_bus_pair()
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_BUS*> dc_buses = mtdc->get_all_dc_buses();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_BUS*> dc_buses = mtdc.get_all_dc_buses();
     unsigned int n_dcbus = dc_buses.size();
     if(n_dcbus!=0)
     {
@@ -206,10 +225,11 @@ void MTDCGRID4::initialize_dynamic_physical_internal_dc_bus_pair()
         unsigned int internal_bus_number = 0;
         for(unsigned int i=0;i!=n_dcbus;i++)
         {
-            DYNAMIC_DC_BUS_TYPE type = dc_buses[i]->get_dc_bus_dynamic_type();
+            DC_BUS& dc_bus = *(dc_buses[i]);
+            DYNAMIC_DC_BUS_TYPE type = dc_bus.get_dc_bus_dynamic_type();
             if(type==DYNAMIC_DC_UR_BUS)
             {
-                unsigned int bus_number = dc_buses[i]->get_dc_bus_number();
+                unsigned int bus_number = dc_bus.get_dc_bus_number();
                 dynamic_inphno_dc_buses.set_physical_internal_bus_number_pair(bus_number, internal_bus_number);
                 ++internal_bus_number;
             }
@@ -217,10 +237,11 @@ void MTDCGRID4::initialize_dynamic_physical_internal_dc_bus_pair()
 
         for(unsigned int i=0;i!=n_dcbus;i++)
         {
-            DYNAMIC_DC_BUS_TYPE type = dc_buses[i]->get_dc_bus_dynamic_type();
+            DC_BUS& dc_bus = *(dc_buses[i]);
+            DYNAMIC_DC_BUS_TYPE type = dc_bus.get_dc_bus_dynamic_type();
             if(type==DYNAMIC_DC_U_BUS)
             {
-                unsigned int bus_number = dc_buses[i]->get_dc_bus_number();
+                unsigned int bus_number = dc_bus.get_dc_bus_number();
                 dynamic_inphno_dc_buses.set_physical_internal_bus_number_pair(bus_number, internal_bus_number);
                 ++internal_bus_number;
             }
@@ -244,8 +265,9 @@ void MTDCGRID4::build_dc_network_matrix_with_dynamic()
 
 void MTDCGRID4::build_dc_network_initial_zero_dynamic_matrix()
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    unsigned int n_dc_bus = mtdc->get_dc_bus_count();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    unsigned int n_dc_bus = mtdc.get_dc_bus_count();
     unsigned int n_dyr_matrix = n_dc_bus;
     for(unsigned int i=0;i!=n_dyr_matrix;i++)
     {
@@ -255,15 +277,17 @@ void MTDCGRID4::build_dc_network_initial_zero_dynamic_matrix()
 
 void MTDCGRID4::add_dc_line_to_dc_dynamic_network_matrix()
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_LINE*> dc_lines = mtdc->get_all_dc_lines();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_LINE*> dc_lines = mtdc.get_all_dc_lines();
     unsigned int n_dcline = dc_lines.size();
     for(unsigned int i=0;i!=n_dcline;i++)
     {
-        double R = dc_lines[i]->get_line_R_in_ohm();
+        DC_LINE& dc_line = *(dc_lines[i]);
+        double R = dc_line.get_line_R_in_ohm();
 
-        unsigned int i_physical_bus = dc_lines[i]->get_sending_side_bus_number();
-        unsigned int j_physical_bus = dc_lines[i]->get_receiving_side_bus_number();
+        unsigned int i_physical_bus = dc_line.get_sending_side_bus_number();
+        unsigned int j_physical_bus = dc_line.get_receiving_side_bus_number();
 
         unsigned int i_bus = dynamic_inphno_dc_buses.get_internal_bus_number_of_physical_bus_number(i_physical_bus);
         unsigned int j_bus = dynamic_inphno_dc_buses.get_internal_bus_number_of_physical_bus_number(j_physical_bus);
@@ -278,15 +302,17 @@ void MTDCGRID4::add_dc_line_to_dc_dynamic_network_matrix()
 
 void MTDCGRID4::add_converter_to_dc_dynamic_network_matrix()
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_BUS*> dc_buses = mtdc->get_all_dc_buses();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_BUS*> dc_buses = mtdc.get_all_dc_buses();
     unsigned int n_dcbus = dc_buses.size();
     for(unsigned int i=0;i!=n_dcbus;i++)
     {
-        if(dc_buses[i]->get_dc_bus_dynamic_type()==DYNAMIC_DC_UR_BUS)
+        DC_BUS& dc_bus = *(dc_buses[i]);
+        if(dc_bus.get_dc_bus_dynamic_type()==DYNAMIC_DC_UR_BUS)
         {
-            unsigned int bus_number = dc_buses[i]->get_dc_bus_number();
-            double req = mtdc->get_dc_bus_req_in_dynamic_simulation(bus_number);
+            unsigned int bus_number = dc_bus.get_dc_bus_number();
+            double req = mtdc.get_dc_bus_req_in_dynamic_simulation(bus_number);
             unsigned int internal_bus = dynamic_inphno_dc_buses.get_internal_bus_number_of_physical_bus_number(bus_number);
             dynamic_dc_network_matrix.add_entry(internal_bus,internal_bus,1/req);
         }
@@ -311,10 +337,11 @@ void MTDCGRID4::build_dc_network_matrix_without_dynamic()
 void MTDCGRID4::split_dynamic_dc_network_matrix_to_4_sub_matrix()
 {
     ostringstream osstream;
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
     unsigned int nc = 0;
     unsigned int nu = 0;
-    unsigned int n_dcbus = mtdc->get_dc_bus_count();
+    unsigned int n_dcbus = mtdc.get_dc_bus_count();
     unsigned int n_bus_ur = get_number_of_dc_buses_with_dynamic_UR_type();
     unsigned int n_bus_u = n_dcbus-n_bus_ur;
     nc = n_bus_ur;
@@ -368,8 +395,9 @@ void MTDCGRID4::split_dynamic_dc_network_matrix_to_4_sub_matrix()
 
 void MTDCGRID4::initialize_dc_bus_injection_current()
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_BUS*> dc_buses = mtdc->get_all_dc_buses();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_BUS*> dc_buses = mtdc.get_all_dc_buses();
     unsigned int n_dcbus = dc_buses.size();
     unsigned int n = 0;
     n = n_dcbus;
@@ -383,16 +411,17 @@ void MTDCGRID4::initialize_dc_bus_injection_current()
     for(unsigned int i=0;i!=n;i++)
     {
         unsigned int bus_number = dynamic_inphno_dc_buses.get_physical_bus_number_of_internal_bus_number(i);
-        double ueq = mtdc->get_dc_bus_ueq_in_dynamic_simulation(bus_number);
-        double req  = mtdc->get_dc_bus_req_in_dynamic_simulation(bus_number);
+        double ueq = mtdc.get_dc_bus_ueq_in_dynamic_simulation(bus_number);
+        double req  = mtdc.get_dc_bus_req_in_dynamic_simulation(bus_number);
         if(req!=0)
         {
             injection_current[i] = ueq/req;
         }
         else
         {
-            DC_BUS* dcbus = mtdc->get_dc_bus_with_bus_number(bus_number);
-            double idc = dcbus->get_dc_bus_current_in_kA();
+            DC_BUS* dcbus_ptr = mtdc.get_dc_bus_with_bus_number(bus_number);
+            DC_BUS& dcbus = *dcbus_ptr;
+            double idc = dcbus.get_dc_bus_current_in_kA();
             injection_current[i] = idc;
         }
 
@@ -402,20 +431,22 @@ void MTDCGRID4::initialize_dc_bus_injection_current()
 
 void MTDCGRID4::add_dc_line_to_injection_current()
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_LINE*> dc_lines = mtdc->get_all_dc_lines();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_LINE*> dc_lines = mtdc.get_all_dc_lines();
     unsigned int n_dcline = dc_lines.size();
     for(unsigned int i=0;i!=n_dcline;i++)
     {
-        unsigned int i_physical_bus = dc_lines[i]->get_sending_side_bus_number();
-        unsigned int j_physical_bus = dc_lines[i]->get_receiving_side_bus_number();
+        DC_LINE& dc_line = *(dc_lines[i]);
+        unsigned int i_physical_bus = dc_line.get_sending_side_bus_number();
+        unsigned int j_physical_bus = dc_line.get_receiving_side_bus_number();
 
-        double Ui = dc_lines[i]->get_dc_line_history_Ui_in_kV();
-        double Uj = dc_lines[i]->get_dc_line_history_Uj_in_kV();
+        double Ui = dc_line.get_dc_line_history_Ui_in_kV();
+        double Uj = dc_line.get_dc_line_history_Uj_in_kV();
 
-        double IL0 = dc_lines[i]->get_i_RL_in_kA_on_sending_side();
+        double IL0 = dc_line.get_i_RL_in_kA_on_sending_side();
 
-        double Ieq_L = dc_lines[i]->get_line_dynamic_injection_current_of_RL_in_kA_in_implicit_trapezoid_method(1,Ui,Uj,IL0);
+        double Ieq_L = dc_line.get_line_dynamic_injection_current_of_RL_in_kA_in_implicit_trapezoid_method(1,Ui,Uj,IL0);
 
         double i_internal = dynamic_inphno_dc_buses.get_internal_bus_number_of_physical_bus_number(i_physical_bus);
         double j_internal = dynamic_inphno_dc_buses.get_internal_bus_number_of_physical_bus_number(j_physical_bus);
@@ -427,8 +458,9 @@ void MTDCGRID4::add_dc_line_to_injection_current()
 
 void MTDCGRID4::initialize_dc_bus_voltage_vector()
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_BUS*> dc_buses = mtdc->get_all_dc_buses();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_BUS*> dc_buses = mtdc.get_all_dc_buses();
     unsigned int n_dcbus = dc_buses.size();
 
     unsigned int n = 0;
@@ -447,7 +479,7 @@ void MTDCGRID4::initialize_dc_bus_voltage_vector()
         if(is_internal_bus_in_U_type(i))
         {
             double bus_number = dynamic_inphno_dc_buses.get_physical_bus_number_of_internal_bus_number(i);
-            double ueq = mtdc->get_dc_bus_ueq_in_dynamic_simulation(bus_number);
+            double ueq = mtdc.get_dc_bus_ueq_in_dynamic_simulation(bus_number);
             bus_voltage[i] = ueq;
             //osstream<<"voltage of U bus :"<<i<<"  is :  "<<ueq<< " and "<<bus_voltage[i];
             //show_information_with_leading_time_stamp_with_default_toolkit(osstream);
@@ -456,8 +488,9 @@ void MTDCGRID4::initialize_dc_bus_voltage_vector()
         else
         {
             unsigned int bus_number = dynamic_inphno_dc_buses.get_physical_bus_number_of_internal_bus_number(i);
-            DC_BUS* dcbus = mtdc->get_dc_bus_with_bus_number(bus_number);
-            double voltage = dcbus->get_dc_bus_voltage_in_kV();
+            DC_BUS* dcbus_ptr = mtdc.get_dc_bus_with_bus_number(bus_number);
+            DC_BUS& dcbus = *dcbus_ptr;
+            double voltage = dcbus.get_dc_bus_voltage_in_kV();
             bus_voltage[i] = voltage;
             /*
             ostringstream osstream;
@@ -472,32 +505,34 @@ void MTDCGRID4::initialize_dc_bus_voltage_vector()
 void MTDCGRID4::update_dc_network_matrix()
 {
     ostringstream osstream;
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_BUS*> dc_buses = mtdc->get_all_dc_buses();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_BUS*> dc_buses = mtdc.get_all_dc_buses();
     unsigned int n_dcbus = dc_buses.size();
     bool update_flag = false;
     for(unsigned int i=0;i!=n_dcbus;i++)
     {
-        DYNAMIC_DC_BUS_TYPE type = dc_buses[i]->get_dc_bus_dynamic_type();
+        DC_BUS& dc_bus = *(dc_buses[i]);
+        DYNAMIC_DC_BUS_TYPE type = dc_bus.get_dc_bus_dynamic_type();
         if(type==DYNAMIC_DC_UR_BUS)
         {
-            double req = mtdc->get_dc_bus_req_in_dynamic_simulation(dc_buses[i]->get_dc_bus_number());
+            double req = mtdc.get_dc_bus_req_in_dynamic_simulation(dc_bus.get_dc_bus_number());
             if(req==0)
             {
-                dc_buses[i]->set_dc_bus_dynamic_type(DYNAMIC_DC_U_BUS);
+                dc_bus.set_dc_bus_dynamic_type(DYNAMIC_DC_U_BUS);
                 update_flag = true;
-                osstream<<"DC BUS DYNAMIC will be update with DC BUS:"<<dc_buses[i]->get_dc_bus_number()<<"  FROM UR BUS TO U BUS";
+                osstream<<"DC BUS DYNAMIC will be update with DC BUS:"<<dc_bus.get_dc_bus_number()<<"  FROM UR BUS TO U BUS";
                 show_information_with_leading_time_stamp_with_default_toolkit(osstream);
             }
         }
         if(type == DYNAMIC_DC_U_BUS)
         {
-            double req = mtdc->get_dc_bus_req_in_dynamic_simulation(dc_buses[i]->get_dc_bus_number());
+            double req = mtdc.get_dc_bus_req_in_dynamic_simulation(dc_bus.get_dc_bus_number());
             if(req!=0)
             {
-                dc_buses[i]->set_dc_bus_dynamic_type(DYNAMIC_DC_UR_BUS);
+                dc_bus.set_dc_bus_dynamic_type(DYNAMIC_DC_UR_BUS);
                 update_flag = true;
-                osstream<<"DC BUS DYNAMIC will be update with DC BUS:"<<dc_buses[i]->get_dc_bus_number()<<"  FROM U BUS TO UR BUS";
+                osstream<<"DC BUS DYNAMIC will be update with DC BUS:"<<dc_bus.get_dc_bus_number()<<"  FROM U BUS TO UR BUS";
                 show_information_with_leading_time_stamp_with_default_toolkit(osstream);
             }
         }
@@ -524,7 +559,8 @@ void MTDCGRID4::update_dc_bus_injection_current()
 {
     //ostringstream osstream;
     //STEPS& toolkit = get_toolkit();
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
     unsigned int n = injection_current.size();;
     for(unsigned int i=0;i!=n;i++)
     {
@@ -538,8 +574,8 @@ void MTDCGRID4::update_dc_bus_injection_current()
         {
 
             unsigned int bus_number = dynamic_inphno_dc_buses.get_physical_bus_number_of_internal_bus_number(i);
-            double ueq = mtdc->get_dc_bus_ueq_in_dynamic_simulation(bus_number);
-            double req = mtdc->get_dc_bus_req_in_dynamic_simulation(bus_number);
+            double ueq = mtdc.get_dc_bus_ueq_in_dynamic_simulation(bus_number);
+            double req = mtdc.get_dc_bus_req_in_dynamic_simulation(bus_number);
             injection_current[i] = ueq/req;
         }
     }
@@ -547,14 +583,15 @@ void MTDCGRID4::update_dc_bus_injection_current()
 
 void MTDCGRID4::update_dc_bus_voltage()
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
     unsigned int n = bus_voltage.size();;
     for(unsigned int i=0;i!=n;i++)
     {
         if(is_internal_bus_in_U_type(i))
         {
             unsigned int bus_number = dynamic_inphno_dc_buses.get_physical_bus_number_of_internal_bus_number(i);
-            double ueq = mtdc->get_dc_bus_ueq_in_dynamic_simulation(bus_number);
+            double ueq = mtdc.get_dc_bus_ueq_in_dynamic_simulation(bus_number);
             bus_voltage[i] = ueq;
         }
     }
@@ -568,10 +605,11 @@ void MTDCGRID4::add_dc_fault_to_dc_network()
 void MTDCGRID4::solve_dc_network_without_line_dynamics()
 {
     ostringstream osstream;
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
     unsigned int nc = 0;
     unsigned int nu = 0;
-    unsigned int n_dcbus = mtdc->get_dc_bus_count();
+    unsigned int n_dcbus = mtdc.get_dc_bus_count();
     unsigned int n_bus_ur = get_number_of_dc_buses_with_dynamic_UR_type();
     unsigned int n_bus_u = n_dcbus-n_bus_ur;
     nc = n_bus_ur;
@@ -655,10 +693,11 @@ void MTDCGRID4::solve_dc_network_without_line_dynamics()
 void MTDCGRID4::solve_dc_network_with_line_dynamics()
 {
     ostringstream osstream;
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
     unsigned int nc = 0;
     unsigned int nu = 0;
-    unsigned int n_dcbus = mtdc->get_dc_bus_count();
+    unsigned int n_dcbus = mtdc.get_dc_bus_count();
     unsigned int n_bus_ur = get_number_of_dc_buses_with_dynamic_UR_type();
     unsigned int n_bus_u = n_dcbus-n_bus_ur;
     nu = n_bus_u;
@@ -745,23 +784,25 @@ void MTDCGRID4::solve_dc_network_with_line_dynamics()
 void MTDCGRID4::update_dc_bus_volatge_and_current()
 {
     ostringstream osstream;
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_BUS*> dc_buses = mtdc->get_all_dc_buses();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_BUS*> dc_buses = mtdc.get_all_dc_buses();
     unsigned int n_dcbus = dc_buses.size();
     for(unsigned int i=0;i!=n_dcbus;i++)
     {
-        unsigned int bus_number = dc_buses[i]->get_dc_bus_number();
+        DC_BUS& dc_bus = *(dc_buses[i]);
+        unsigned int bus_number = dc_bus.get_dc_bus_number();
         unsigned int internal_number = dynamic_inphno_dc_buses.get_internal_bus_number_of_physical_bus_number(bus_number);
         double udc = bus_voltage[internal_number];
-        dc_buses[i]->set_dc_bus_voltage_in_kV(udc);
+        dc_bus.set_dc_bus_voltage_in_kV(udc);
 
         //update current:
         if(not is_internal_bus_in_U_type(internal_number))
         {
-            double ueq = mtdc->get_dc_bus_ueq_in_dynamic_simulation(bus_number);
-            double req = mtdc->get_dc_bus_req_in_dynamic_simulation(bus_number);
+            double ueq = mtdc.get_dc_bus_ueq_in_dynamic_simulation(bus_number);
+            double req = mtdc.get_dc_bus_req_in_dynamic_simulation(bus_number);
             double idc = (ueq-udc)/req;
-            dc_buses[i]->set_dc_bus_current_in_kA(idc);
+            dc_bus.set_dc_bus_current_in_kA(idc);
 
             //osstream<<"CURRENT OF UR DC BUS :"<<bus_number<<"IS UPDATE TO: "<<idc;
             //show_information_with_leading_time_stamp_with_default_toolkit(osstream);
@@ -770,7 +811,7 @@ void MTDCGRID4::update_dc_bus_volatge_and_current()
         {
             //osstream<<"BEGIN TO UPDATE IDC OF U BUS :"<<bus_number;
             //show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-            dc_buses[i]->set_dc_bus_current_in_kA(injection_current[internal_number]);
+            dc_bus.set_dc_bus_current_in_kA(injection_current[internal_number]);
         }
     }
 
@@ -778,13 +819,15 @@ void MTDCGRID4::update_dc_bus_volatge_and_current()
 
 void MTDCGRID4::update_dc_line_voltage_and_current()
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_LINE*> dc_lines = mtdc->get_all_dc_lines();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_LINE*> dc_lines = mtdc.get_all_dc_lines();
     unsigned int n_dcline = dc_lines.size();
     for(unsigned int i=0;i!=n_dcline;i++)
     {
-        unsigned int i_physical_bus = dc_lines[i]->get_sending_side_bus_number();
-        unsigned int j_physical_bus = dc_lines[i]->get_receiving_side_bus_number();
+        DC_LINE& dc_line = *(dc_lines[i]);
+        unsigned int i_physical_bus = dc_line.get_sending_side_bus_number();
+        unsigned int j_physical_bus = dc_line.get_receiving_side_bus_number();
 
 
         unsigned int i_internal_bus = dynamic_inphno_dc_buses.get_internal_bus_number_of_physical_bus_number(i_physical_bus);
@@ -792,10 +835,10 @@ void MTDCGRID4::update_dc_line_voltage_and_current()
 
         double Ui = bus_voltage[i_internal_bus];
         double Uj = bus_voltage[j_internal_bus];
-        double R = dc_lines[i]->get_line_R_in_ohm();
+        double R = dc_line.get_line_R_in_ohm();
 
         double idc = (Ui-Uj)/R;
-        dc_lines[i]->set_i_RL_in_kA_on_sending_side(idc);
+        dc_line.set_i_RL_in_kA_on_sending_side(idc);
 
     }
 }
@@ -965,8 +1008,9 @@ void MTDCGRID4::save()
 string MTDCGRID4::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    string mtdc_name = "'"+mtdc->get_name()+"'";
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    string mtdc_name = "'"+mtdc.get_name()+"'";
     string model_name = "'"+get_model_name()+"'";
     string is_dc_dynamic = "";
     if(get_is_dc_network_dynamics_consider()==true)
@@ -1191,12 +1235,14 @@ void MTDCGRID4::show_dc_bus_voltage()
     ostringstream osstream;
     osstream<<" dc bus voltage " ;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_BUS*> buses = mtdc->get_all_dc_buses();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_BUS*> buses = mtdc.get_all_dc_buses();
     unsigned int n_dcbus = buses.size();
     for(unsigned int i=0;i!=n_dcbus;i++)
     {
-        osstream<<" bus voltage of dc bus" <<buses[i]->get_dc_bus_number()<<" is:"<<buses[i]->get_dc_bus_voltage_in_kV();
+        DC_BUS& bus = *(buses[i]);
+        osstream<<" bus voltage of dc bus" <<bus.get_dc_bus_number()<<" is:"<<bus.get_dc_bus_voltage_in_kV();
         show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     }
 }
@@ -1206,12 +1252,14 @@ void MTDCGRID4::show_dc_bus_current()
     ostringstream osstream;
     osstream<<" dc bus current " ;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    vector<DC_BUS*> buses = mtdc->get_all_dc_buses();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    vector<DC_BUS*> buses = mtdc.get_all_dc_buses();
     unsigned int n_dcbus = buses.size();
     for(unsigned int i=0;i!=n_dcbus;i++)
     {
-        osstream<<" bus current of dc bus" <<buses[i]->get_dc_bus_number()<<" is:"<<buses[i]->get_dc_bus_current_in_kA();
+        DC_BUS& bus = *(buses[i]);
+        osstream<<" bus current of dc bus" <<bus.get_dc_bus_number()<<" is:"<<bus.get_dc_bus_current_in_kA();
         show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     }
 }

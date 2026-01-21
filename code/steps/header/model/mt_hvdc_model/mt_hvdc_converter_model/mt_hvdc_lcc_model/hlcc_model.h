@@ -54,8 +54,8 @@ class HLCC_MODEL : public MT_HVDC_MODEL
         virtual void update_converters() = 0;
 
     public:
-        virtual void set_bypass_flag(const bool is_bypass);
-        virtual void set_block_flag(const bool is_block);
+        virtual void set_bypass_flag(const bool flag);
+        virtual void set_block_flag(const bool flag);
         virtual bool get_bypass_flag();
         virtual bool get_block_flag();
         virtual void block_lcc();

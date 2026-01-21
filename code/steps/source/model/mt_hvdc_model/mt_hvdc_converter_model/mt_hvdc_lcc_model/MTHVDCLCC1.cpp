@@ -121,37 +121,37 @@ void MTHVDCLCC1::set_vdcol(const VDCOL& vdcol_limiter)
 
 void MTHVDCLCC1::set_dynamic_max_firing_angle(const double max_angle)
 {
-    this->dynamic_max_angle = max_angle;
+    dynamic_max_angle = max_angle;
 }
 
 void MTHVDCLCC1::set_dynamic_min_firing_angle(const double min_angle)
 {
-    this->dynamic_min_angle = min_angle;
+    dynamic_min_angle = min_angle;
 }
 
 void MTHVDCLCC1::set_min_current_command_value(const double c0)
 {
-    this->min_current_command_value = c0;
+    min_current_command_value = c0;
 }
 
 void MTHVDCLCC1::set_dynamic_idc_ref_in_kA(const double idc)
 {
-    this->idc_ref_in_kA = idc;
+    idc_ref_in_kA = idc;
 }
 
 void MTHVDCLCC1::set_dynamic_angle_ref_in_deg(const double angle)
 {
-    this->angle_ref_in_deg = angle;
+    angle_ref_in_deg = angle;
 }
 
 void MTHVDCLCC1::set_dynamic_udc_ref_in_kV(const double udc)
 {
-    this->udc_ref_in_kV = udc;
+    udc_ref_in_kV = udc;
 }
 
 void MTHVDCLCC1::set_dynamic_min_unbypass_gamma_in_deg(const double gamma)
 {
-    this->dynamic_min_unbypass_gamma_in_deg = gamma;
+    dynamic_min_unbypass_gamma_in_deg = gamma;
 }
 
 double MTHVDCLCC1::get_udc_sensor_block_Td_in_s() const
@@ -221,16 +221,17 @@ double MTHVDCLCC1::get_idc_ref_in_kA() const
 
 double MTHVDCLCC1::get_idc_ref_in_kA_of_VDCOL(double Udc)
 {
-    HLCC* lcc = get_hlcc_pointer();
+    HLCC* lcc_ptr = get_hlcc_pointer();
+    HLCC& lcc = *lcc_ptr;
     double Idc_ref = 0.0;
-    HLCC_CONTROL_MODE cmode = lcc->get_control_mode();
+    HLCC_CONTROL_MODE cmode = lcc.get_control_mode();
     if(cmode==LCC_CONSTANT_CURRENT_MODE)
     {
-        Idc_ref = lcc->get_command_idc_in_kA();
+        Idc_ref = lcc.get_command_idc_in_kA();
     }
     else if(cmode==LCC_CONSTANT_POWER_MODE)
     {
-        double Pdc_ref = lcc->get_command_pdc_in_MW();
+        double Pdc_ref = lcc.get_command_pdc_in_MW();
         Idc_ref = Pdc_ref/Udc;
     }
     else
@@ -264,18 +265,19 @@ double MTHVDCLCC1::get_dynamic_min_unbypass_gamma_in_deg() const
 double MTHVDCLCC1::solve_inverter_gamma_in_deg_with_beta_in_rad_and_idc_in_kA(double beta,double idc)
 {
     ostringstream osstream;
-    HLCC* lcc = get_hlcc_pointer();
-    HLCC_OPERATION_MODE omode = lcc->get_converter_operating_mode();
+    HLCC* lcc_ptr = get_hlcc_pointer();
+    HLCC& lcc = *lcc_ptr;
+    HLCC_OPERATION_MODE omode = lcc.get_converter_operating_mode();
     if(omode==LCC_INVERTER)
     {
         idc = abs(idc);
-        double vac = lcc->get_ac_bus_vlotage_in_kV();
-        double vbase_grid = lcc->get_converter_transformer_grid_side_base_voltage_in_kV();
-        double vbase_converter = lcc->get_converter_transformer_converter_side_base_voltage_in_kV();
+        double vac = lcc.get_ac_bus_vlotage_in_kV();
+        double vbase_grid = lcc.get_converter_transformer_grid_side_base_voltage_in_kV();
+        double vbase_converter = lcc.get_converter_transformer_converter_side_base_voltage_in_kV();
         double k = vbase_grid/vbase_converter;
-        double tap = lcc->get_converter_transformer_tap_in_pu();
+        double tap = lcc.get_converter_transformer_tap_in_pu();
         double Eac = vac/k/tap;
-        double X = lcc->get_converter_transformer_X_in_ohm();
+        double X = lcc.get_converter_transformer_X_in_ohm();
 
         double cos_gamma = SQRT2*idc*X/Eac+steps_cos(beta);
         if(cos_gamma>=0.999)
@@ -409,25 +411,26 @@ void MTHVDCLCC1::initialize()
 {
     if(not is_model_initialized())
     {
-        HLCC* lcc = get_hlcc_pointer();
+        HLCC* lcc_ptr = get_hlcc_pointer();
+        HLCC& lcc = *lcc_ptr;
         setup_block_toolkit_and_parameters();
 
-        double udc = lcc->get_udc_in_kV();
+        double udc = lcc.get_udc_in_kV();
         udc_sensor.set_output(udc);
         udc_sensor.initialize();
 
-        double idc = lcc->get_idc_in_kA();
+        double idc = lcc.get_idc_in_kA();
         idc_sensor.set_output(idc);
         idc_sensor.initialize();
 
-        double angle_in_deg = lcc->get_firing_angle_in_deg();
+        double angle_in_deg = lcc.get_firing_angle_in_deg();
         double angle_in_rad = deg2rad(angle_in_deg);
 
         set_dynamic_idc_ref_in_kA(abs(idc));
         set_dynamic_udc_ref_in_kV(udc);
         set_dynamic_angle_ref_in_deg(angle_in_deg);
 
-        HLCC_OPERATION_MODE omode = lcc->get_converter_operating_mode();
+        HLCC_OPERATION_MODE omode = lcc.get_converter_operating_mode();
         if(omode==LCC_RECTIFIER)
         {
             pi_cc.set_output(angle_in_rad);
@@ -450,10 +453,10 @@ void MTHVDCLCC1::initialize()
             //double gamma_in_rad = deg2rad(gamma_in_deg);
             double gamma_min = get_dynamic_min_firing_angle();
 
-            double beta_in_rad = lcc->solve_inverter_beta_in_rad_with_gamma_in_deg_and_idc_in_kA(gamma_in_deg,idc);
-            double min_beta_in_rad = lcc->solve_inverter_beta_in_rad_with_gamma_in_deg_and_idc_in_kA(gamma_min,idc);
+            double beta_in_rad = lcc.solve_inverter_beta_in_rad_with_gamma_in_deg_and_idc_in_kA(gamma_in_deg,idc);
+            double min_beta_in_rad = lcc.solve_inverter_beta_in_rad_with_gamma_in_deg_and_idc_in_kA(gamma_min,idc);
 
-            HLCC_CONTROL_MODE cmode = lcc->get_control_mode();
+            HLCC_CONTROL_MODE cmode = lcc.get_control_mode();
             switch(cmode)
             {
                 case LCC_CONSTANT_CURRENT_MODE:
@@ -503,26 +506,26 @@ void MTHVDCLCC1::check_limits_in_initialization()
 
 void MTHVDCLCC1::run(DYNAMIC_MODE mode)
 {
-    STEPS& toolkit = get_toolkit();
-    HLCC* lcc = get_hlcc_pointer();
+    HLCC* lcc_ptr = get_hlcc_pointer();
+    HLCC& lcc = *lcc_ptr;
     ostringstream osstream;
-    double input_udc_sensor = lcc->get_udc_in_kV();
+    double input_udc_sensor = lcc.get_udc_in_kV();
     udc_sensor.set_input(input_udc_sensor);
     udc_sensor.run(mode);
     double Udcm = udc_sensor.get_output();
-    //double Udcm = lcc->get_udc_in_kV();
+    //double Udcm = lcc.get_udc_in_kV();
 
-    double input_idc_sensor = lcc->get_idc_in_kA();
+    double input_idc_sensor = lcc.get_idc_in_kA();
     idc_sensor.set_input(input_idc_sensor);
     idc_sensor.run(mode);
     double Idcm = idc_sensor.get_output();
-    //double Idcm = lcc->get_idc_in_kA();
+    //double Idcm = lcc.get_idc_in_kA();
 
-    HLCC_OPERATION_MODE omode = lcc->get_converter_operating_mode();
-    HLCC_CONTROL_MODE cmode = lcc->get_control_mode();
+    HLCC_OPERATION_MODE omode = lcc.get_converter_operating_mode();
+    HLCC_CONTROL_MODE cmode = lcc.get_control_mode();
 
-    double Sbase = lcc->get_converter_rated_capacity_in_MVA();
-    double Vbase = lcc->get_converter_base_voltage_in_kV();
+    double Sbase = lcc.get_converter_rated_capacity_in_MVA();
+    double Vbase = lcc.get_converter_base_voltage_in_kV();
     double Ibase = Sbase/Vbase;
 
     if(omode==LCC_RECTIFIER)
@@ -571,9 +574,9 @@ void MTHVDCLCC1::run(DYNAMIC_MODE mode)
         //double gamma_ref = 15;//steady-state min gamma
         double gamma_ref_in_rad = deg2rad(gamma_ref);
 
-        double margin = lcc->get_converter_current_margin_in_pu();
+        double margin = lcc.get_converter_current_margin_in_pu();
 
-        double gamma_in_deg = lcc->get_firing_angle_in_deg();
+        double gamma_in_deg = lcc.get_firing_angle_in_deg();
         double gamma_in_rad = deg2rad(gamma_in_deg);
 
         double Udc_ref = 0.0;
@@ -593,7 +596,7 @@ void MTHVDCLCC1::run(DYNAMIC_MODE mode)
                 pi_cea.run(mode);
 
 
-                Udc_ref = lcc->get_command_udc_in_kV();
+                Udc_ref = lcc.get_command_udc_in_kV();
                 pi_cv.set_input((-Udc_ref+Udcm)/Vbase);
                 pi_cv.run(mode);
                 /*
@@ -673,11 +676,13 @@ void MTHVDCLCC1::save()
 string MTHVDCLCC1::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    HLCC* lcc = get_hlcc_pointer();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    HLCC* lcc_ptr = get_hlcc_pointer();
+    HLCC& lcc = *lcc_ptr;
 
-    string mtdc_name = "'"+mtdc->get_name()+"'";
-    string lcc_name = "'"+lcc->get_converter_name()+"'";
+    string mtdc_name = "'"+mtdc.get_name()+"'";
+    string lcc_name = "'"+lcc.get_converter_name()+"'";
     string model_name = "'"+get_model_name()+"'";
     osstream<<setw(16)<<mtdc_name<<", "
             <<setw(10)<<lcc_name<<","
@@ -709,8 +714,9 @@ string MTHVDCLCC1::get_standard_psse_string(bool export_internal_bus_number) con
 void MTHVDCLCC1::update_converters()
 {
     ostringstream osstream;
-    HLCC* lcc = get_hlcc_pointer();
-    HLCC_OPERATION_MODE omode = lcc->get_converter_operating_mode();
+    HLCC* lcc_ptr = get_hlcc_pointer();
+    HLCC& lcc = *lcc_ptr;
+    HLCC_OPERATION_MODE omode = lcc.get_converter_operating_mode();
 
     check_block_logic();
     check_bypass_logic();
@@ -720,8 +726,8 @@ void MTHVDCLCC1::update_converters()
     {
         double angle_command_in_rad = get_dynamic_command_firing_angle_in_rad();
         double alpha_command_in_deg = rad2deg(angle_command_in_rad);
-        lcc->set_firing_angle_in_deg(alpha_command_in_deg);
-        //osstream<<" LCC"<<lcc->get_converter_name()<<" is update with alpha: "<<alpha_command_in_deg;
+        lcc.set_firing_angle_in_deg(alpha_command_in_deg);
+        //osstream<<" LCC"<<lcc.get_converter_name()<<" is update with alpha: "<<alpha_command_in_deg;
         //show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     }
 }
@@ -889,14 +895,15 @@ void MTHVDCLCC1::check_bypass_logic()
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit();
-    HLCC* lcc = get_hlcc_pointer();
-    HLCC_OPERATION_MODE omode = lcc->get_converter_operating_mode();
+    HLCC* lcc_ptr = get_hlcc_pointer();
+    HLCC& lcc = *lcc_ptr;
+    HLCC_OPERATION_MODE omode = lcc.get_converter_operating_mode();
 
     double angle_command_in_rad = get_dynamic_command_firing_angle_in_rad();
 
     if(omode==LCC_INVERTER)
     {
-        double idc = lcc->get_idc_in_kA();
+        double idc = lcc.get_idc_in_kA();
         double beta_command_in_rad = angle_command_in_rad;
         double gamma_in_deg = solve_inverter_gamma_in_deg_with_beta_in_rad_and_idc_in_kA(beta_command_in_rad,idc);
         if(get_block_flag()==false)
@@ -907,8 +914,8 @@ void MTHVDCLCC1::check_bypass_logic()
                 double gamma_min = get_dynamic_min_firing_angle();
                 if(gamma_in_deg<=gamma_min)
                 {
-                    lcc->set_firing_angle_in_deg(0);
-                    osstream<<"INVERTER LCC: "<<lcc->get_converter_name()<<" will be bypass due to insufficient gamma = "<<gamma_in_deg<<" with min gamma: "<<gamma_min;
+                    lcc.set_firing_angle_in_deg(0);
+                    osstream<<"INVERTER LCC: "<<lcc.get_converter_name()<<" will be bypass due to insufficient gamma = "<<gamma_in_deg<<" with min gamma: "<<gamma_min;
                     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
                     bypass_lcc();
                     double t= toolkit.get_dynamic_simulation_time_in_s();
@@ -916,7 +923,7 @@ void MTHVDCLCC1::check_bypass_logic()
                 }
                 else
                 {
-                    lcc->set_firing_angle_in_deg(gamma_in_deg);
+                    lcc.set_firing_angle_in_deg(gamma_in_deg);
                 }
             }
             else
@@ -929,15 +936,15 @@ void MTHVDCLCC1::check_bypass_logic()
                 if(gamma_in_deg>min_unbypass_gamma_in_deg)
                 {
 
-                    lcc->set_firing_angle_in_deg(gamma_in_deg);
-                    osstream<<"INVERTER LCC: "<<lcc->get_converter_name()<<" will be unbypass due to sufficient gamma = "<<gamma_in_deg<<" with min unbypass gamma: "<<min_unbypass_gamma_in_deg;
+                    lcc.set_firing_angle_in_deg(gamma_in_deg);
+                    osstream<<"INVERTER LCC: "<<lcc.get_converter_name()<<" will be unbypass due to sufficient gamma = "<<gamma_in_deg<<" with min unbypass gamma: "<<min_unbypass_gamma_in_deg;
                     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
                     unbypass_lcc();
 
                 }
                 else
                 {
-                    lcc->set_firing_angle_in_deg(0);
+                    lcc.set_firing_angle_in_deg(0);
                 }
             }
         }
@@ -946,11 +953,11 @@ void MTHVDCLCC1::check_bypass_logic()
 
 void MTHVDCLCC1::check_block_logic()
 {
-    HLCC* lcc = get_hlcc_pointer();
-    double idc = lcc->get_idc_in_kA();
+    HLCC* lcc_ptr = get_hlcc_pointer();
+    HLCC& lcc = *lcc_ptr;
     if(get_block_flag()==false)
     {
-        HLCC_OPERATION_MODE omode = lcc->get_converter_operating_mode();
+        HLCC_OPERATION_MODE omode = lcc.get_converter_operating_mode();
         if(omode==LCC_RECTIFIER)
         {
             ;
@@ -982,12 +989,13 @@ double MTHVDCLCC1::get_converter_angle_ref_in_deg_of_cv()
 
 double MTHVDCLCC1::get_converter_idc_ref_in_kA()
 {
-    HLCC* lcc = get_hlcc_pointer();
+    HLCC* lcc_ptr = get_hlcc_pointer();
+    HLCC& lcc = *lcc_ptr;
     double Udcm = udc_sensor.get_output();
     double idc_ref = get_idc_ref_in_kA_of_VDCOL(Udcm);
-    if(lcc->get_converter_operating_mode()==LCC_INVERTER)
+    if(lcc.get_converter_operating_mode()==LCC_INVERTER)
     {
-        double margin = lcc->get_converter_current_margin_in_pu();
+        double margin = lcc.get_converter_current_margin_in_pu();
         idc_ref = -idc_ref*(1-margin);
     }
     return idc_ref;

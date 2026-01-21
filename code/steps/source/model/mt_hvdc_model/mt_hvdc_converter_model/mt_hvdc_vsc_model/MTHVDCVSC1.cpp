@@ -139,7 +139,7 @@ void MTHVDCVSC1::set_reactive_power_block_qmin(double qmin)
 
 void MTHVDCVSC1::set_dc_voltage_block_ceq_in_uF(const double ceq)
 {
-    this->ceq_in_uF = ceq;
+    ceq_in_uF = ceq;
     udc_block.set_T_in_s(ceq*1e-6);
 }
 
@@ -212,22 +212,22 @@ double MTHVDCVSC1::get_dc_voltage_block_ceq_in_uF() const
 
 void MTHVDCVSC1::set_active_power_block_Pref(double pref)
 {
-    this->p_ref = pref;
+    p_ref = pref;
 }
 
 void MTHVDCVSC1::set_active_power_block_Udcref(double udcref)
 {
-    this->udc_ref = udcref;
+    udc_ref = udcref;
 }
 
 void MTHVDCVSC1::set_reactive_power_block_Qref(double qref)
 {
-    this->q_ref = qref;
+    q_ref = qref;
 }
 
 void MTHVDCVSC1::set_reactive_power_block_Uacref(double uacref)
 {
-    this->uac_ref = uacref;
+    uac_ref = uacref;
 }
 
 double MTHVDCVSC1::get_active_power_block_Pref() const
@@ -349,21 +349,22 @@ void MTHVDCVSC1::initialize()
 {
     if(not is_model_initialized())
     {
-        HVSC* vsc = get_hvsc_pointer();
+        HVSC* vsc_ptr = get_hvsc_pointer();
+        HVSC& vsc = *vsc_ptr;
         setup_block_toolkit_and_parameters();
 
-        double Ps = vsc->get_converter_P_to_AC_bus_MW();
-        double Qs = vsc->get_converter_Q_to_AC_bus_Mvar();
-        double Udc = vsc->get_udc_in_kV();
-        double Idc = vsc->get_idc_in_kA();
-        double Uac = vsc->get_converter_AC_bus_voltage_in_pu();
+        double Ps = vsc.get_converter_P_to_AC_bus_MW();
+        double Qs = vsc.get_converter_Q_to_AC_bus_Mvar();
+        double Udc = vsc.get_udc_in_kV();
+        double Idc = vsc.get_idc_in_kA();
+        double Uac = vsc.get_converter_AC_bus_voltage_in_pu();
 
-        double Sconverter_base = vsc->get_converter_rated_capacity_in_MVA();
-        double Vdc_base = vsc->get_converter_base_voltage_in_kV();
+        double Sconverter_base = vsc.get_converter_rated_capacity_in_MVA();
+        double Vdc_base = vsc.get_converter_base_voltage_in_kV();
 
-        vsc->set_converter_Pdc_command_in_MW(Udc*Idc);
+        vsc.set_converter_Pdc_command_in_MW(Udc*Idc);
 
-        HVSC_D_CONTROL_MODE dmode = vsc->get_converter_d_axis_control_mode();
+        HVSC_D_CONTROL_MODE dmode = vsc.get_converter_d_axis_control_mode();
         switch(dmode)
         {
             case VSC_CONSTANT_AC_ACTIVE_POWER_MODE:
@@ -380,7 +381,7 @@ void MTHVDCVSC1::initialize()
                 break;
         }
 
-        HVSC_Q_CONTROL_MODE qmode = vsc->get_converter_q_axis_control_mode();
+        HVSC_Q_CONTROL_MODE qmode = vsc.get_converter_q_axis_control_mode();
         switch(qmode)
         {
             case VSC_CONSTANT_AC_REACTIVE_POWER_MODE:
@@ -397,7 +398,7 @@ void MTHVDCVSC1::initialize()
                 break;
         }
 
-        complex<double> Idq = vsc->get_converter_initial_ac_current_in_pu_on_converter_base_in_dq_axis();
+        complex<double> Idq = vsc.get_converter_initial_ac_current_in_pu_on_converter_base_in_dq_axis();
         double Id = Idq.real();
         double Iq = Idq.imag();
         p_block.set_output(Id);
@@ -409,7 +410,7 @@ void MTHVDCVSC1::initialize()
         udc_block.initialize();
         /*
         ostringstream osstream;
-        osstream<<" INITIALIZE RESULT OF VSC:: " <<vsc->get_converter_name()<<endl
+        osstream<<" INITIALIZE RESULT OF VSC:: " <<vsc.get_converter_name()<<endl
                 <<"Sensor"<<endl
                 <<"P snesor output: "<<Ps/Sconverter_base<<" OR "<<Udc/Vdc_base<<" ' "
                 <<"Q snesor output: "<<Qs/Sconverter_base<<" OR "<<Uac<<endl
@@ -429,15 +430,16 @@ void MTHVDCVSC1::check_limits_in_initialization()
 
 void MTHVDCVSC1::run(DYNAMIC_MODE mode)
 {
-    HVSC* vsc = get_hvsc_pointer();
-    double Sbase_con = vsc->get_converter_rated_capacity_in_MVA();
-    double Udc_base = vsc->get_converter_base_voltage_in_kV();
+    HVSC* vsc_ptr = get_hvsc_pointer();
+    HVSC& vsc = *vsc_ptr;
+    double Sbase_con = vsc.get_converter_rated_capacity_in_MVA();
+    double Udc_base = vsc.get_converter_base_voltage_in_kV();
 
     complex<double> Ixy_in_kA = get_converter_dynamic_current_from_ac_bus_to_converter_in_xy_axis_in_kA();
-    complex<double> Uac_complex = vsc->get_converter_AC_bus_compelx_voltage_in_kV();
+    complex<double> Uac_complex = vsc.get_converter_AC_bus_compelx_voltage_in_kV();
     complex<double> Scon = SQRT3*Uac_complex*conj(Ixy_in_kA);
-    double Uac = vsc->get_converter_AC_bus_voltage_in_pu();
-    double Udc = vsc->get_udc_in_kV();
+    double Uac = vsc.get_converter_AC_bus_voltage_in_pu();
+    double Udc = vsc.get_udc_in_kV();
 
     double P = Scon.real();
     double Q = Scon.imag();
@@ -449,8 +451,8 @@ void MTHVDCVSC1::run(DYNAMIC_MODE mode)
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     */
 
-    //double P = vsc->get_converter_P_to_AC_bus_MW();
-    //double Q = vsc->get_converter_Q_to_AC_bus_Mvar();
+    //double P = vsc.get_converter_P_to_AC_bus_MW();
+    //double Q = vsc.get_converter_Q_to_AC_bus_Mvar();
 
     double Pref = get_active_power_block_Pref();
     double Udcref = get_active_power_block_Udcref();
@@ -458,7 +460,7 @@ void MTHVDCVSC1::run(DYNAMIC_MODE mode)
     double Uacref = get_reactive_power_block_Uacref();
 
     double d_input = 0.0;
-    HVSC_D_CONTROL_MODE dmode = vsc->get_converter_d_axis_control_mode();
+    HVSC_D_CONTROL_MODE dmode = vsc.get_converter_d_axis_control_mode();
     if(dmode == VSC_CONSTANT_AC_ACTIVE_POWER_MODE)
     {
         p_sensor.set_input(P/Sbase_con);
@@ -477,7 +479,7 @@ void MTHVDCVSC1::run(DYNAMIC_MODE mode)
     p_block.run(mode);
 
     double q_input = 0.0;
-    HVSC_Q_CONTROL_MODE qmode = vsc->get_converter_q_axis_control_mode();
+    HVSC_Q_CONTROL_MODE qmode = vsc.get_converter_q_axis_control_mode();
     if(qmode == VSC_CONSTANT_AC_REACTIVE_POWER_MODE)
     {
         q_sensor.set_input(Q/Sbase_con);
@@ -544,24 +546,26 @@ void MTHVDCVSC1::save()
 string MTHVDCVSC1::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    HVSC* vsc = get_hvsc_pointer();
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    HVSC* vsc_ptr = get_hvsc_pointer();
+    HVSC& vsc = *vsc_ptr;
 
-    string mtdc_name = "'"+mtdc->get_name()+"'";
-    string vsc_name = "'"+vsc->get_converter_name()+"'";
+    string mtdc_name = "'"+mtdc.get_name()+"'";
+    string vsc_name = "'"+vsc.get_converter_name()+"'";
     string model_name = "'"+get_model_name()+"'";
     string dmode = "";
-    if(vsc->get_converter_d_axis_control_mode()==VSC_CONSTANT_AC_ACTIVE_POWER_MODE)
+    if(vsc.get_converter_d_axis_control_mode()==VSC_CONSTANT_AC_ACTIVE_POWER_MODE)
         dmode = "CONSTANT PAC CONTROL";
-    else if(vsc->get_converter_d_axis_control_mode()==VSC_CONSTANT_DC_VOLTAGE_MODE)
+    else if(vsc.get_converter_d_axis_control_mode()==VSC_CONSTANT_DC_VOLTAGE_MODE)
         dmode = "CONSTANT UDC CONTROL";
     else
         dmode = "INVALID D-AXIS CONTROL MODE";
 
     string qmode = "";
-    if(vsc->get_converter_q_axis_control_mode()==VSC_CONSTANT_AC_REACTIVE_POWER_MODE)
+    if(vsc.get_converter_q_axis_control_mode()==VSC_CONSTANT_AC_REACTIVE_POWER_MODE)
         qmode = "CONSTANT QAC CONTROL";
-    else if(vsc->get_converter_q_axis_control_mode()==VSC_CONSTANT_AC_VOLTAGE_MODE)
+    else if(vsc.get_converter_q_axis_control_mode()==VSC_CONSTANT_AC_VOLTAGE_MODE)
         qmode = "CONSTANT UAC CONTROL";
     else
         qmode ="INVALID Q-AXIS CONTROL MODE";
@@ -750,8 +754,9 @@ complex<double> MTHVDCVSC1::get_converter_dynamic_current_from_ac_bus_to_convert
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    HVSC* vsc = get_hvsc_pointer();
-    double Scon_base = vsc->get_converter_rated_capacity_in_MVA();
+    HVSC* vsc_ptr = get_hvsc_pointer();
+    HVSC& vsc = *vsc_ptr;
+    double Scon_base = vsc.get_converter_rated_capacity_in_MVA();
     double Sac_base = psdb.get_system_base_power_in_MVA();
 
     complex<double> Ixy_on_converter_base = get_converter_dynamic_current_from_ac_bus_to_converter_in_xy_axis_in_pu_on_converter_base();
@@ -769,11 +774,13 @@ complex<double> MTHVDCVSC1::get_converter_dynamic_current_from_ac_bus_to_convert
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    HVSC* vsc = get_hvsc_pointer();
-    BUS* bus = psdb.get_pointer_to_ac_bus(vsc->get_converter_ac_bus());
+    HVSC* vsc_ptr = get_hvsc_pointer();
+    HVSC& vsc = *vsc_ptr;
+    BUS* bus_ptr = psdb.get_pointer_to_ac_bus(vsc.get_converter_ac_bus());
+    BUS& bus = *bus_ptr;
 
     double Sbase = psdb.get_system_base_power_in_MVA();
-    double Vbase = bus->get_base_voltage_in_kV();
+    double Vbase = bus.get_base_voltage_in_kV();
 
     complex<double> Ixy_pu = get_converter_dynamic_current_from_ac_bus_to_converter_in_xy_axis_in_pu_on_system_base();
     double Ibase = Sbase/SQRT3/Vbase;
@@ -789,9 +796,10 @@ complex<double> MTHVDCVSC1::get_converter_dynamic_current_from_ac_bus_to_convert
 
 complex<double> MTHVDCVSC1::get_converter_dynamic_ac_complex_power() const
 {
-    HVSC* vsc = get_hvsc_pointer();
+    HVSC* vsc_ptr = get_hvsc_pointer();
+    HVSC& vsc = *vsc_ptr;
     complex<double> ixy = get_converter_dynamic_current_from_ac_bus_to_converter_in_xy_axis_in_kA();
-    complex<double> uac = vsc->get_converter_AC_bus_compelx_voltage_in_kV();
+    complex<double> uac = vsc.get_converter_AC_bus_compelx_voltage_in_kV();
     complex<double> S = SQRT3*uac*conj(ixy);
     return S;
 
@@ -812,12 +820,13 @@ double MTHVDCVSC1::get_converter_dynamic_reactive_power_in_Mvar() const
 double MTHVDCVSC1::get_converter_dynamic_current_from_converter_to_ceq_in_kA() const
 {
     ostringstream osstream;
-    HVSC* vsc = get_hvsc_pointer();
-    double Udc = vsc->get_udc_in_kV();
+    HVSC* vsc_ptr = get_hvsc_pointer();
+    HVSC& vsc = *vsc_ptr;
+    double Udc = vsc.get_udc_in_kV();
     double Pdc = get_converter_dynamic_power_of_converter_to_ceq();
     double idc = Pdc/Udc;
     /*
-    osstream<<"VSC CONVERTER:"<<vsc->get_converter_name()<<" idc to ceq is :";
+    osstream<<"VSC CONVERTER:"<<vsc.get_converter_name()<<" idc to ceq is :";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     cout << fixed << setprecision(12) << idc<<endl;
     */
@@ -829,22 +838,23 @@ double MTHVDCVSC1::get_converter_dynamic_power_of_converter_to_ceq() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    HVSC* vsc = get_hvsc_pointer();
+    HVSC* vsc_ptr = get_hvsc_pointer();
+    HVSC& vsc = *vsc_ptr;
     ostringstream osstream;
 
     double Pdc = 0.0;
-    complex<double> Vac = psdb.get_bus_positive_sequence_complex_voltage_in_kV(vsc->get_converter_ac_bus());
+    complex<double> Vac = psdb.get_bus_positive_sequence_complex_voltage_in_kV(vsc.get_converter_ac_bus());
     complex<double> It = get_converter_dynamic_current_from_ac_bus_to_converter_in_xy_axis_in_kA();
-    complex<double> Z = vsc->get_converter_commutating_impedance();
+    complex<double> Z = vsc.get_converter_commutating_impedance();
     complex<double> Uc = Vac - It*Z*SQRT3;
     double Pc = (SQRT3*Uc*conj(It)).real();
 
-    double a = vsc->get_converter_loss_coefficient_A_in_kW();
-    double b = vsc->get_converter_loss_coefficient_B_in_kW_per_amp();
-    double c = vsc->get_converter_loss_coefficient_C_in_kW_per_amp_squard();
+    double a = vsc.get_converter_loss_coefficient_A_in_kW();
+    double b = vsc.get_converter_loss_coefficient_B_in_kW_per_amp();
+    double c = vsc.get_converter_loss_coefficient_C_in_kW_per_amp_squard();
     double I = abs(It)*1000;
     double ploss = (a+b*I+c*I*I)/1000;
-    double ploss_min = vsc->get_converter_min_loss_in_kW()/1000;
+    double ploss_min = vsc.get_converter_min_loss_in_kW()/1000;
 
     if(ploss<ploss_min)
     {

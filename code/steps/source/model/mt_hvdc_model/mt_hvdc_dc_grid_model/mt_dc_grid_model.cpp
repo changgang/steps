@@ -19,15 +19,17 @@ MT_DC_GRID_MODEL::~MT_DC_GRID_MODEL()
 
 DC_BUS* MT_DC_GRID_MODEL::get_dc_bus_pointer_with_bus_number(unsigned int bus) const
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    DC_BUS* dc_bus = mtdc->get_dc_bus_with_bus_number(bus);
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    DC_BUS* dc_bus = mtdc.get_dc_bus_with_bus_number(bus);
     return dc_bus;
 }
 
 DC_LINE* MT_DC_GRID_MODEL::get_dc_line_pointer_with_bus_number(unsigned int ibus, unsigned int jbus) const
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    DC_LINE* dc_line = mtdc->get_dc_line_with_ibus_and_jbus(ibus, jbus);
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    DC_LINE* dc_line = mtdc.get_dc_line_with_ibus_and_jbus(ibus, jbus);
     return dc_line;
 }
 

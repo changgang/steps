@@ -21,13 +21,14 @@ HVSC_MODEL::~HVSC_MODEL()
 
 void HVSC_MODEL::set_hvsc_pointer(HVSC* vsc)
 {
-    this->vsc_ptr = vsc;
+    vsc_ptr = vsc;
 }
 
 HVSC* HVSC_MODEL::get_hvsc_pointer_with_name(string name) const
 {
-    MT_HVDC* mtdc = get_mt_hvdc_pointer();
-    HVSC* vsc = mtdc->get_vsc_converter_with_name(name);
+    MT_HVDC* mtdc_ptr = get_mt_hvdc_pointer();
+    MT_HVDC& mtdc = *mtdc_ptr;
+    HVSC* vsc = mtdc.get_vsc_converter_with_name(name);
     return vsc;
 }
 
@@ -43,7 +44,7 @@ string HVSC_MODEL::get_model_type() const
 
 void HVSC_MODEL::set_model_converter_name(const string name)
 {
-    this->hvsc_name = name;
+    hvsc_name = name;
 }
 string HVSC_MODEL::get_model_converter_name()
 {
@@ -54,8 +55,9 @@ double HVSC_MODEL::get_dynamic_pll_angle_in_deg() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    HVSC* vsc = get_hvsc_pointer();
-    double angle = psdb.get_bus_positive_sequence_angle_in_deg(vsc->get_converter_ac_bus());
+    HVSC* vsc_ptr = get_hvsc_pointer();
+    HVSC& vsc = *vsc_ptr;
+    double angle = psdb.get_bus_positive_sequence_angle_in_deg(vsc.get_converter_ac_bus());
     return angle;
 }
 
