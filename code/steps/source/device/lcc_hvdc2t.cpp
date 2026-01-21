@@ -60,13 +60,13 @@ void LCC_HVDC2T::set_converter_valve_side_bus_name(CONVERTER_SIDE converter, str
 void LCC_HVDC2T::set_identifier(const string hvdc_id)
 {
     string hvdc_id_temp = trim_string(hvdc_id);
-    this->identifier_index = get_index_of_string(hvdc_id_temp);
+    identifier_index = get_index_of_string(hvdc_id_temp);
 }
 
 void LCC_HVDC2T::set_name(const string name)
 {
     set_identifier(name);
-    //this->hvdc_name = trim_string(name);
+    //hvdc_name = trim_string(name);
 }
 
 void LCC_HVDC2T::set_status(const bool status)
@@ -77,7 +77,7 @@ void LCC_HVDC2T::set_status(const bool status)
 void LCC_HVDC2T::set_line_resistance_in_ohm(const double R)
 {
     if(R>0.0)
-        this->line_R_in_ohm = R;
+        line_R_in_ohm = R;
     else
     {
         ostringstream osstream;
@@ -85,14 +85,14 @@ void LCC_HVDC2T::set_line_resistance_in_ohm(const double R)
           <<"0.0 will be set to indicate invalid LCC_LCC_HVDC2T2T link.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
-        this->line_R_in_ohm = 0.0;
+        line_R_in_ohm = 0.0;
     }
 }
 
 void LCC_HVDC2T::set_line_inductance_in_mH(const double L)
 {
     if(L>=0.0)
-        this->line_L_in_H = L*1e-3;
+        line_L_in_H = L*1e-3;
     else
     {
         ostringstream osstream;
@@ -100,14 +100,14 @@ void LCC_HVDC2T::set_line_inductance_in_mH(const double L)
           <<"0.0 will be set to indicate invalid LCC_LCC_HVDC2T2T link.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
-        this->line_L_in_H = 0.0;
+        line_L_in_H = 0.0;
     }
 }
 
 void LCC_HVDC2T::set_line_capacitance_in_uF(const double C)
 {
     if(C>=0.0)
-        this->line_C_in_F = C*1e-6;
+        line_C_in_F = C*1e-6;
     else
     {
         ostringstream osstream;
@@ -115,14 +115,14 @@ void LCC_HVDC2T::set_line_capacitance_in_uF(const double C)
           <<"0.0 will be set to indicate invalid LCC_LCC_HVDC2T2T link.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
-        this->line_C_in_F = 0.0;
+        line_C_in_F = 0.0;
     }
 }
 
 void LCC_HVDC2T::set_line_smooting_inductance_in_mH(CONVERTER_SIDE converter, const double L)
 {
     if(L>=0.0)
-        this->smoothing_L_in_H[converter] = L*0.001;
+        smoothing_L_in_H[converter] = L*0.001;
     else
     {
         ostringstream osstream;
@@ -130,14 +130,14 @@ void LCC_HVDC2T::set_line_smooting_inductance_in_mH(CONVERTER_SIDE converter, co
           <<"0.0 will be set automatically.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
-        this->smoothing_L_in_H[converter] = 0.0;
+        smoothing_L_in_H[converter] = 0.0;
     }
 }
 
 void LCC_HVDC2T::set_line_smooting_resistance_in_ohm(CONVERTER_SIDE converter, const double R)
 {
     if(R>=0.0)
-        this->smoothing_R_in_ohm[converter] = R;
+        smoothing_R_in_ohm[converter] = R;
     else
     {
         ostringstream osstream;
@@ -145,7 +145,7 @@ void LCC_HVDC2T::set_line_smooting_resistance_in_ohm(CONVERTER_SIDE converter, c
           <<"0.0 will be set automatically.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
-        this->smoothing_R_in_ohm[converter] = 0.0;
+        smoothing_R_in_ohm[converter] = 0.0;
     }
 }
 
@@ -238,9 +238,9 @@ void LCC_HVDC2T::set_threshold_dc_voltage_for_constant_power_and_constant_curren
 void LCC_HVDC2T::set_current_power_margin(const double margin)
 {
     if(margin>0.0 and margin<1.0)
-        this->dc_current_power_margin = margin;
+        dc_current_power_margin = margin;
     else
-        this->dc_current_power_margin = 0.15;
+        dc_current_power_margin = 0.15;
 }
 
 void LCC_HVDC2T::set_meter_end(const CONVERTER_SIDE converter)
@@ -284,7 +284,7 @@ void LCC_HVDC2T::set_converter_operation_mode(CONVERTER_SIDE converter, const HV
 void LCC_HVDC2T::set_converter_number_of_bridge(CONVERTER_SIDE converter, const unsigned int nbridge)
 {
     if(nbridge > 0)
-        this->bridge_number[converter] = nbridge;
+        bridge_number[converter] = nbridge;
     else
     {
         string converter_name = converter_side2string(converter);
@@ -293,14 +293,14 @@ void LCC_HVDC2T::set_converter_number_of_bridge(CONVERTER_SIDE converter, const 
                 <<"0 will be set to indicate invalid LCC_LCC_HVDC2T2T link.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
-        this->bridge_number[converter] = 0;
+        bridge_number[converter] = 0;
     }
 }
 
 void LCC_HVDC2T::set_converter_voltage_drop_per_bridge_in_kV(CONVERTER_SIDE converter, const double V)
 {
     if(V >= 0.0)
-        this->voltage_drop_per_bridge_in_kV[converter] = V;
+        voltage_drop_per_bridge_in_kV[converter] = V;
     else
     {
         string converter_name = converter_side2string(converter);
@@ -309,7 +309,7 @@ void LCC_HVDC2T::set_converter_voltage_drop_per_bridge_in_kV(CONVERTER_SIDE conv
                 <<"0 will be set automatically.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
-        this->voltage_drop_per_bridge_in_kV[converter] = 0.0;
+        voltage_drop_per_bridge_in_kV[converter] = 0.0;
     }
 }
 
@@ -318,29 +318,29 @@ void LCC_HVDC2T::set_converter_max_alpha_or_gamma_in_deg(CONVERTER_SIDE converte
     if(angle>=0.0)
     {
         if(angle<=90.0)
-            this->max_firing_angle_in_deg[converter] = angle;
+            max_firing_angle_in_deg[converter] = angle;
         else
-            this->max_firing_angle_in_deg[converter] = 90.0;
+            max_firing_angle_in_deg[converter] = 90.0;
     }
     else
-        this->max_firing_angle_in_deg[converter] = 0.0;
+        max_firing_angle_in_deg[converter] = 0.0;
 
-    cos_max_firing_angle[converter] = steps_cos(deg2rad(this->max_firing_angle_in_deg[converter]));
+    cos_max_firing_angle[converter] = steps_cos(deg2rad(max_firing_angle_in_deg[converter]));
 }
 
 void LCC_HVDC2T::set_converter_min_alpha_or_gamma_in_deg(CONVERTER_SIDE converter, const double angle)
 {
     if(angle>=0.0)
-        this->min_firing_angle_in_deg[converter] = angle;
+        min_firing_angle_in_deg[converter] = angle;
     else
-        this->min_firing_angle_in_deg[converter] = 0.0;
-    cos_min_firing_angle[converter] = steps_cos(deg2rad(this->min_firing_angle_in_deg[converter]));
+        min_firing_angle_in_deg[converter] = 0.0;
+    cos_min_firing_angle[converter] = steps_cos(deg2rad(min_firing_angle_in_deg[converter]));
 }
 
 void LCC_HVDC2T::set_converter_transformer_grid_side_base_voltage_in_kV(CONVERTER_SIDE converter, const double V)
 {
     if(V > 0.0)
-        this->converter_transformer_grid_side_base_voltage_in_kV[converter] = V;
+        converter_transformer_grid_side_base_voltage_in_kV[converter] = V;
     else
     {
         ostringstream osstream;
@@ -353,14 +353,14 @@ void LCC_HVDC2T::set_converter_transformer_grid_side_base_voltage_in_kV(CONVERTE
             if(psdb.is_bus_exist(get_converter_bus(converter)))
             {
                 double base_voltage = psdb.get_bus_base_voltage_in_kV(get_converter_bus(converter));
-                this->converter_transformer_grid_side_base_voltage_in_kV[converter] = base_voltage;
+                converter_transformer_grid_side_base_voltage_in_kV[converter] = base_voltage;
             }
             else
             {
                 osstream<<"Warning. Zero (0.0 kV) is provided for setting LCC_LCC_HVDC2T2T "<<converter_name<<" transformer grid side base voltage of "<<get_compound_device_name()<<endl
                         <<"However, the "<<converter_name<<" bus doesn't exist. 0.0 will be set to indicate as base voltage of "<<converter_name<<" bus.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
-                this->converter_transformer_grid_side_base_voltage_in_kV[converter] = 0.0;
+                converter_transformer_grid_side_base_voltage_in_kV[converter] = 0.0;
             }
         }
          else
@@ -369,7 +369,7 @@ void LCC_HVDC2T::set_converter_transformer_grid_side_base_voltage_in_kV(CONVERTE
                     <<"0.0 will be set automatically as base voltage of "<<converter_name<<" bus.";
             STEPS& toolkit = get_toolkit();
             toolkit.show_information_with_leading_time_stamp(osstream);
-            this->converter_transformer_grid_side_base_voltage_in_kV[converter] = 0.0;
+            converter_transformer_grid_side_base_voltage_in_kV[converter] = 0.0;
         }
     }
 }
@@ -377,7 +377,7 @@ void LCC_HVDC2T::set_converter_transformer_grid_side_base_voltage_in_kV(CONVERTE
 void LCC_HVDC2T::set_converter_transformer_converter_side_base_voltage_in_kV(CONVERTER_SIDE converter, const double V)
 {
     if(V > 0.0)
-        this->converter_transformer_converter_side_base_voltage_in_kV[converter] = V;
+        converter_transformer_converter_side_base_voltage_in_kV[converter] = V;
     else
     {
         string converter_name = converter_side2string(converter);
@@ -386,42 +386,42 @@ void LCC_HVDC2T::set_converter_transformer_converter_side_base_voltage_in_kV(CON
           <<"0.0 will be set to indicate invalid base voltage.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
-        this->converter_transformer_converter_side_base_voltage_in_kV[converter] = 0.0;
+        converter_transformer_converter_side_base_voltage_in_kV[converter] = 0.0;
     }
 }
 
 void LCC_HVDC2T::set_converter_transformer_impedance_in_ohm(CONVERTER_SIDE converter, const complex<double> z)
 {
-    this->converter_transformer_Z_in_ohm[converter] = z;
+    converter_transformer_Z_in_ohm[converter] = z;
 }
 
 void LCC_HVDC2T::set_converter_transformer_admittance_in_siemens(CONVERTER_SIDE converter, const complex<double> y)
 {
-    this->converter_transformer_Y_in_siemens[converter] = y;
+    converter_transformer_Y_in_siemens[converter] = y;
 }
 
 void LCC_HVDC2T::set_converter_transformer_max_tap_in_pu(CONVERTER_SIDE converter, const double maxtap)
 {
     if(maxtap>0.0)
-        this->converter_transformer_max_tap_in_pu[converter] = maxtap;
+        converter_transformer_max_tap_in_pu[converter] = maxtap;
     else
-        this->converter_transformer_max_tap_in_pu[converter] = 1.0;
+        converter_transformer_max_tap_in_pu[converter] = 1.0;
 }
 
 void LCC_HVDC2T::set_converter_transformer_min_tap_in_pu(CONVERTER_SIDE converter, const double mintap)
 {
     if(mintap>0.0)
-        this->converter_transformer_min_tap_in_pu[converter] = mintap;
+        converter_transformer_min_tap_in_pu[converter] = mintap;
     else
-        this->converter_transformer_min_tap_in_pu[converter] = 1.0;
+        converter_transformer_min_tap_in_pu[converter] = 1.0;
 }
 
 void LCC_HVDC2T::set_converter_transformer_number_of_taps(CONVERTER_SIDE converter, const unsigned int ntap)
 {
     if(ntap>1)
-        this->converter_transformer_number_of_taps[converter] = ntap;
+        converter_transformer_number_of_taps[converter] = ntap;
     else
-        this->converter_transformer_number_of_taps[converter] = 1;
+        converter_transformer_number_of_taps[converter] = 1;
 }
 
 unsigned int LCC_HVDC2T::get_converter_bus(CONVERTER_SIDE converter) const
@@ -982,9 +982,15 @@ bool LCC_HVDC2T::is_in_area(unsigned int area) const
     {
         bool in_area = false;
         if(busptr_rec!=NULL)
-            in_area = in_area or busptr_rec->is_in_area(area);
+        {
+            BUS& bus_rec = *busptr_rec;
+            in_area = in_area or bus_rec.is_in_area(area);
+        }
         if(busptr_inv!=NULL)
-            in_area = in_area or busptr_inv->is_in_area(area);
+        {
+            BUS& bus_inv = *busptr_inv;
+            in_area = in_area or bus_inv.is_in_area(area);
+        }
         return in_area;
     }
     else
@@ -1001,9 +1007,15 @@ bool LCC_HVDC2T::is_in_zone(unsigned int zone) const
     {
         bool in_zone = false;
         if(busptr_rec!=NULL)
-            in_zone = in_zone or busptr_rec->is_in_zone(zone);
+        {
+            BUS& bus_rec = *busptr_rec;
+            in_zone = in_zone or bus_rec.is_in_zone(zone);
+        }
         if(busptr_inv!=NULL)
-            in_zone = in_zone or busptr_inv->is_in_zone(zone);
+        {
+            BUS& bus_inv = *busptr_inv;
+            in_zone = in_zone or bus_inv.is_in_zone(zone);
+        }
         return in_zone;
     }
     else
@@ -1055,25 +1067,29 @@ void LCC_HVDC2T::save() const
     ;
 }
 
-void LCC_HVDC2T::set_model(MODEL* model)
+void LCC_HVDC2T::set_model(MODEL* model_ptr)
 {
-    if(model != NULL and model->has_allowed_device_type(STEPS_LCC_HVDC2T))
+    if(model_ptr != NULL)
     {
-        model->set_device_id(get_device_id());
-        if(model->get_model_type()=="2T LCC HVDC")
+        MODEL& model = *model_ptr;
+        if(model.has_allowed_device_type(STEPS_LCC_HVDC2T))
         {
-            set_lcc_hvdc2t_model((LCC_HVDC2T_MODEL*) model);
-            return;
+            model.set_device_id(get_device_id());
+            if(model.get_model_type()=="2T LCC HVDC")
+            {
+                set_lcc_hvdc2t_model((LCC_HVDC2T_MODEL*) model_ptr);
+                return;
+            }
+            if(model.get_model_type()=="AUXILIARY SIGNAL")
+            {
+                set_auxiliary_signal_model((AUXILIARY_SIGNAL_MODEL*) model_ptr);
+                return;
+            }
+            ostringstream osstream;
+            osstream<<"Warning. Neither AUXILIARY SIGNAL model nor LCC_HVDC2T model is given to set dynamic model for "<<get_compound_device_name();
+            STEPS& toolkit = get_toolkit();
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
-        if(model->get_model_type()=="AUXILIARY SIGNAL")
-        {
-            set_auxiliary_signal_model((AUXILIARY_SIGNAL_MODEL*) model);
-            return;
-        }
-        ostringstream osstream;
-        osstream<<"Warning. Neither AUXILIARY SIGNAL model nor LCC_HVDC2T model is given to set dynamic model for "<<get_compound_device_name();
-        STEPS& toolkit = get_toolkit();
-        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -1087,16 +1103,16 @@ MODEL* LCC_HVDC2T::get_model_of_type(string model_type, unsigned int index)
     return NULL;
 }
 
-void LCC_HVDC2T::set_lcc_hvdc2t_model(LCC_HVDC2T_MODEL* model)
+void LCC_HVDC2T::set_lcc_hvdc2t_model(LCC_HVDC2T_MODEL* model_ptr)
 {
-    if(model!=NULL)
-        hvdc_model = model;
+    if(model_ptr!=NULL)
+        hvdc_model = model_ptr;
 }
 
-void LCC_HVDC2T::set_auxiliary_signal_model(AUXILIARY_SIGNAL_MODEL* model)
+void LCC_HVDC2T::set_auxiliary_signal_model(AUXILIARY_SIGNAL_MODEL* model_ptr)
 {
-    if(model != NULL)
-        auxiliary_signal_model = model;
+    if(model_ptr != NULL)
+        auxiliary_signal_model = model_ptr;
 }
 
 LCC_HVDC2T_MODEL* LCC_HVDC2T::get_lcc_hvdc2t_model() const
@@ -1125,9 +1141,13 @@ void LCC_HVDC2T::run(DYNAMIC_MODE mode)
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     show_solved_steady_state();
                 }
-                LCC_HVDC2T_MODEL* hvdc_model = get_lcc_hvdc2t_model();
-                if(hvdc_model!=NULL and hvdc_model->is_model_active())
-                    hvdc_model->initialize();
+                LCC_HVDC2T_MODEL* hvdc_model_ptr = get_lcc_hvdc2t_model();
+                if(hvdc_model_ptr!=NULL)
+                {
+                    LCC_HVDC2T_MODEL& hvdc_model = *hvdc_model_ptr;
+                    if(hvdc_model.is_model_active())
+                        hvdc_model.initialize();
+                }
                 else
                 {
                     osstream<<"LCC_HVDC2T model is missing for "<<get_compound_device_name();
@@ -1137,9 +1157,13 @@ void LCC_HVDC2T::run(DYNAMIC_MODE mode)
             }
             default:
             {
-                LCC_HVDC2T_MODEL* hvdc_model = get_lcc_hvdc2t_model();
-                if(hvdc_model!=NULL and hvdc_model->is_model_active())
-                    hvdc_model->run(mode);
+                LCC_HVDC2T_MODEL* hvdc_model_ptr = get_lcc_hvdc2t_model();
+                if(hvdc_model!=NULL)
+                {
+                    LCC_HVDC2T_MODEL& hvdc_model = *hvdc_model_ptr;
+                    if(hvdc_model.is_model_active())
+                         hvdc_model.run(mode);
+                }
                 break;
             }
         }
@@ -2167,9 +2191,12 @@ complex<double> LCC_HVDC2T::get_converter_dynamic_current_in_pu_based_on_system_
 {
     if(get_status() == true)
     {
-        LCC_HVDC2T_MODEL* model = get_lcc_hvdc2t_model();
-        if(model!=NULL)
-            return model->get_converter_ac_current_in_pu(converter);
+        LCC_HVDC2T_MODEL* model_ptr = get_lcc_hvdc2t_model();
+        if(model_ptr!=NULL)
+        {
+            LCC_HVDC2T_MODEL& model = *model_ptr;
+            return model.get_converter_ac_current_in_pu(converter);
+        }
         else
             return 0.0;
     }
