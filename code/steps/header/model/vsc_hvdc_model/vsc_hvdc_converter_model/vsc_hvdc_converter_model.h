@@ -122,6 +122,9 @@ class VSC_HVDC_CONVERTER_MODEL: public VSC_HVDC_MODEL
         unsigned int control_mode; // change to enum, dynamic version.
         VSC_HVDC_CONVERTER_ACTIVE_POWER_DYNAMIC_CONTROL_MODE active_power_control_mode;
         VSC_HVDC_CONVERTER_REACTIVE_POWER_DYNAMIC_CONTROL_MODE reactive_power_control_mode;
+        complex<double> get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base_as_voltage_source() const;
+        complex<double> get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base_as_current_source() const;
+        complex<double> get_converter_voltage_in_xy_axis_in_pu_as_current_source() const;
 };
 
 #endif // VSC_HVDC_CONVERTER_MODEL_H_INCLUDED

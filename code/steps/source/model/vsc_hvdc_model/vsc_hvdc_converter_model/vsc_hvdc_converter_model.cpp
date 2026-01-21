@@ -379,19 +379,9 @@ complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_dynamic_current_from_con
 complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base() const
 {
     if(is_voltage_source())
-    {
-        complex<double> E = get_converter_source_voltage_in_xy_axis_in_pu();
-        complex<double> V = get_converter_ac_bus_complex_voltage_in_pu();
-        complex<double> Z = get_converter_commutating_impedance_in_pu_on_converter_base();
-        complex<double> I = (E-V)/Z;
-        return I;
-    }
+        return get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base_as_voltage_source();
     else
-    {
-        complex<double> Idq = get_converter_dynamic_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_converter_base_as_current_source();
-        double angle = get_dynamic_angle_at_pll_in_rad();
-        return dq2ab_with_angle_in_rad(Idq, angle);
-    }
+        return get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base_as_current_source();
 }
 
 complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_system_base() const
@@ -430,12 +420,28 @@ complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_source_voltage_in_xy_axi
     if(is_voltage_source())
         return get_converter_voltage_in_xy_axis_in_pu_as_voltage_source();
     else
-    {
-        complex<double> V = get_converter_ac_bus_complex_voltage_in_pu();
-        complex<double> I = get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base();
-        complex<double> Z = get_converter_commutating_impedance_in_pu_on_converter_base();
-        complex<double> E = V+I*Z;
-        return E;
-    }
+        return get_converter_voltage_in_xy_axis_in_pu_as_current_source();
 }
 
+complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base_as_voltage_source() const
+{
+    complex<double> E = get_converter_voltage_in_xy_axis_in_pu_as_voltage_source();
+    complex<double> V = get_converter_ac_bus_complex_voltage_in_pu();
+    complex<double> Z = get_converter_commutating_impedance_in_pu_on_converter_base();
+    return (E - V) / Z;
+}
+
+complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base_as_current_source() const
+{
+    complex<double> Idq = get_converter_dynamic_current_from_converter_to_ac_bus_in_dq_axis_in_pu_on_converter_base_as_current_source();
+    double angle = get_dynamic_angle_at_pll_in_rad();
+    return dq2ab_with_angle_in_rad(Idq, angle);
+}
+
+complex<double> VSC_HVDC_CONVERTER_MODEL::get_converter_voltage_in_xy_axis_in_pu_as_current_source() const
+{
+    complex<double> V = get_converter_ac_bus_complex_voltage_in_pu();
+    complex<double> I = get_converter_dynamic_current_from_converter_to_ac_bus_in_xy_axis_in_pu_on_converter_base_as_current_source();
+    complex<double> Z = get_converter_commutating_impedance_in_pu_on_converter_base();
+    return V + I * Z;
+}
