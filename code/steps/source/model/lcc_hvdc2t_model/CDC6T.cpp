@@ -42,33 +42,33 @@ void CDC6T::copy_from_const_model(const CDC6T& model)
     rectifier_dc_voltage_sensor.set_toolkit(toolkit);
 
     clear();
-    this->set_inverter_dc_voltage_sensor_T_in_s(model.get_inverter_dc_voltage_sensor_T_in_s());
-    this->set_rectifier_dc_voltage_sensor_T_in_s(model.get_rectifier_dc_voltage_sensor_T_in_s());
-    this->set_dc_current_sensor_T_in_s(model.get_dc_current_sensor_T_in_s());
-    this->set_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER,model.get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER));
-    this->set_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER,model.get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER));
-    this->set_rectifier_ac_instantaneous_blocking_voltage_in_pu(model.get_rectifier_ac_instantaneous_blocking_voltage_in_pu());
-    this->set_rectifier_ac_delayed_blocking_voltage_in_pu(model.get_rectifier_ac_delayed_blocking_voltage_in_pu());
-    this->set_rectifier_ac_delayed_blocking_time_in_s(model.get_rectifier_ac_delayed_blocking_time_in_s());
-    this->set_inverter_ac_instantaneous_blocking_voltage_in_pu(model.get_inverter_ac_instantaneous_blocking_voltage_in_pu());
-    this->set_communication_delay_between_converters_in_s(model.get_communication_delay_between_converters_in_s());
-    this->set_rectifier_ac_delayed_unblocking_voltage_in_pu(model.get_rectifier_ac_delayed_unblocking_voltage_in_pu());
-    this->set_rectifier_ac_delayed_unblocking_time_in_s(model.get_rectifier_ac_delayed_unblocking_time_in_s());
-    this->set_inverter_ac_delayed_unblocking_time_in_s(model.get_inverter_ac_delayed_unblocking_time_in_s());
-    this->set_mininum_blocking_time_in_s(model.get_mininum_blocking_time_in_s());
-    this->set_inverter_dc_instantaneous_bypassing_voltage_in_kV(model.get_inverter_dc_instantaneous_bypassing_voltage_in_kV());
-    this->set_inverter_ac_delayed_bypassing_voltage_in_pu(model.get_inverter_ac_delayed_bypassing_voltage_in_pu());
-    this->set_inverter_ac_delayed_bypassing_time_in_s(model.get_inverter_ac_delayed_bypassing_time_in_s());
-    this->set_inverter_ac_delayed_unbypassing_voltage_in_pu(model.get_inverter_ac_delayed_unbypassing_voltage_in_pu());
-    this->set_inverter_ac_delayed_unbypassing_time_in_s(model.get_inverter_ac_delayed_unbypassing_time_in_s());
-    this->set_mininum_bypassing_time_in_s(model.get_mininum_bypassing_time_in_s());
-    this->set_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing(model.get_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing());
-    this->set_minimum_dc_current_in_kA_following_unblocking(model.get_minimum_dc_current_in_kA_following_unblocking());
-    this->set_dc_voltage_command_recovery_rate_in_pu_per_second(model.get_dc_voltage_command_recovery_rate_in_pu_per_second());
-    this->set_dc_current_command_recovery_rate_in_pu_per_second(model.get_dc_current_command_recovery_rate_in_pu_per_second());
-    this->set_minimum_dc_current_command_in_kA(model.get_minimum_dc_current_command_in_kA());
-    this->set_VDCOL(model.get_VDCOL());
-    this->set_minimum_time_in_switched_mode_in_s(model.get_minimum_time_in_switched_mode_in_s());
+    set_inverter_dc_voltage_sensor_T_in_s(model.get_inverter_dc_voltage_sensor_T_in_s());
+    set_rectifier_dc_voltage_sensor_T_in_s(model.get_rectifier_dc_voltage_sensor_T_in_s());
+    set_dc_current_sensor_T_in_s(model.get_dc_current_sensor_T_in_s());
+    set_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER,model.get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER));
+    set_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER,model.get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER));
+    set_rectifier_ac_instantaneous_blocking_voltage_in_pu(model.get_rectifier_ac_instantaneous_blocking_voltage_in_pu());
+    set_rectifier_ac_delayed_blocking_voltage_in_pu(model.get_rectifier_ac_delayed_blocking_voltage_in_pu());
+    set_rectifier_ac_delayed_blocking_time_in_s(model.get_rectifier_ac_delayed_blocking_time_in_s());
+    set_inverter_ac_instantaneous_blocking_voltage_in_pu(model.get_inverter_ac_instantaneous_blocking_voltage_in_pu());
+    set_communication_delay_between_converters_in_s(model.get_communication_delay_between_converters_in_s());
+    set_rectifier_ac_delayed_unblocking_voltage_in_pu(model.get_rectifier_ac_delayed_unblocking_voltage_in_pu());
+    set_rectifier_ac_delayed_unblocking_time_in_s(model.get_rectifier_ac_delayed_unblocking_time_in_s());
+    set_inverter_ac_delayed_unblocking_time_in_s(model.get_inverter_ac_delayed_unblocking_time_in_s());
+    set_mininum_blocking_time_in_s(model.get_mininum_blocking_time_in_s());
+    set_inverter_dc_instantaneous_bypassing_voltage_in_kV(model.get_inverter_dc_instantaneous_bypassing_voltage_in_kV());
+    set_inverter_ac_delayed_bypassing_voltage_in_pu(model.get_inverter_ac_delayed_bypassing_voltage_in_pu());
+    set_inverter_ac_delayed_bypassing_time_in_s(model.get_inverter_ac_delayed_bypassing_time_in_s());
+    set_inverter_ac_delayed_unbypassing_voltage_in_pu(model.get_inverter_ac_delayed_unbypassing_voltage_in_pu());
+    set_inverter_ac_delayed_unbypassing_time_in_s(model.get_inverter_ac_delayed_unbypassing_time_in_s());
+    set_mininum_bypassing_time_in_s(model.get_mininum_bypassing_time_in_s());
+    set_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing(model.get_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing());
+    set_minimum_dc_current_in_kA_following_unblocking(model.get_minimum_dc_current_in_kA_following_unblocking());
+    set_dc_voltage_command_recovery_rate_in_pu_per_second(model.get_dc_voltage_command_recovery_rate_in_pu_per_second());
+    set_dc_current_command_recovery_rate_in_pu_per_second(model.get_dc_current_command_recovery_rate_in_pu_per_second());
+    set_minimum_dc_current_command_in_kA(model.get_minimum_dc_current_command_in_kA());
+    set_VDCOL(model.get_VDCOL());
+    set_minimum_time_in_switched_mode_in_s(model.get_minimum_time_in_switched_mode_in_s());
 }
 
 CDC6T::~CDC6T()
@@ -400,19 +400,20 @@ void CDC6T::initialize()
 {
     if(not is_model_initialized())
     {
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
 
         setup_block_toolkit_and_parameters();
 
-        double Vdcr = hvdc->get_converter_dc_voltage_in_kV(RECTIFIER);
+        double Vdcr = hvdc.get_converter_dc_voltage_in_kV(RECTIFIER);
         rectifier_dc_voltage_sensor.set_output(Vdcr);
         rectifier_dc_voltage_sensor.initialize();
 
-        double Vdci = hvdc->get_converter_dc_voltage_in_kV(INVERTER);
+        double Vdci = hvdc.get_converter_dc_voltage_in_kV(INVERTER);
         inverter_dc_voltage_sensor.set_output(Vdci);
         inverter_dc_voltage_sensor.initialize();
 
-        double Idc = hvdc->get_line_dc_current_in_kA();
+        double Idc = hvdc.get_line_dc_current_in_kA();
         dc_current_sensor.set_output(Idc);
         dc_current_sensor.initialize();
 
@@ -427,19 +428,21 @@ void CDC6T::check_limits_in_initialization()
 
 void CDC6T::run(DYNAMIC_MODE mode)
 {
-    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T& hvdc = *hvdc_ptr;
+
 
     //solve_lcc_hvdc2t_model_without_integration();
 
-    double Vdcr = hvdc->get_converter_dc_voltage_in_kV(RECTIFIER);
+    double Vdcr = hvdc.get_converter_dc_voltage_in_kV(RECTIFIER);
     rectifier_dc_voltage_sensor.set_input(Vdcr);
     rectifier_dc_voltage_sensor.run(mode);
 
-    double Vdci = hvdc->get_converter_dc_voltage_in_kV(INVERTER);
+    double Vdci = hvdc.get_converter_dc_voltage_in_kV(INVERTER);
     inverter_dc_voltage_sensor.set_input(Vdci);
     inverter_dc_voltage_sensor.run(mode);
 
-    double Idc = hvdc->get_line_dc_current_in_kA();
+    double Idc = hvdc.get_line_dc_current_in_kA();
     dc_current_sensor.set_input(Idc);
     dc_current_sensor.run(mode);
 
@@ -484,8 +487,8 @@ void CDC6T::check_blocking_logic()
 
         ostringstream osstream;
 
-        //unsigned int bus_r = hvdc->get_converter_bus(RECTIFIER);
-        //unsigned int bus_i = hvdc->get_converter_bus(INVERTER);
+        //unsigned int bus_r = hvdc.get_converter_bus(RECTIFIER);
+        //unsigned int bus_i = hvdc.get_converter_bus(INVERTER);
         //double vac_r = psdb.get_bus_positive_sequence_voltage_in_pu(bus_r);
         //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(bus_i);
         double vac_r = get_converter_ac_voltage_in_pu(RECTIFIER);
@@ -702,7 +705,7 @@ void CDC6T::check_bypassing_logic()
                     bypass_logic = true;
                 }
 
-                //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(hvdc->get_converter_bus(INVERTER));
+                //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(hvdc.get_converter_bus(INVERTER));
                 double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
                 double vaci_dbypass = get_inverter_ac_delayed_bypassing_voltage_in_pu();
                 //double ti_dbypass = get_inverter_ac_delayed_bypassing_time_in_s();
@@ -783,7 +786,7 @@ void CDC6T::check_bypassing_logic()
         }
         else
         {
-            //unsigned int bus_i = hvdc->get_converter_bus(INVERTER);
+            //unsigned int bus_i = hvdc.get_converter_bus(INVERTER);
             //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(bus_i);
             if(is_bypass_timer_timed_out())
             {
@@ -832,7 +835,9 @@ void CDC6T::check_mode_switching_logic()
 {
     if(not is_blocked() and not is_bypassed())
     {
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+
         STEPS& toolkit = get_toolkit();
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
@@ -841,11 +846,11 @@ void CDC6T::check_mode_switching_logic()
         if(fabs(t_unblock-INFINITE_THRESHOLD)>DOUBLE_EPSILON or fabs(t_unbypass-INFINITE_THRESHOLD)>DOUBLE_EPSILON) // unblocking or unbypassing
             return;
 
-        double vdc_i = hvdc->get_converter_dc_voltage_in_kV(INVERTER);
-        double vmode = hvdc->get_threshold_dc_voltage_for_constant_power_and_constant_current_mode_in_kV();
+        double vdc_i = hvdc.get_converter_dc_voltage_in_kV(INVERTER);
+        double vmode = hvdc.get_threshold_dc_voltage_for_constant_power_and_constant_current_mode_in_kV();
         if(not is_mode_switched())
         {
-            if(hvdc->get_converter_operation_mode(RECTIFIER)==RECTIFIER_CONSTANT_POWER)
+            if(hvdc.get_converter_operation_mode(RECTIFIER)==RECTIFIER_CONSTANT_POWER)
             {
                 if(vdc_i<vmode)
                 {
@@ -895,10 +900,12 @@ string CDC6T::get_standard_psse_string(bool export_internal_bus_number) const
 {
     ostringstream osstream;
 
-    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-    //unsigned int rbus = hvdc->get_converter_bus(RECTIFIER);
-    //unsigned int ibus = hvdc->get_converter_bus(INVERTER);
-    string dcname = "'"+hvdc->get_name()+"'";
+    LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T& hvdc = *hvdc_ptr;
+
+    //unsigned int rbus = hvdc.get_converter_bus(RECTIFIER);
+    //unsigned int ibus = hvdc.get_converter_bus(INVERTER);
+    string dcname = "'"+hvdc.get_name()+"'";
     string model_name = "'"+get_model_name()+"'";
 
     VDCOL vdcol_limiter = get_VDCOL();

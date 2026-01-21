@@ -73,26 +73,32 @@ string LCC_HVDC2T_MODEL::get_model_type() const
 double LCC_HVDC2T_MODEL::get_initial_alpha_in_deg() const
 {
     ostringstream osstream;
-    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-    return hvdc->get_converter_alpha_or_gamma_in_deg(RECTIFIER);
+    LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T& hvdc = *hvdc_ptr;
+    return hvdc.get_converter_alpha_or_gamma_in_deg(RECTIFIER);
 }
 
 double LCC_HVDC2T_MODEL::get_initial_gamma_in_deg() const
 {
     ostringstream osstream;
-    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-    return hvdc->get_converter_alpha_or_gamma_in_deg(INVERTER);
+    LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T& hvdc = *hvdc_ptr;
+    return hvdc.get_converter_alpha_or_gamma_in_deg(INVERTER);
 }
 
 double LCC_HVDC2T_MODEL::get_auxiliary_signal_in_MW() const
 {
-    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T& hvdc = *hvdc_ptr;
 
-    AUXILIARY_SIGNAL_MODEL* auxiliary_signal_model = hvdc->get_auxiliary_signal_model();
-    if(auxiliary_signal_model == NULL)
+    AUXILIARY_SIGNAL_MODEL* auxiliary_signal_model_ptr = hvdc.get_auxiliary_signal_model();
+    if(auxiliary_signal_model_ptr == NULL)
         return 0.0;
     else
-        return auxiliary_signal_model->get_auxiliary_signal_in_MW();
+    {
+        AUXILIARY_SIGNAL_MODEL& auxiliary_signal_model = *auxiliary_signal_model_ptr;
+        return auxiliary_signal_model.get_auxiliary_signal_in_MW();
+    }
 }
 
 void LCC_HVDC2T_MODEL::set_converter_dynamic_max_alpha_or_gamma_in_deg(CONVERTER_SIDE converter, double angle)
@@ -268,13 +274,14 @@ double LCC_HVDC2T_MODEL::get_rectifier_dc_current_command_in_kA(double Vdci_meas
         STEPS& toolkit = get_toolkit();
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-        //double Vset = hvdc->get_inverter_nominal_dc_voltage_command_in_kV();
-        double Iset = hvdc->get_rectifier_nominal_dc_current_command_in_kA();
-        double Pset = hvdc->get_rectifier_nominal_dc_power_command_in_MW();
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+        //double Vset = hvdc.get_inverter_nominal_dc_voltage_command_in_kV();
+        double Iset = hvdc.get_rectifier_nominal_dc_current_command_in_kA();
+        double Pset = hvdc.get_rectifier_nominal_dc_power_command_in_MW();
 
-        double Rdc = hvdc->get_line_resistance_in_ohm();
-        //double Rcomp = hvdc->get_compensating_resistance_to_hold_dc_voltage_in_ohm();
+        double Rdc = hvdc.get_line_resistance_in_ohm();
+        //double Rcomp = hvdc.get_compensating_resistance_to_hold_dc_voltage_in_ohm();
 
         double Icommand = Iset;
 
@@ -304,9 +311,9 @@ double LCC_HVDC2T_MODEL::get_rectifier_dc_current_command_in_kA(double Vdci_meas
             {
                 // no matter DC is in unbypassing or normal state, get current command as in normal state
                 double P_module = get_auxiliary_signal_in_MW();
-                if(hvdc->get_converter_operation_mode(RECTIFIER)==RECTIFIER_CONSTANT_POWER)
+                if(hvdc.get_converter_operation_mode(RECTIFIER)==RECTIFIER_CONSTANT_POWER)
                 {
-                    if(hvdc->get_side_to_hold_dc_power()==RECTIFIER)
+                    if(hvdc.get_side_to_hold_dc_power()==RECTIFIER)
                         Icommand = (Pset+P_module)/Vdcr_measured;
                     else
                         Icommand = (Pset+P_module)/Vdci_measured;
@@ -332,10 +339,11 @@ double LCC_HVDC2T_MODEL::get_rectifier_dc_current_command_in_kA(double Vdci_meas
 
 double LCC_HVDC2T_MODEL::get_inverter_dc_voltage_command_in_kV()
 {
-    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T& hvdc = *hvdc_ptr;
 
-    //double Rcomp = hvdc->get_compensating_resistance_to_hold_dc_voltage_in_ohm();
-    double Vset = hvdc->get_inverter_nominal_dc_voltage_command_in_kV();
+    //double Rcomp = hvdc.get_compensating_resistance_to_hold_dc_voltage_in_ohm();
+    double Vset = hvdc.get_inverter_nominal_dc_voltage_command_in_kV();
     double Vcommand = 0.0;
 
     if(is_blocked() or is_bypassed())// blocked or bypassed
@@ -410,8 +418,9 @@ void LCC_HVDC2T_MODEL::block_lcc_hvdc2t()
             mode_switch_timer.reset();
         }
 
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-        hvdc->set_status(false); // block hvdc
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+        hvdc.set_status(false); // block hvdc
         //time_when_blocked = TIME; // set blocked time
         dc_current_recovered_after_unblocking = false; // set unblocking as false
         dc_voltage_recovered_after_unblocking = false;
@@ -437,8 +446,9 @@ void LCC_HVDC2T_MODEL::unblock_lcc_hvdc2t()
         STEPS& toolkit = get_toolkit();
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-        hvdc->set_status(true);
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+        hvdc.set_status(true);
         //time_when_blocked = INFINITE_THRESHOLD;
         block_timer.reset();
         time_when_unblocking = TIME;
@@ -494,8 +504,9 @@ bool LCC_HVDC2T_MODEL::is_manual_blocked() const
 
 bool LCC_HVDC2T_MODEL::is_blocked() const
 {
-    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-    return not hvdc->get_status();
+    LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T& hvdc = *hvdc_ptr;
+    return not hvdc.get_status();
 }
 
 bool LCC_HVDC2T_MODEL::is_unblocking() const
@@ -749,9 +760,10 @@ bool LCC_HVDC2T_MODEL::is_bypass_timer_timed_out() const
 
 void LCC_HVDC2T_MODEL::switch_lcc_hvdc2t_mode()
 {
-    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T& hvdc = *hvdc_ptr;
 
-    if(hvdc->get_converter_operation_mode(RECTIFIER)!=RECTIFIER_CONSTANT_POWER)
+    if(hvdc.get_converter_operation_mode(RECTIFIER)!=RECTIFIER_CONSTANT_POWER)
         return;
 
     if((not is_blocked()) and (not is_bypassed()) and (not is_mode_switched()))
@@ -770,9 +782,10 @@ void LCC_HVDC2T_MODEL::switch_lcc_hvdc2t_mode()
 
 void LCC_HVDC2T_MODEL::switch_lcc_hvdc2t_mode_back()
 {
-    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T& hvdc = *hvdc_ptr;
 
-    if(hvdc->get_converter_operation_mode(RECTIFIER)!=RECTIFIER_CONSTANT_POWER)
+    if(hvdc.get_converter_operation_mode(RECTIFIER)!=RECTIFIER_CONSTANT_POWER)
         return;
 
     if((not is_blocked()) and (not is_bypassed()) and is_mode_switched() and is_mode_switch_timer_timed_out())
@@ -811,7 +824,8 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_without_line_dynamics(double Iset_
     if(not is_blocked())
     {
         ostringstream osstream;
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
         STEPS& toolkit = get_toolkit();
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
@@ -822,9 +836,9 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_without_line_dynamics(double Iset_
         //double alpha_max_in_rad = deg2rad(get_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER));
         double gamma_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER));
         double gamma_max_in_rad = deg2rad(get_converter_dynamic_max_alpha_or_gamma_in_deg(INVERTER));
-        if(hvdc->get_converter_max_alpha_or_gamma_in_deg(INVERTER)<=hvdc->get_converter_min_alpha_or_gamma_in_deg(INVERTER)) // in constant gamma mode
+        if(hvdc.get_converter_max_alpha_or_gamma_in_deg(INVERTER)<=hvdc.get_converter_min_alpha_or_gamma_in_deg(INVERTER)) // in constant gamma mode
         {
-            gamma_min_in_rad = deg2rad(hvdc->get_converter_min_alpha_or_gamma_in_deg(INVERTER));
+            gamma_min_in_rad = deg2rad(hvdc.get_converter_min_alpha_or_gamma_in_deg(INVERTER));
             gamma_max_in_rad = gamma_min_in_rad;
         }
 
@@ -832,27 +846,27 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_without_line_dynamics(double Iset_
         double cos_alpha = 0.0, cos_gamma = 0.0;
         double cos_alpha_min = cos_firing_angle_min[RECTIFIER], cos_gamma_min = cos_firing_angle_min[INVERTER];
 
-        double tap_r = hvdc->get_converter_transformer_tap_in_pu(RECTIFIER);
-        double tap_i = hvdc->get_converter_transformer_tap_in_pu(INVERTER);
+        double tap_r = hvdc.get_converter_transformer_tap_in_pu(RECTIFIER);
+        double tap_i = hvdc.get_converter_transformer_tap_in_pu(INVERTER);
 
-        double ebase_grid_r = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER);
-        double ebase_converter_r = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER);
+        double ebase_grid_r = hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER);
+        double ebase_converter_r = hvdc.get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER);
 
-        double ebase_grid_i = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER);
-        double ebase_converter_i = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER);
+        double ebase_grid_i = hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER);
+        double ebase_converter_i = hvdc.get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER);
 
-        unsigned int Nr = hvdc->get_converter_number_of_bridge(RECTIFIER);
-        unsigned int Ni = hvdc->get_converter_number_of_bridge(INVERTER);
+        unsigned int Nr = hvdc.get_converter_number_of_bridge(RECTIFIER);
+        unsigned int Ni = hvdc.get_converter_number_of_bridge(INVERTER);
 
-        complex<double> Zc_r = hvdc->get_converter_transformer_impedance_in_ohm(RECTIFIER);
-        complex<double> Zc_i = hvdc->get_converter_transformer_impedance_in_ohm(INVERTER);
+        complex<double> Zc_r = hvdc.get_converter_transformer_impedance_in_ohm(RECTIFIER);
+        complex<double> Zc_i = hvdc.get_converter_transformer_impedance_in_ohm(INVERTER);
         double Rc_r = Zc_r.real(); double Xc_r = Zc_r.imag();
         double Rc_i = Zc_i.real(); double Xc_i = Zc_i.imag();
 
-        double Rdc = hvdc->get_line_resistance_in_ohm();
-        double Rcomp = hvdc->get_compensating_resistance_to_hold_dc_voltage_in_ohm();
+        double Rdc = hvdc.get_line_resistance_in_ohm();
+        double Rcomp = hvdc.get_compensating_resistance_to_hold_dc_voltage_in_ohm();
 
-        double margin = hvdc->get_current_power_margin();
+        double margin = hvdc.get_current_power_margin();
 
         //double vac_r = psdb.get_bus_positive_sequence_voltage_in_kV(bus_r);
         //double vac_i = psdb.get_bus_positive_sequence_voltage_in_kV(bus_i);
@@ -880,7 +894,7 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_without_line_dynamics(double Iset_
             if(gamma_min_in_rad>=gamma_max_in_rad) // constant gamma mode
             {
                 gamma_in_rad = gamma_min_in_rad;
-                hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
+                hvdc.set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
 
                 Vdci =vdc0_i*cos_gamma_min-rceq_i*Iset_kA;
                 Vdcr = Vdci+Rdc*Iset_kA;
@@ -889,7 +903,7 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_without_line_dynamics(double Iset_
                 if(cos_alpha<cos_alpha_min)
                 {
                     alpha_in_rad = steps_acos(cos_alpha);
-                    hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
+                    hvdc.set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
                 }
                 else
                 {
@@ -921,7 +935,7 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_without_line_dynamics(double Iset_
                        solve_lcc_hvdc2t_as_bypassed(Iset_kA_for_bypass);
                        return;
                     }
-                    hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
+                    hvdc.set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
                 }
             }
             else
@@ -930,13 +944,13 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_without_line_dynamics(double Iset_
                 if(cos_alpha<cos_alpha_min) // alpha can hold dc current
                 {
                     alpha_in_rad = steps_acos(cos_alpha);
-                    hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
+                    hvdc.set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
 
                     cos_gamma = (Vdci+rceq_i*Iset_kA)/vdc0_i; // test if gamma can hold dc voltage
                     if(cos_gamma<cos_gamma_min) // gamma can hold dc voltage
                     {
                         gamma_in_rad = steps_acos(cos_gamma);
-                        hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
+                        hvdc.set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
                     }
                     else // gamma can not hold dc voltage
                     {
@@ -947,7 +961,7 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_without_line_dynamics(double Iset_
                         //show_information_with_leading_time_stamp(osstream);
 
                         gamma_in_rad = gamma_min_in_rad;
-                        hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
+                        hvdc.set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
                         // try to reduce dc voltage
                         // vdcr0*cos_alpha-rcr*Iset_kA=vdci0*cos_gamma_min-rci*Iset_kA + Rdc*Iset_kA
 
@@ -999,7 +1013,7 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_without_line_dynamics(double Iset_
                                     return;
                                 }
                             }
-                            hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
+                            hvdc.set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
                             //show_information_with_leading_time_stamp(osstream);
                         }
                     }
@@ -1007,7 +1021,7 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_without_line_dynamics(double Iset_
                 else // alpha can not hold dc current
                 {
                     alpha_in_rad = alpha_min_in_rad;
-                    hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
+                    hvdc.set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
 
                     osstream<<"Warning. At time "<<TIME<<" s, "<<get_compound_device_name()<<" Rectifier cannot hold current with alpha.("
                            <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
@@ -1035,7 +1049,7 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_without_line_dynamics(double Iset_
                         solve_lcc_hvdc2t_as_bypassed(Iset_kA_for_bypass);
                         return;
                     }
-                    hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
+                    hvdc.set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
                     //show_information_with_leading_time_stamp(osstream);
 
                 }
@@ -1047,30 +1061,31 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_without_line_dynamics(double Iset_
             Idc = (vdc0_r*cos_alpha-vdc0_i*cos_gamma)/(Rdc+rceq_r-rceq_i);
             Vdcr = vdc0_r*cos_alpha - rceq_r*Idc;
             Vdci = vdc0_i*cos_gamma - rceq_i*Idc;
-            hvdc->set_converter_dc_voltage_in_kV(RECTIFIER, Vdcr);
-            hvdc->set_converter_dc_voltage_in_kV(INVERTER, Vdci);
-            hvdc->set_line_dc_current_in_kA(Idc);
+            hvdc.set_converter_dc_voltage_in_kV(RECTIFIER, Vdcr);
+            hvdc.set_converter_dc_voltage_in_kV(INVERTER, Vdci);
+            hvdc.set_line_dc_current_in_kA(Idc);
         }
         else
         {
             solve_lcc_hvdc2t_as_bypassed(Iset_kA_for_bypass);
         }
     }
-    //hvdc->show_solved_steady_state();
+    //hvdc.show_solved_steady_state();
 }
 
 void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_as_bypassed(double Iset_kA)
 {
     if(not is_blocked() and is_bypassed())
     {
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
         double alpha_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER));
         double alpha_max_in_rad = deg2rad(get_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER));
         /*double gamma_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER));
         double gamma_max_in_rad = deg2rad(get_converter_dynamic_max_alpha_or_gamma_in_deg(INVERTER));
-        if(hvdc->get_converter_max_alpha_or_gamma_in_deg(INVERTER)<=hvdc->get_converter_min_alpha_or_gamma_in_deg(INVERTER)) // in constant gamma mode
+        if(hvdc.get_converter_max_alpha_or_gamma_in_deg(INVERTER)<=hvdc.get_converter_min_alpha_or_gamma_in_deg(INVERTER)) // in constant gamma mode
         {
-            gamma_min_in_rad = deg2rad(hvdc->get_converter_min_alpha_or_gamma_in_deg(INVERTER));
+            gamma_min_in_rad = deg2rad(hvdc.get_converter_min_alpha_or_gamma_in_deg(INVERTER));
             gamma_max_in_rad = gamma_min_in_rad;
         }*/
 
@@ -1080,27 +1095,27 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_as_bypassed(double Iset_kA)
         double cos_alpha_min = cos_firing_angle_min[RECTIFIER];
         //double cos_gamma_min = cos_firing_angle_min[INVERTER];
 
-        double tap_r = hvdc->get_converter_transformer_tap_in_pu(RECTIFIER);
-        //double tap_i = hvdc->get_converter_transformer_tap_in_pu(INVERTER);
+        double tap_r = hvdc.get_converter_transformer_tap_in_pu(RECTIFIER);
+        //double tap_i = hvdc.get_converter_transformer_tap_in_pu(INVERTER);
 
-        double ebase_grid_r = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER);
-        double ebase_converter_r = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER);
+        double ebase_grid_r = hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER);
+        double ebase_converter_r = hvdc.get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER);
 
-        //double ebase_grid_i = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER);
-        //double ebase_converter_i = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER);
+        //double ebase_grid_i = hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER);
+        //double ebase_converter_i = hvdc.get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER);
 
-        unsigned int Nr = hvdc->get_converter_number_of_bridge(RECTIFIER);
-        //unsigned int Ni = hvdc->get_converter_number_of_bridge(INVERTER);
+        unsigned int Nr = hvdc.get_converter_number_of_bridge(RECTIFIER);
+        //unsigned int Ni = hvdc.get_converter_number_of_bridge(INVERTER);
 
-        complex<double> Zc_r = hvdc->get_converter_transformer_impedance_in_ohm(RECTIFIER);
-        //complex<double> Zc_i = hvdc->get_converter_transformer_impedance_in_ohm(INVERTER);
+        complex<double> Zc_r = hvdc.get_converter_transformer_impedance_in_ohm(RECTIFIER);
+        //complex<double> Zc_i = hvdc.get_converter_transformer_impedance_in_ohm(INVERTER);
         double Rc_r = Zc_r.real(); double Xc_r = Zc_r.imag();
         //double Rc_i = Zc_i.real(); double Xc_i = Zc_i.imag();
 
-        double Rdc = hvdc->get_line_resistance_in_ohm();
-        //double Rcomp = hvdc->get_compensating_resistance_to_hold_dc_voltage_in_ohm();
+        double Rdc = hvdc.get_line_resistance_in_ohm();
+        //double Rcomp = hvdc.get_compensating_resistance_to_hold_dc_voltage_in_ohm();
 
-        //double margin = hvdc->get_current_power_margin();
+        //double margin = hvdc.get_current_power_margin();
 
         //double vac_r = psdb.get_bus_positive_sequence_voltage_in_kV(bus_r);
         double vac_r = get_converter_ac_voltage_in_kV(RECTIFIER);
@@ -1121,7 +1136,7 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_as_bypassed(double Iset_kA)
         double Idc;
             // bypassed
         Vdci = 0.0;
-        Iset_kA = hvdc->get_rectifier_nominal_dc_current_command_in_kA();
+        Iset_kA = hvdc.get_rectifier_nominal_dc_current_command_in_kA();
         Vdcr = Iset_kA*Rdc;
 
         cos_alpha = (Vdcr+rceq_r*Iset_kA)/vdc0_r;
@@ -1144,19 +1159,20 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_as_bypassed(double Iset_kA)
         Vdcr = vdc0_r*cos_alpha - rceq_r*Idc;
         Vdci = 0.0;
 
-        hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
-        hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
+        hvdc.set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
+        hvdc.set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
 
-        hvdc->set_converter_dc_voltage_in_kV(RECTIFIER, Vdcr);
-        hvdc->set_converter_dc_voltage_in_kV(INVERTER, Vdci);
-        hvdc->set_line_dc_current_in_kA(Idc);
+        hvdc.set_converter_dc_voltage_in_kV(RECTIFIER, Vdcr);
+        hvdc.set_converter_dc_voltage_in_kV(INVERTER, Vdci);
+        hvdc.set_line_dc_current_in_kA(Idc);
     }
 }
 void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_with_line_dynamics(double Iset_kA, double Vset_kV)
 {
     if(not is_blocked())
     {
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
         double alpha_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER));
         double alpha_max_in_rad = deg2rad(get_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER));
         double gamma_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER));
@@ -1166,25 +1182,25 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_with_line_dynamics(double Iset_kA,
         double cos_alpha = 0.0, cos_gamma = 0.0;
         double cos_alpha_min = cos_firing_angle_min[RECTIFIER], cos_gamma_min = cos_firing_angle_min[INVERTER];
 
-        double tap_r = hvdc->get_converter_transformer_tap_in_pu(RECTIFIER);
-        double tap_i = hvdc->get_converter_transformer_tap_in_pu(INVERTER);
+        double tap_r = hvdc.get_converter_transformer_tap_in_pu(RECTIFIER);
+        double tap_i = hvdc.get_converter_transformer_tap_in_pu(INVERTER);
 
-        double ebase_grid_r = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER);
-        double ebase_converter_r = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER);
+        double ebase_grid_r = hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER);
+        double ebase_converter_r = hvdc.get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER);
 
-        double ebase_grid_i = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER);
-        double ebase_converter_i = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER);
+        double ebase_grid_i = hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER);
+        double ebase_converter_i = hvdc.get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER);
 
-        unsigned int Nr = hvdc->get_converter_number_of_bridge(RECTIFIER);
-        unsigned int Ni = hvdc->get_converter_number_of_bridge(INVERTER);
+        unsigned int Nr = hvdc.get_converter_number_of_bridge(RECTIFIER);
+        unsigned int Ni = hvdc.get_converter_number_of_bridge(INVERTER);
 
-        complex<double> Zc_r = hvdc->get_converter_transformer_impedance_in_ohm(RECTIFIER);
-        complex<double> Zc_i = hvdc->get_converter_transformer_impedance_in_ohm(INVERTER);
+        complex<double> Zc_r = hvdc.get_converter_transformer_impedance_in_ohm(RECTIFIER);
+        complex<double> Zc_i = hvdc.get_converter_transformer_impedance_in_ohm(INVERTER);
         double Rc_r = Zc_r.real(); double Xc_r = Zc_r.imag();
         double Rc_i = Zc_i.real(); double Xc_i = Zc_i.imag();
 
-        double Rdc = hvdc->get_line_resistance_in_ohm();
-        double Rcomp = hvdc->get_compensating_resistance_to_hold_dc_voltage_in_ohm();
+        double Rdc = hvdc.get_line_resistance_in_ohm();
+        double Rcomp = hvdc.get_compensating_resistance_to_hold_dc_voltage_in_ohm();
 
         //double vac_r = psdb.get_bus_positive_sequence_voltage_in_pu(bus_r);
         //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(bus_i);
@@ -1210,7 +1226,7 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_with_line_dynamics(double Iset_kA,
             if(gamma_min_in_rad>=gamma_max_in_rad) // constant gamma mode
             {
                 gamma_in_rad = gamma_min_in_rad;
-                hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
+                hvdc.set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
 
                 Vdci =vdc0_i*cos_gamma_min-rceq_i*Idc;
                 Vdcr = Vdci+Rdc*Idc;
@@ -1220,7 +1236,7 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_with_line_dynamics(double Iset_kA,
                     alpha_in_rad = alpha_min_in_rad;
                 else
                     alpha_in_rad = steps_acos(cos_alpha);
-                hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
+                hvdc.set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
             }
             else
             {
@@ -1229,14 +1245,14 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_with_line_dynamics(double Iset_kA,
                     alpha_in_rad = alpha_min_in_rad;
                 else
                     alpha_in_rad = steps_acos(cos_alpha);
-                hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
+                hvdc.set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
 
                 cos_gamma = (Vdci+rceq_i*Idc)/vdc0_i;
                 if(cos_gamma>=cos_gamma_min)
                     gamma_in_rad = gamma_min_in_rad;
                 else
                     gamma_in_rad = steps_acos(cos_gamma);
-                hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
+                hvdc.set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
             }
 
             cos_alpha = steps_cos(alpha_in_rad);
@@ -1246,16 +1262,16 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_with_line_dynamics(double Iset_kA,
             Vdcr = vdc0_r*cos_alpha - rceq_r*Idc;
             Vdci = vdc0_i*cos_gamma - rceq_i*Idc;
 
-            hvdc->set_converter_dc_voltage_in_kV(RECTIFIER, Vdcr);
-            hvdc->set_converter_dc_voltage_in_kV(INVERTER, Vdci);
+            hvdc.set_converter_dc_voltage_in_kV(RECTIFIER, Vdcr);
+            hvdc.set_converter_dc_voltage_in_kV(INVERTER, Vdci);
 
-            hvdc->set_line_dc_current_in_kA(Idc);
+            hvdc.set_line_dc_current_in_kA(Idc);
         }
         else
         {
             // bypassed
             Vdci = 0.0;
-            Idc = hvdc->get_nominal_dc_current_in_kA();
+            Idc = hvdc.get_nominal_dc_current_in_kA();
             Vdcr = Idc*Rdc;
 
             cos_alpha = (Vdcr+rceq_r*Idc)/vdc0_r;
@@ -1277,12 +1293,12 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_with_line_dynamics(double Iset_kA,
             Vdcr = vdc0_r*cos_alpha - rceq_r*Idc;
             Vdci = 0.0;
 
-            hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
-            hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
+            hvdc.set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
+            hvdc.set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
 
-            hvdc->set_converter_dc_voltage_in_kV(RECTIFIER, Vdcr);
-            hvdc->set_converter_dc_voltage_in_kV(INVERTER, Vdci);
-            hvdc->set_line_dc_current_in_kA(Idc);
+            hvdc.set_converter_dc_voltage_in_kV(RECTIFIER, Vdcr);
+            hvdc.set_converter_dc_voltage_in_kV(INVERTER, Vdci);
+            hvdc.set_line_dc_current_in_kA(Idc);
         }
     }
 }
@@ -1291,8 +1307,8 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_with_line_dynamics_and_control_dyn
 {
     if(is_pi_controller_dynamics_considered == true)
     {
-        STEPS& toolkit = get_toolkit();
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
         if(not is_blocked())
         {
             if(not is_bypassed())
@@ -1300,33 +1316,33 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_with_line_dynamics_and_control_dyn
                 double Uac_r = get_converter_ac_voltage_in_kV(RECTIFIER);
                 double Uac_i = get_converter_ac_voltage_in_kV(INVERTER);
 
-                double tap_r = hvdc->get_converter_transformer_tap_in_pu(RECTIFIER);
-                double tap_i = hvdc->get_converter_transformer_tap_in_pu(INVERTER);
+                double tap_r = hvdc.get_converter_transformer_tap_in_pu(RECTIFIER);
+                double tap_i = hvdc.get_converter_transformer_tap_in_pu(INVERTER);
 
-                double ebase_grid_r = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER);
-                double ebase_converter_r = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER);
+                double ebase_grid_r = hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER);
+                double ebase_converter_r = hvdc.get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER);
                 double k_r = ebase_grid_r/ebase_converter_r;
 
-                double ebase_grid_i = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER);
-                double ebase_converter_i = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER);
+                double ebase_grid_i = hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER);
+                double ebase_converter_i = hvdc.get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER);
                 double k_i = ebase_grid_i/ebase_converter_i;
 
                 double Eac_r = THREE_SQRT2_OVER_PI*Uac_r/k_r/tap_r;
                 double Eac_i = THREE_SQRT2_OVER_PI*Uac_i/k_i/tap_i;
 
-                unsigned int Nr = hvdc->get_converter_number_of_bridge(RECTIFIER);
-                unsigned int Ni = hvdc->get_converter_number_of_bridge(INVERTER);
+                unsigned int Nr = hvdc.get_converter_number_of_bridge(RECTIFIER);
+                unsigned int Ni = hvdc.get_converter_number_of_bridge(INVERTER);
 
-                complex<double> Zc_r = hvdc->get_converter_transformer_impedance_in_ohm(RECTIFIER);
-                complex<double> Zc_i = hvdc->get_converter_transformer_impedance_in_ohm(INVERTER);
+                complex<double> Zc_r = hvdc.get_converter_transformer_impedance_in_ohm(RECTIFIER);
+                //complex<double> Zc_i = hvdc.get_converter_transformer_impedance_in_ohm(INVERTER);
                 double Rc_r = Zc_r.real(); double Xc_r = Zc_r.imag();
-                double Rc_i = Zc_i.real(); double Xc_i = Zc_i.imag();
+                //double Rc_i = Zc_i.real(); double Xc_i = Zc_i.imag();
 
                 double req_r = THREE_OVER_PI*Xc_r+2*Rc_r;
-                double req_i = THREE_OVER_PI*Xc_i+2*Rc_i;
+                //double req_i = THREE_OVER_PI*Xc_i+2*Rc_i;
 
-                double vdrop_r = hvdc->get_converter_voltage_drop_per_bridge_in_kV(RECTIFIER);
-                double vdrop_i = hvdc->get_converter_voltage_drop_per_bridge_in_kV(INVERTER);
+                double vdrop_r = hvdc.get_converter_voltage_drop_per_bridge_in_kV(RECTIFIER);
+                double vdrop_i = hvdc.get_converter_voltage_drop_per_bridge_in_kV(INVERTER);
 
                 double cos_alpha = steps_cos(deg2rad(alpha_in_deg));
                 double cos_gamma = steps_cos(deg2rad(gamma_in_deg));
@@ -1334,15 +1350,16 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_with_line_dynamics_and_control_dyn
                 double Udc_r = Nr*(Eac_r*cos_alpha-Iset_kA*req_r-vdrop_r);
                 double Udc_i = Ni*(Eac_i*cos_gamma-Iset_kA*req_r-vdrop_i);
 
-                hvdc->set_converter_dc_voltage_in_kV(RECTIFIER, Udc_r);
-                hvdc->set_converter_dc_voltage_in_kV(INVERTER, Udc_i);
+                hvdc.set_converter_dc_voltage_in_kV(RECTIFIER, Udc_r);
+                hvdc.set_converter_dc_voltage_in_kV(INVERTER, Udc_i);
 
-                hvdc->set_line_dc_current_in_kA(Iset_kA);
+                hvdc.set_line_dc_current_in_kA(Iset_kA);
 
-                hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, alpha_in_deg);
-                hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, gamma_in_deg);
+                hvdc.set_converter_alpha_or_gamma_in_deg(RECTIFIER, alpha_in_deg);
+                hvdc.set_converter_alpha_or_gamma_in_deg(INVERTER, gamma_in_deg);
 
                 /*
+                STEPS& toolkit = get_toolkit();
                 ostringstream osstream;
                 osstream<<"**********************SOLVE HVDC******************************";
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -1361,38 +1378,38 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_with_line_dynamics_and_control_dyn
             else //is bypassed
             {
                 double Uac_r = get_converter_ac_voltage_in_kV(RECTIFIER);
-                double Uac_i = get_converter_ac_voltage_in_kV(INVERTER);
+                //double Uac_i = get_converter_ac_voltage_in_kV(INVERTER);
 
-                double tap_r = hvdc->get_converter_transformer_tap_in_pu(RECTIFIER);
-                double tap_i = hvdc->get_converter_transformer_tap_in_pu(INVERTER);
+                double tap_r = hvdc.get_converter_transformer_tap_in_pu(RECTIFIER);
+                //double tap_i = hvdc.get_converter_transformer_tap_in_pu(INVERTER);
 
-                double ebase_grid_r = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER);
-                double ebase_converter_r = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER);
+                double ebase_grid_r = hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER);
+                double ebase_converter_r = hvdc.get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER);
                 double k_r = ebase_grid_r/ebase_converter_r;
 
-                double ebase_grid_i = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER);
-                double ebase_converter_i = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER);
-                double k_i = ebase_grid_i/ebase_converter_i;
+                //double ebase_grid_i = hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER);
+                //double ebase_converter_i = hvdc.get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER);
+                //double k_i = ebase_grid_i/ebase_converter_i;
 
                 double Eac_r = THREE_SQRT2_OVER_PI*Uac_r/k_r/tap_r;
-                double Eac_i = THREE_SQRT2_OVER_PI*Uac_i/k_i/tap_i;
+                //double Eac_i = THREE_SQRT2_OVER_PI*Uac_i/k_i/tap_i;
 
-                unsigned int Nr = hvdc->get_converter_number_of_bridge(RECTIFIER);
-                unsigned int Ni = hvdc->get_converter_number_of_bridge(INVERTER);
+                unsigned int Nr = hvdc.get_converter_number_of_bridge(RECTIFIER);
+                //unsigned int Ni = hvdc.get_converter_number_of_bridge(INVERTER);
 
-                complex<double> Zc_r = hvdc->get_converter_transformer_impedance_in_ohm(RECTIFIER);
-                complex<double> Zc_i = hvdc->get_converter_transformer_impedance_in_ohm(INVERTER);
+                complex<double> Zc_r = hvdc.get_converter_transformer_impedance_in_ohm(RECTIFIER);
+                //complex<double> Zc_i = hvdc.get_converter_transformer_impedance_in_ohm(INVERTER);
                 double Rc_r = Zc_r.real(); double Xc_r = Zc_r.imag();
-                double Rc_i = Zc_i.real(); double Xc_i = Zc_i.imag();
+                //double Rc_i = Zc_i.real(); double Xc_i = Zc_i.imag();
 
                 double req_r = THREE_OVER_PI*Xc_r+2*Rc_r;
-                double req_i = THREE_OVER_PI*Xc_i+2*Rc_i;
+                //double req_i = THREE_OVER_PI*Xc_i+2*Rc_i;
 
-                double vdrop_r = hvdc->get_converter_voltage_drop_per_bridge_in_kV(RECTIFIER);
-                double vdrop_i = hvdc->get_converter_voltage_drop_per_bridge_in_kV(INVERTER);
+                double vdrop_r = hvdc.get_converter_voltage_drop_per_bridge_in_kV(RECTIFIER);
+                //double vdrop_i = hvdc.get_converter_voltage_drop_per_bridge_in_kV(INVERTER);
 
                 double cos_alpha = steps_cos(deg2rad(alpha_in_deg));
-                double cos_gamma = steps_cos(deg2rad(gamma_in_deg));
+                //double cos_gamma = steps_cos(deg2rad(gamma_in_deg));
 
                 double Udc_r = Nr*(Eac_r*cos_alpha-Iset_kA*req_r-vdrop_r);
                 /*
@@ -1408,13 +1425,13 @@ void LCC_HVDC2T_MODEL::solve_lcc_hvdc2t_model_with_line_dynamics_and_control_dyn
 
                 double Udc_i = 0; //F(X) NEED TO BE FOUND
 
-                hvdc->set_converter_dc_voltage_in_kV(RECTIFIER, Udc_r);
-                hvdc->set_converter_dc_voltage_in_kV(INVERTER, Udc_i);
+                hvdc.set_converter_dc_voltage_in_kV(RECTIFIER, Udc_r);
+                hvdc.set_converter_dc_voltage_in_kV(INVERTER, Udc_i);
 
-                hvdc->set_line_dc_current_in_kA(Iset_kA);
+                hvdc.set_line_dc_current_in_kA(Iset_kA);
 
-                hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, alpha_in_deg);
-                hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, gamma_in_deg); //GAMMA KEEP CONSTANT?
+                hvdc.set_converter_alpha_or_gamma_in_deg(RECTIFIER, alpha_in_deg);
+                hvdc.set_converter_alpha_or_gamma_in_deg(INVERTER, gamma_in_deg); //GAMMA KEEP CONSTANT?
 
             }
         }
@@ -1427,8 +1444,9 @@ double LCC_HVDC2T_MODEL::get_converter_dc_voltage_in_kV(CONVERTER_SIDE converter
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-        return hvdc->get_converter_dc_voltage_in_kV(converter);
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+        return hvdc.get_converter_dc_voltage_in_kV(converter);
     }
     else
         return 0.0;
@@ -1438,8 +1456,9 @@ double LCC_HVDC2T_MODEL::get_converter_dc_current_in_kA(CONVERTER_SIDE converter
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-        return hvdc->get_line_dc_current_in_kA();
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+        return hvdc.get_line_dc_current_in_kA();
     }
     else
         return 0.0;
@@ -1455,11 +1474,12 @@ double LCC_HVDC2T_MODEL::get_converter_dc_power_in_MW(CONVERTER_SIDE converter) 
 
 double LCC_HVDC2T_MODEL::get_converter_alpha_or_gamma_in_deg(CONVERTER_SIDE converter) const
 {
-    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T& hvdc = *hvdc_ptr;
     if(not is_blocked())
     {
         if(not is_bypassed() or converter==RECTIFIER)
-            return hvdc->get_converter_alpha_or_gamma_in_deg(converter);
+            return hvdc.get_converter_alpha_or_gamma_in_deg(converter);
         else
             return 90.0;
     }
@@ -1472,15 +1492,16 @@ double LCC_HVDC2T_MODEL::get_converter_commutation_overlap_angle_in_deg(CONVERTE
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
         double angle = deg2rad(get_converter_alpha_or_gamma_in_deg(converter));
         double idc = get_converter_dc_current_in_kA(converter);
-        double xc = hvdc->get_converter_transformer_impedance_in_ohm(converter).imag();
-        //double vac = psdb.get_bus_positive_sequence_voltage_in_kV(hvdc->get_converter_bus(converter));
+        double xc = hvdc.get_converter_transformer_impedance_in_ohm(converter).imag();
+        //double vac = psdb.get_bus_positive_sequence_voltage_in_kV(hvdc.get_converter_bus(converter));
         double vac = get_converter_ac_voltage_in_kV(converter);
-        double vbase_grid = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(converter);
-        double vbase_converter = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(converter);
-        double tap = hvdc->get_converter_transformer_tap_in_pu(converter);
+        double vbase_grid = hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(converter);
+        double vbase_converter = hvdc.get_converter_transformer_converter_side_base_voltage_in_kV(converter);
+        double tap = hvdc.get_converter_transformer_tap_in_pu(converter);
         double eac = vac*vbase_converter/(vbase_grid*tap);
 
         double mu = steps_cos(angle)-SQRT2*idc*xc/eac;
@@ -1507,9 +1528,10 @@ complex<double> LCC_HVDC2T_MODEL::get_converter_ac_complex_power_in_MVA(CONVERTE
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-        double N = hvdc->get_converter_number_of_bridge(converter);
-        double Rc = hvdc->get_converter_transformer_impedance_in_ohm(converter).real();
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+        double N = hvdc.get_converter_number_of_bridge(converter);
+        double Rc = hvdc.get_converter_transformer_impedance_in_ohm(converter).real();
         double Idc = get_converter_dc_current_in_kA(converter);
         double P = get_converter_dc_power_in_MW(converter);
         double Ploss = N*(2.0*Idc*Idc*Rc); // N for bridges, 2 for two phases
@@ -1550,7 +1572,6 @@ double LCC_HVDC2T_MODEL::get_converter_ac_power_factor_angle_in_deg(CONVERTER_SI
         STEPS& toolkit = get_toolkit();
         if(isnan(tan_phi) and toolkit.is_detailed_log_enabled())
         {
-            LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
             ostringstream osstream;
             osstream<<"NAN is detected for tan_phi of "<<get_model_name()<<" of "<<get_compound_device_name()<<endl
                     <<converter_side2string(converter)<<": angle = "<<angle<<" rad, mu = "<<mu<<" rad";
@@ -1595,9 +1616,11 @@ complex<double> LCC_HVDC2T_MODEL::get_converter_ac_current_in_kA(CONVERTER_SIDE 
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
         complex<double> I = get_converter_ac_current_in_pu(converter);
-        LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-        BUS* bus = hvdc->get_bus_pointer(converter);
-        double vbase = bus->get_base_voltage_in_kV();
+        LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+        LCC_HVDC2T& hvdc = *hvdc_ptr;
+        BUS* bus_ptr = hvdc.get_bus_pointer(converter);
+        BUS& bus = *bus_ptr;
+        double vbase = bus.get_base_voltage_in_kV();
         STEPS& toolkit = get_toolkit();
         double sbase = toolkit.get_system_base_power_in_MVA();
         double ibase = sbase/(SQRT3*vbase);
@@ -1611,23 +1634,29 @@ complex<double> LCC_HVDC2T_MODEL::get_converter_ac_current_in_kA(CONVERTER_SIDE 
 
 double LCC_HVDC2T_MODEL::get_converter_ac_voltage_in_pu(CONVERTER_SIDE converter) const
 {
-    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-    BUS* bus = hvdc->get_bus_pointer(converter);
-    return bus->get_positive_sequence_voltage_in_pu();
+    LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T& hvdc = *hvdc_ptr;
+    BUS* bus_ptr = hvdc.get_bus_pointer(converter);
+    BUS& bus = *bus_ptr;
+    return bus.get_positive_sequence_voltage_in_pu();
 }
 
 double LCC_HVDC2T_MODEL::get_converter_ac_voltage_in_kV(CONVERTER_SIDE converter) const
 {
-    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-    BUS* bus = hvdc->get_bus_pointer(converter);
-    return bus->get_positive_sequence_voltage_in_kV();
+    LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T& hvdc = *hvdc_ptr;
+    BUS* bus_ptr = hvdc.get_bus_pointer(converter);
+    BUS& bus = *bus_ptr;
+    return bus.get_positive_sequence_voltage_in_kV();
 }
 
 complex<double> LCC_HVDC2T_MODEL::get_converter_ac_complex_voltage_in_pu(CONVERTER_SIDE converter) const
 {
-    LCC_HVDC2T* hvdc = get_lcc_hvdc2t_pointer();
-    BUS* bus = hvdc->get_bus_pointer(converter);
-    return bus->get_positive_sequence_complex_voltage_in_pu();
+    LCC_HVDC2T* hvdc_ptr = get_lcc_hvdc2t_pointer();
+    LCC_HVDC2T& hvdc = *hvdc_ptr;
+    BUS* bus_ptr = hvdc.get_bus_pointer(converter);
+    BUS& bus = *bus_ptr;
+    return bus.get_positive_sequence_complex_voltage_in_pu();
 }
 
 double LCC_HVDC2T_MODEL::get_time_duration_to_the_last_bypass_in_s() const
