@@ -2,7 +2,9 @@
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
 #include <cstdio>
-IEEL::IEEL(STEPS& toolkit) : LOAD_MODEL(toolkit)
+IEEL::IEEL(STEPS& toolkit) : LOAD_MODEL(toolkit),
+                             voltage_sensor(toolkit),
+                             angle_sensor(toolkit)
 {
     clear();
 }
@@ -20,12 +22,13 @@ void IEEL::clear()
 
 void IEEL::copy_from_const_model(const IEEL& model)
 {
-    set_toolkit(model.get_toolkit());
+
+    STEPS& toolkit = model.get_toolkit();
+    set_toolkit(toolkit);
+    voltage_sensor.set_toolkit(toolkit);
+    angle_sensor.set_toolkit(toolkit);
 
     clear();
-
-    //this->set_power_system_database(model.toolkit.get_power_system_database());
-    //this->set_device_id(model.get_device_id());
 
     this->set_subsystem_type(model.get_subsystem_type());
 
@@ -47,7 +50,9 @@ void IEEL::copy_from_const_model(const IEEL& model)
 
 }
 
-IEEL::IEEL(const IEEL& model) : LOAD_MODEL(model.get_toolkit())
+IEEL::IEEL(const IEEL& model) : LOAD_MODEL(model.get_toolkit()),
+                                voltage_sensor(model.get_toolkit()),
+                                angle_sensor(model.get_toolkit())
 {
     copy_from_const_model(model);
 }
@@ -307,7 +312,11 @@ complex<double> IEEL::get_additional_admittance_in_pu_based_on_SBASE()
 
 void IEEL::setup_block_toolkit_and_parameters()
 {
-    ;
+    voltage_sensor.set_T_in_s(0.005);
+
+    angle_sensor.set_bus_pointer(get_bus_pointer());
+    angle_sensor.set_Kp(500);
+    angle_sensor.set_Ki(0.5);
 }
 
 void IEEL::initialize()
@@ -321,6 +330,11 @@ void IEEL::initialize()
 
     complex<double> S = load->get_actual_total_load_in_MVA();
     double V = get_bus_positive_sequence_voltage_in_pu();
+
+    voltage_sensor.set_output(V);
+    voltage_sensor.initialize();
+
+    angle_sensor.initialize();
 
     double P = S.real();
     double alpha1 = get_P_alpha_1();
@@ -408,20 +422,61 @@ void IEEL::check_limits_in_initialization()
 
 void IEEL::run(DYNAMIC_MODE mode)
 {
+    synchronize_bus_voltage_and_frequency();
+
+    bool voltage_sensor_enabled = is_bus_voltage_sensor_enabled();
+    bool voltage_sensor_initialized = is_bus_voltage_sensor_initialized();
+    if(voltage_sensor_enabled and (not voltage_sensor_initialized))
+    {
+        double V = get_bus_positive_sequence_voltage_in_pu();
+        voltage_sensor.set_output(V);
+        voltage_sensor.initialize();
+        set_bus_voltage_sensor_initialized_flag(true);
+    }
+
+    bool angle_sensor_enabled = is_bus_angle_sensor_enabled();
+    bool angle_sensor_initialized = is_bus_angle_sensor_initialized();
+    if(angle_sensor_enabled and (not angle_sensor_initialized))
+    {
+        angle_sensor.initialize();
+        set_bus_angle_sensor_initialized_flag(true);
+    }
+
+    if(voltage_sensor_enabled)
+    {
+        double v = get_bus_positive_sequence_voltage_in_pu();
+        voltage_sensor.set_input(v);
+        voltage_sensor.run(mode);
+    }
+
+    if(angle_sensor_enabled)
+        angle_sensor.run(mode);
+
     if(mode==DYNAMIC_UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 
 complex<double> IEEL::get_load_power_in_MVA()
 {
-    double V = get_bus_positive_sequence_voltage_in_pu();
-    double f = get_bus_frequency_deviation_in_pu();
     if(is_PIZ)
-    {
-        double voltage_scale_P = LOAD::get_constant_power_load_scale_with_voltage(V, LOAD_LINEAR_CV);
-        double voltage_scale_I = LOAD::get_constant_current_load_scale_with_voltage(V, LOAD_LINEAR_CV);
-        double voltage_scale_Z = V*V;
+        return get_load_power_in_MVA_as_PIZ_load();
+    else
+        return get_load_power_in_MVA_as_non_PIZ_load();
+}
 
+complex<double> IEEL::get_load_power_in_MVA_as_PIZ_load()
+{
+    double Vbus = get_bus_positive_sequence_voltage_in_pu();
+    double Vsensor = get_bus_positive_sequence_voltage_in_pu_from_sensor();
+    double V = is_bus_voltage_sensor_enabled() ? Vsensor : Vbus;
+    double f = get_bus_frequency_deviation_in_pu();
+
+    double voltage_scale_P = LOAD::get_constant_power_load_scale_with_voltage(V, LOAD_LINEAR_CV);
+    double voltage_scale_I = LOAD::get_constant_current_load_scale_with_voltage(Vbus, LOAD_LINEAR_CV);
+    double voltage_scale_Z = Vbus*Vbus;
+
+    if(not is_bus_voltage_sensor_enabled())
+    {
         double P_scale = P_alpha_1*voltage_scale_P + P_alpha_2*voltage_scale_I + P_alpha_3*voltage_scale_Z;
         double Q_scale = Q_alpha_1*voltage_scale_P + Q_alpha_2*voltage_scale_I + Q_alpha_3*voltage_scale_Z;
 
@@ -432,30 +487,121 @@ complex<double> IEEL::get_load_power_in_MVA()
     }
     else
     {
-        double voltage_scale1 = LOAD::get_load_scale_with_voltage(P_n_power_1, V, LOAD_LINEAR_CV);
-        double voltage_scale2 = LOAD::get_load_scale_with_voltage(P_n_power_2, V, LOAD_LINEAR_CV);
-        double voltage_scale3 = LOAD::get_load_scale_with_voltage(P_n_power_3, V, LOAD_LINEAR_CV);
+        double angle_bus = get_bus_positive_sequence_angle_in_rad();
+        double angle_sensor = get_bus_positive_sequence_angle_in_rad_from_sensor();
+        double angle_shift = angle_bus - angle_sensor;
+        complex<double> rotation(steps_cos(angle_shift), steps_sin(angle_shift));
 
-        double scale = P_alpha_1*voltage_scale1 + P_alpha_2*voltage_scale2 + P_alpha_3*voltage_scale3;
+        complex<double> Sp_target(P0*P_alpha_1*voltage_scale_P, Q0*Q_alpha_1*voltage_scale_P);
+        complex<double> Sp_true = Sp_target*rotation*(Vbus/Vsensor);
+
+        complex<double> Si_target(P0*P_alpha_2*voltage_scale_I, Q0*Q_alpha_2*voltage_scale_I);
+        complex<double> Si_true = Si_target*rotation;
+
+        complex<double> Sz_true(P0*P_alpha_3*voltage_scale_Z, Q0*Q_alpha_3*voltage_scale_Z);
+
+        return Sp_true + Si_true + Sz_true;
+    }
+}
+
+complex<double> IEEL::get_load_power_in_MVA_as_non_PIZ_load()
+{
+    double Vbus = get_bus_positive_sequence_voltage_in_pu();
+    double Vsensor = get_bus_positive_sequence_voltage_in_pu_from_sensor();
+    double V = is_bus_voltage_sensor_enabled() ? Vsensor : Vbus;
+    double f = get_bus_frequency_deviation_in_pu();
+
+    complex<double> S = 0;
+    double voltage_scale1_P = LOAD::get_load_scale_with_voltage(P_n_power_1, V, LOAD_LINEAR_CV);
+    double voltage_scale2_P = LOAD::get_load_scale_with_voltage(P_n_power_2, V, LOAD_LINEAR_CV);
+    double voltage_scale3_P = LOAD::get_load_scale_with_voltage(P_n_power_3, V, LOAD_LINEAR_CV);
+
+    if(not is_bus_voltage_sensor_enabled())
+    {
+        double scale = P_alpha_1*voltage_scale1_P + P_alpha_2*voltage_scale2_P + P_alpha_3*voltage_scale3_P;
 
         double P = P0*scale*(1.0+P_Kf*f);
 
         if(fabs(P_n_power_1-Q_n_power_1)<FLOAT_EPSILON and fabs(P_n_power_2-Q_n_power_2)<FLOAT_EPSILON and fabs(P_n_power_3-Q_n_power_3)<FLOAT_EPSILON)
         {
-            scale = Q_alpha_1*voltage_scale1 + Q_alpha_2*voltage_scale2 + Q_alpha_3*voltage_scale3;
+            scale = Q_alpha_1*voltage_scale1_P + Q_alpha_2*voltage_scale2_P + Q_alpha_3*voltage_scale3_P;
         }
         else
         {
-            voltage_scale1 = LOAD::get_load_scale_with_voltage(Q_n_power_1, V, LOAD_LINEAR_CV);
-            voltage_scale2 = LOAD::get_load_scale_with_voltage(Q_n_power_2, V, LOAD_LINEAR_CV);
-            voltage_scale3 = LOAD::get_load_scale_with_voltage(Q_n_power_3, V, LOAD_LINEAR_CV);
+            double voltage_scale1_Q = LOAD::get_load_scale_with_voltage(Q_n_power_1, V, LOAD_LINEAR_CV);
+            double voltage_scale2_Q = LOAD::get_load_scale_with_voltage(Q_n_power_2, V, LOAD_LINEAR_CV);
+            double voltage_scale3_Q = LOAD::get_load_scale_with_voltage(Q_n_power_3, V, LOAD_LINEAR_CV);
 
-            scale = Q_alpha_1*voltage_scale1 + Q_alpha_2*voltage_scale2 + Q_alpha_3*voltage_scale3;
+            scale = Q_alpha_1*voltage_scale1_Q + Q_alpha_2*voltage_scale2_Q + Q_alpha_3*voltage_scale3_Q;
         }
         double Q = Q0*scale*(1.0+Q_Kf*f);
 
-        return complex<double>(P,Q);
+        S = complex<double>(P,Q);
     }
+    else
+    {
+        if(fabs(P_n_power_1-Q_n_power_1)<FLOAT_EPSILON and fabs(P_n_power_2-Q_n_power_2)<FLOAT_EPSILON and fabs(P_n_power_3-Q_n_power_3)<FLOAT_EPSILON)
+        {
+            double angle_bus = get_bus_positive_sequence_angle_in_rad();
+            double angle_sensor = get_bus_positive_sequence_angle_in_rad_from_sensor();
+            double angle_shift = angle_bus - angle_sensor;
+            complex<double> rotation(steps_cos(angle_shift), steps_sin(angle_shift));
+
+            complex<double> S_target = 0;
+            complex<double> S_true = 0;
+
+            S_target.real(P0*P_alpha_1*voltage_scale1_P);
+            S_target.imag(Q0*Q_alpha_1*voltage_scale1_P);
+            S_true = S_target*rotation*(Vbus/Vsensor);
+            S += S_true;
+
+            S_target.real(P0*P_alpha_2*voltage_scale2_P);
+            S_target.imag(Q0*Q_alpha_2*voltage_scale2_P);
+            S_true = S_target*rotation*(Vbus/Vsensor);
+            S += S_true;
+
+            S_target.real(P0*P_alpha_3*voltage_scale3_P);
+            S_target.imag(Q0*Q_alpha_3*voltage_scale3_P);
+            S_true = S_target*rotation*(Vbus/Vsensor);
+            S += S_true;
+
+            S.real(S.real()*(1.0+P_Kf*f));
+            S.imag(S.imag()*(1.0+Q_Kf*f));
+        }
+        else
+        {
+            double voltage_scale1_Q = LOAD::get_load_scale_with_voltage(Q_n_power_1, V, LOAD_LINEAR_CV);
+            double voltage_scale2_Q = LOAD::get_load_scale_with_voltage(Q_n_power_2, V, LOAD_LINEAR_CV);
+            double voltage_scale3_Q = LOAD::get_load_scale_with_voltage(Q_n_power_3, V, LOAD_LINEAR_CV);
+
+            double angle_bus = get_bus_positive_sequence_angle_in_rad();
+            double angle_sensor = get_bus_positive_sequence_angle_in_rad_from_sensor();
+            double angle_shift = angle_bus - angle_sensor;
+            complex<double> rotation(steps_cos(angle_shift), steps_sin(angle_shift));
+
+            complex<double> S_target = 0;
+            complex<double> S_true = 0;
+
+            S_target.real(P0*P_alpha_1*voltage_scale1_P);
+            S_target.imag(Q0*Q_alpha_1*voltage_scale1_Q);
+            S_true = S_target*rotation*(Vbus/Vsensor);
+            S += S_true;
+
+            S_target.real(P0*P_alpha_2*voltage_scale2_P);
+            S_target.imag(Q0*Q_alpha_2*voltage_scale2_Q);
+            S_true = S_target*rotation*(Vbus/Vsensor);
+            S += S_true;
+
+            S_target.real(P0*P_alpha_3*voltage_scale3_P);
+            S_target.imag(Q0*Q_alpha_3*voltage_scale3_Q);
+            S_true = S_target*rotation*(Vbus/Vsensor);
+            S += S_true;
+
+            S.real(S.real()*(1.0+P_Kf*f));
+            S.imag(S.imag()*(1.0+Q_Kf*f));
+        }
+    }
+    return S;
 }
 
 complex<double> IEEL::get_load_current_in_pu_based_on_SBASE()
@@ -481,45 +627,83 @@ complex<double> IEEL::get_derivative_of_load_current_wrt_voltage_on_SBASE()
     complex<double> complex_v = get_bus_positive_sequence_complex_voltage_in_pu();
     double f = get_bus_frequency_deviation_in_pu();
     complex<double> j = complex<double>(0, 1.0);
-    if(is_PIZ)
+
+    if(not is_bus_voltage_sensor_enabled())//out put PIZ load
     {
-        complex<double> d_voltage_scale_P_over_d_complex_v = LOAD::get_derivative_of_constant_power_load_scale_with_voltage(V, complex_v, LOAD_LINEAR_CV);
-        complex<double> d_voltage_scale_I_over_d_complex_v = LOAD::get_derivative_of_constant_current_load_scale_with_voltage(V, complex_v, LOAD_LINEAR_CV);
-        complex<double> d_voltage_scale_Z_over_d_complex_v = conj(complex_v);
-
-        complex<double> dP_scale_over_d_complex_v = P_alpha_1*d_voltage_scale_P_over_d_complex_v + P_alpha_2*d_voltage_scale_I_over_d_complex_v + P_alpha_3*d_voltage_scale_Z_over_d_complex_v;
-        complex<double> dQ_scale_over_d_complex_v = Q_alpha_1*d_voltage_scale_P_over_d_complex_v + Q_alpha_2*d_voltage_scale_I_over_d_complex_v + Q_alpha_3*d_voltage_scale_Z_over_d_complex_v;
-
-        complex<double> dP_over_d_complex_v = P0*dP_scale_over_d_complex_v*(1.0+P_Kf*f);
-        complex<double> dQ_over_d_complex_v = Q0*dQ_scale_over_d_complex_v*(1.0+Q_Kf*f);
-
-        return one_over_sbase*(dP_over_d_complex_v-j*dQ_over_d_complex_v)/conj(complex_v);
-    }
-    else
-    {
-        complex<double> d_voltage_scale1_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(P_n_power_1, V, complex_v, LOAD_LINEAR_CV);
-        complex<double> d_voltage_scale2_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(P_n_power_2, V, complex_v, LOAD_LINEAR_CV);
-        complex<double> d_voltage_scale3_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(P_n_power_3, V, complex_v, LOAD_LINEAR_CV);
-
-         complex<double> d_scale_over_d_complex_v = P_alpha_1*d_voltage_scale1_over_d_complex_v + P_alpha_2*d_voltage_scale2_over_d_complex_v + P_alpha_3*d_voltage_scale3_over_d_complex_v;
-
-        complex<double> dP_over_d_complex_v = P0*d_scale_over_d_complex_v*(1.0+P_Kf*f);
-
-        if(fabs(P_n_power_1-Q_n_power_1)<FLOAT_EPSILON and fabs(P_n_power_2-Q_n_power_2)<FLOAT_EPSILON and fabs(P_n_power_3-Q_n_power_3)<FLOAT_EPSILON)
+        if(is_PIZ)
         {
-            d_scale_over_d_complex_v = Q_alpha_1*d_voltage_scale1_over_d_complex_v + Q_alpha_2*d_voltage_scale2_over_d_complex_v + Q_alpha_3*d_voltage_scale3_over_d_complex_v;
+            complex<double> d_voltage_scale_P_over_d_complex_v = LOAD::get_derivative_of_constant_power_load_scale_with_voltage(V, complex_v, LOAD_LINEAR_CV);
+            complex<double> d_voltage_scale_I_over_d_complex_v = LOAD::get_derivative_of_constant_current_load_scale_with_voltage(V, complex_v, LOAD_LINEAR_CV);
+            complex<double> d_voltage_scale_Z_over_d_complex_v = conj(complex_v);
+
+            complex<double> dP_scale_over_d_complex_v = P_alpha_1*d_voltage_scale_P_over_d_complex_v + P_alpha_2*d_voltage_scale_I_over_d_complex_v + P_alpha_3*d_voltage_scale_Z_over_d_complex_v;
+            complex<double> dQ_scale_over_d_complex_v = Q_alpha_1*d_voltage_scale_P_over_d_complex_v + Q_alpha_2*d_voltage_scale_I_over_d_complex_v + Q_alpha_3*d_voltage_scale_Z_over_d_complex_v;
+
+            complex<double> dP_over_d_complex_v = P0*dP_scale_over_d_complex_v*(1.0+P_Kf*f);
+            complex<double> dQ_over_d_complex_v = Q0*dQ_scale_over_d_complex_v*(1.0+Q_Kf*f);
+
+            return one_over_sbase*(dP_over_d_complex_v-j*dQ_over_d_complex_v)/conj(complex_v);
         }
         else
         {
-            d_voltage_scale1_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(Q_n_power_1, V, complex_v, LOAD_LINEAR_CV);
-            d_voltage_scale2_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(Q_n_power_2, V, complex_v, LOAD_LINEAR_CV);
-            d_voltage_scale3_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(Q_n_power_3, V, complex_v, LOAD_LINEAR_CV);
+            complex<double> d_voltage_scale1_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(P_n_power_1, V, complex_v, LOAD_LINEAR_CV);
+            complex<double> d_voltage_scale2_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(P_n_power_2, V, complex_v, LOAD_LINEAR_CV);
+            complex<double> d_voltage_scale3_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(P_n_power_3, V, complex_v, LOAD_LINEAR_CV);
 
-            d_scale_over_d_complex_v = Q_alpha_1*d_voltage_scale1_over_d_complex_v + Q_alpha_2*d_voltage_scale2_over_d_complex_v + Q_alpha_3*d_voltage_scale3_over_d_complex_v;
+             complex<double> d_scale_over_d_complex_v = P_alpha_1*d_voltage_scale1_over_d_complex_v + P_alpha_2*d_voltage_scale2_over_d_complex_v + P_alpha_3*d_voltage_scale3_over_d_complex_v;
+
+            complex<double> dP_over_d_complex_v = P0*d_scale_over_d_complex_v*(1.0+P_Kf*f);
+
+            if(fabs(P_n_power_1-Q_n_power_1)<FLOAT_EPSILON and fabs(P_n_power_2-Q_n_power_2)<FLOAT_EPSILON and fabs(P_n_power_3-Q_n_power_3)<FLOAT_EPSILON)
+            {
+                d_scale_over_d_complex_v = Q_alpha_1*d_voltage_scale1_over_d_complex_v + Q_alpha_2*d_voltage_scale2_over_d_complex_v + Q_alpha_3*d_voltage_scale3_over_d_complex_v;
+            }
+            else
+            {
+                d_voltage_scale1_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(Q_n_power_1, V, complex_v, LOAD_LINEAR_CV);
+                d_voltage_scale2_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(Q_n_power_2, V, complex_v, LOAD_LINEAR_CV);
+                d_voltage_scale3_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(Q_n_power_3, V, complex_v, LOAD_LINEAR_CV);
+
+                d_scale_over_d_complex_v = Q_alpha_1*d_voltage_scale1_over_d_complex_v + Q_alpha_2*d_voltage_scale2_over_d_complex_v + Q_alpha_3*d_voltage_scale3_over_d_complex_v;
+            }
+            complex<double> dQ_over_d_complex_v = Q0*d_scale_over_d_complex_v*(1.0+Q_Kf*f);
+
+            return one_over_sbase*(dP_over_d_complex_v-j*dQ_over_d_complex_v)/conj(complex_v);
         }
-        complex<double> dQ_over_d_complex_v = Q0*d_scale_over_d_complex_v*(1.0+Q_Kf*f);
+    }
+    else// only output constant Z load  when use PLL
+    {
+        if(is_PIZ)
+        {
+            complex<double> d_voltage_scale_Z_over_d_complex_v = conj(complex_v);
 
-        return one_over_sbase*(dP_over_d_complex_v-j*dQ_over_d_complex_v)/conj(complex_v);
+            complex<double> dP_scale_over_d_complex_v = P_alpha_3*d_voltage_scale_Z_over_d_complex_v;
+            complex<double> dQ_scale_over_d_complex_v = Q_alpha_3*d_voltage_scale_Z_over_d_complex_v;
+
+            complex<double> dP_over_d_complex_v = P0*dP_scale_over_d_complex_v*(1.0+P_Kf*f);
+            complex<double> dQ_over_d_complex_v = Q0*dQ_scale_over_d_complex_v*(1.0+Q_Kf*f);
+
+            return one_over_sbase*(dP_over_d_complex_v-j*dQ_over_d_complex_v)/conj(complex_v);
+        }
+        else
+        {
+            complex<double> d_voltage_scale3_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(P_n_power_3, V, complex_v, LOAD_LINEAR_CV);
+             complex<double> d_scale_over_d_complex_v = P_alpha_3*d_voltage_scale3_over_d_complex_v;
+            complex<double> dP_over_d_complex_v = P0*d_scale_over_d_complex_v*(1.0+P_Kf*f);
+
+            if(fabs(P_n_power_1-Q_n_power_1)<FLOAT_EPSILON and fabs(P_n_power_2-Q_n_power_2)<FLOAT_EPSILON and fabs(P_n_power_3-Q_n_power_3)<FLOAT_EPSILON)
+            {
+                d_scale_over_d_complex_v = Q_alpha_3*d_voltage_scale3_over_d_complex_v;
+            }
+            else
+            {
+                d_voltage_scale3_over_d_complex_v = LOAD::get_derivative_of_load_scale_with_voltage(Q_n_power_3, V, complex_v, LOAD_LINEAR_CV);
+                d_scale_over_d_complex_v = Q_alpha_3*d_voltage_scale3_over_d_complex_v;
+            }
+            complex<double> dQ_over_d_complex_v = Q0*d_scale_over_d_complex_v*(1.0+Q_Kf*f);
+
+            return one_over_sbase*(dP_over_d_complex_v-j*dQ_over_d_complex_v)/conj(complex_v);
+        }
     }
 }
 
@@ -716,6 +900,9 @@ void IEEL::prepare_model_internal_variable_table()
     add_model_internal_variable_name_and_index_pair("TOTAL REACTIVE POWER LOAD IN MVAR", i); i++;
     add_model_internal_variable_name_and_index_pair("INITIAL ACTIVE POWER LOAD IN MW", i); i++;
     add_model_internal_variable_name_and_index_pair("INITIAL REACTIVE POWER LOAD IN MVAR", i); i++;
+    add_model_internal_variable_name_and_index_pair("BUS ANGLE FROM SENSOR IN RAD", i); i++;
+    add_model_internal_variable_name_and_index_pair("BUS ANGLE FROM SENSOR IN DEG", i); i++;
+    add_model_internal_variable_name_and_index_pair("BUS VOLTAGE FROM SENSOR IN PU", i); i++;
 }
 
 double IEEL::get_model_internal_variable_with_name(string var_name)
@@ -729,6 +916,12 @@ double IEEL::get_model_internal_variable_with_name(string var_name)
         return get_initial_load_power_in_MVA().real();
     if(var_name == "INITIAL REACTIVE POWER LOAD IN MVAR")
         return get_initial_load_power_in_MVA().imag();
+    if(var_name == "BUS ANGLE FROM SENSOR IN RAD")
+        return angle_sensor.get_pll_angle_in_rad();
+    if(var_name == "BUS ANGLE FROM SENSOR IN DEG")
+        return angle_sensor.get_pll_angle_in_deg();
+    if(var_name == "BUS VOLTAGE FROM SENSOR IN PU")
+        return voltage_sensor.get_output();
 
     return 0.0;
 }
@@ -795,4 +988,14 @@ void IEEL::build_linearized_matrix_ABCD()
     matrix.push_back(&C);
     matrix.push_back(&D);
     build_linearized_matrix_ABCD_with_basic_ABCD(matrix);
+}
+
+double IEEL::get_bus_positive_sequence_voltage_in_pu_from_sensor()
+{
+    return voltage_sensor.get_output();
+}
+
+double IEEL::get_bus_positive_sequence_angle_in_rad_from_sensor()
+{
+    return angle_sensor.get_pll_angle_in_rad();
 }

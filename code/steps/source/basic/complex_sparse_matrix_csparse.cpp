@@ -421,8 +421,8 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance
             if(LU_workspace != NULL)
             {
                 clock_t lu_finished = clock();
-                snprintf(buffer, 256, "Successful LU factorization of complex matrix takes %f ms\n",(1000.0/double(CLOCKS_PER_SEC))*double(lu_finished-lu_start));
-                show_information_with_leading_time_stamp_with_default_toolkit(buffer);
+                //snprintf(buffer, 256, "Successful LU factorization of complex matrix takes %f ms\n",(1000.0/double(CLOCKS_PER_SEC))*double(lu_finished-lu_start));
+                //show_information_with_leading_time_stamp_with_default_toolkit(buffer);
             }
             else
             {

@@ -212,6 +212,8 @@ class DYNAMICS_SIMULATOR
         void update_with_specific_mode(DYNAMIC_MODE mode);
         void check_relay_events();
         double get_system_max_angle_difference_in_deg();
+        void enable_bus_voltage_and_angle_sensor_of_dynamic_models();
+        void disable_bus_voltage_and_angle_sensor_of_dynamic_models();
 
         void open_meter_output_files();
         void close_meter_output_files();

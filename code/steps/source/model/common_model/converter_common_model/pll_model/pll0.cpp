@@ -36,8 +36,8 @@ void PLL0::clear()
     angle_in_rad_block.set_T_in_s(INFINITE_THRESHOLD);
     set_Kp(0.0);
     set_Ki(0.0);
-    set_Pllmax(0.0);
-    set_Pllmin(0.0);
+    set_Pllmax(INFINITE_THRESHOLD);
+    set_Pllmin(-INFINITE_THRESHOLD);
     ideal_pll_flag = true;
 }
 

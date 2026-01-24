@@ -2,6 +2,8 @@
 #define IEEL_H
 
 #include "header/model/load_model/load_model.h"
+#include "header/block/first_order_block.h"
+#include "header/model/common_model/converter_common_model/pll_model/pll0.h"
 #include <complex>
 
 class IEEL : public LOAD_MODEL
@@ -88,11 +90,20 @@ class IEEL : public LOAD_MODEL
 
         void swap_parameters();
 
+        complex<double> get_load_power_in_MVA_as_PIZ_load();
+        complex<double> get_load_power_in_MVA_as_non_PIZ_load();
+
+        double get_bus_positive_sequence_voltage_in_pu_from_sensor();
+        double get_bus_positive_sequence_angle_in_rad_from_sensor();
+
         double P0, Q0;
         double P_alpha_1, P_alpha_2, P_alpha_3, Q_alpha_1, Q_alpha_2, Q_alpha_3;
         double P_n_power_1, P_n_power_2, P_n_power_3, Q_n_power_1, Q_n_power_2, Q_n_power_3;
         double P_Kf, Q_Kf;
 
         bool is_PIZ;
+
+        FIRST_ORDER_BLOCK voltage_sensor;
+        PLL0 angle_sensor;
 };
 #endif // IEEL_H

@@ -1207,25 +1207,87 @@ double DYNAMICS_SIMULATOR::get_system_max_angle_difference_in_deg()
     return max_angle-min_angle;
 }
 
+void DYNAMICS_SIMULATOR::enable_bus_voltage_and_angle_sensor_of_dynamic_models()
+{
+    unsigned int nload = loads.size();
+    for(unsigned int i=0; i<nload; ++i)
+    {
+        LOAD& load = *(loads[i]);
+        if(load.get_status()==true)
+        {
+            LOAD_MODEL* model_ptr = load.get_load_model();
+            if(model_ptr != NULL)
+            {
+                LOAD_MODEL& model = *model_ptr;
+                model.enable_bus_voltage_sensor();
+                model.enable_bus_angle_sensor();
+            }
+        }
+    }
+    /*
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    osstream<<"All loads voltage and angle measurement via sensors are enabled at time: "<<TIME<<" s."<<endl;
+    toolkit.show_information_with_leading_time_stamp(osstream);
+    */
+}
+
+void DYNAMICS_SIMULATOR::disable_bus_voltage_and_angle_sensor_of_dynamic_models()
+{
+    unsigned int nload = loads.size();
+    for(unsigned int i=0; i<nload; ++i)
+    {
+        LOAD& load = *(loads[i]);
+        if(load.get_status()==true)
+        {
+            LOAD_MODEL* model_ptr = load.get_load_model();
+            if(model_ptr != NULL)
+            {
+                LOAD_MODEL& model = *model_ptr;
+                model.disable_bus_voltage_sensor();
+                model.disable_bus_angle_sensor();
+            }
+        }
+    }
+    /*
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
+    osstream<<"All loads voltage and angle measurement via sensors are disabled at time: "<<TIME<<" s."<<endl;
+    toolkit.show_information_with_leading_time_stamp(osstream);
+    */
+}
+
 void DYNAMICS_SIMULATOR::run_to(double time)
 {
     STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+
     NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
 
     network_matrix.build_dynamic_network_Y_matrix();
+
+    disable_bus_voltage_and_angle_sensor_of_dynamic_models();
     build_jacobian();
 
     build_vsc_hvdc_dynamic_dc_network_matrix();
 
     update_with_event(FAULT_OR_OPERATION_EVENT);
 
-    unsigned int jacobian_update_count = 0;
+    unsigned int step_count = 0;
 
     while(TIME<=time-DOUBLE_EPSILON)
     {
-        if(jacobian_update_count<3)
+        if(step_count<3)
             build_jacobian();
-        jacobian_update_count++;
+
+        if(step_count==3)
+        {
+            enable_bus_voltage_and_angle_sensor_of_dynamic_models();
+            build_jacobian();
+        }
+
+        step_count++;
+
         bool change_time_step_for_precise_time = false;
         double old_DELT = DELT;
         if(TIME+DELT>time and fabs(time-TIME)>FLOAT_EPSILON)
@@ -1304,12 +1366,12 @@ void DYNAMICS_SIMULATOR::run_a_step()
             if(ITER_DAE==1 and smax_th_MVA_original<=0.01)
             {
                 set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original*100.0);
-                set_iteration_accelerator(alpha_original*0.75);
+                //set_iteration_accelerator(alpha_original*0.75);
             }
             if(ITER_DAE==2 and smax_th_MVA_original<=0.01)
             {
                 set_allowed_max_power_imbalance_in_MVA(smax_th_MVA_original*10.0);
-                set_iteration_accelerator(alpha_original*0.875);
+                //set_iteration_accelerator(alpha_original*0.875);
             }
 
             bool network_converged = solve_network();
@@ -1468,14 +1530,14 @@ void DYNAMICS_SIMULATOR::update_with_specific_mode(DYNAMIC_MODE mode)
         while(iter<max_update_iter)
         {
             double alpha_original = get_iteration_accelerator();
-            if(iter==1)
+            /*if(iter==1)
             {
                 set_iteration_accelerator(alpha_original*0.75);
             }
             if(iter==2)
             {
                 set_iteration_accelerator(alpha_original*0.875);
-            }
+            }*/
             network_converged = solve_network();
             set_iteration_accelerator(alpha_original);
             ITER_NET += network_iteration_count;
@@ -3120,7 +3182,7 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
         internal_bus_complex_voltage_in_pu[in_bus] = V;
 
 		double vmag_new = steps_fast_complex_abs(V);
-        //vmag_new = (vmag_new<3.0)?vmag_new:3.0;
+        vmag_new = (vmag_new<3.0)?vmag_new:3.0;
         bus.set_positive_sequence_voltage_in_pu(vmag_new);
 
 		double x = V.real(), y = V.imag();
@@ -3128,7 +3190,7 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
 		complex<double> z(x*x0 + y*y0, x0*y - y0*x);
         double delta_vang = steps_fast_complex_arg(z);
         double vang0 = bus.get_positive_sequence_angle_in_rad();
-        double vang_new = vang0+delta_vang*0.5;
+        double vang_new = vang0+delta_vang;
 
         bus.set_positive_sequence_angle_in_rad(vang_new, V/vmag_new);
     }
@@ -3211,9 +3273,11 @@ void DYNAMICS_SIMULATOR::build_jacobian()
     update_jacobian_with_load_models();
 
     clock_t tfinished = clock();
+    /*
     ostringstream osstream;
     osstream<<"Successful Jacobian build for dynamic simulation takes "<<(1000.0/double(CLOCKS_PER_SEC))*double(tfinished-tstart)<<" ms\n";
     toolkit.show_information_with_leading_time_stamp(osstream);
+    */
 }
 
 void DYNAMICS_SIMULATOR::build_basic_jacobian_with_Y_matrix()
@@ -3270,13 +3334,15 @@ void DYNAMICS_SIMULATOR::update_jacobian_with_load_models()
             complex<double> s0 = jacobian.get_entry_value(k);
 
             complex<double> s = load.get_derivative_of_load_current_wrt_voltage_on_SBASE();
-            jacobian.change_entry_value(k, s0-s);
+            jacobian.change_entry_value(k, s0+s);
         }
     }
     clock_t tfinished = clock();
+    /*
     ostringstream osstream;
     osstream<<"Successful Jacobian update with load model for dynamic simulation takes "<<(1000.0/double(CLOCKS_PER_SEC))*double(tfinished-tstart)<<" ms\n";
     toolkit.show_information_with_leading_time_stamp(osstream);
+    */
 }
 
 void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_in_s(double delt)

@@ -18,6 +18,16 @@ class LOAD_MODEL : public MODEL
         void set_voltage_source_flag(bool flag);
         bool get_voltage_source_flag() const;
         inline bool is_voltage_source() const{return voltage_source_flag;}
+        inline void enable_bus_voltage_sensor(){bus_voltage_sensor_enabled_flag = true; set_bus_voltage_sensor_initialized_flag(false);}
+        inline void enable_bus_angle_sensor(){bus_angle_sensor_enabled_flag = true; set_bus_angle_sensor_initialized_flag(false);}
+        inline void disable_bus_voltage_sensor(){bus_voltage_sensor_enabled_flag = false;}
+        inline void disable_bus_angle_sensor(){bus_angle_sensor_enabled_flag = false;}
+        inline void set_bus_voltage_sensor_initialized_flag(bool flag) {bus_voltage_sensor_initialized_flag = flag;}
+        inline void set_bus_angle_sensor_initialized_flag(bool flag) {bus_angle_sensor_initialized_flag = flag;}
+        inline bool is_bus_voltage_sensor_enabled() const {return bus_voltage_sensor_enabled_flag;}
+        inline bool is_bus_angle_sensor_enabled() const {return bus_angle_sensor_enabled_flag;}
+        inline bool is_bus_voltage_sensor_initialized() const {return bus_voltage_sensor_initialized_flag;}
+        inline bool is_bus_angle_sensor_initialized() const {return bus_angle_sensor_initialized_flag;}
 
         // common load model
         virtual string get_model_type() const;
@@ -26,6 +36,7 @@ class LOAD_MODEL : public MODEL
         inline double get_bus_positive_sequence_voltage_in_pu() const{return voltage_in_pu;}
         double get_bus_positive_sequence_voltage_in_kV() const;
         inline complex<double> get_bus_positive_sequence_complex_voltage_in_pu() const{return complex_voltage_in_pu;}
+        inline double get_bus_positive_sequence_angle_in_rad() const{return angle_in_rad;}
         inline double get_bus_frequency_deviation_in_pu() const{return frequency_deviation_in_pu;}
         double get_bus_base_frequency_in_Hz() const;
         // common scale
@@ -85,7 +96,9 @@ class LOAD_MODEL : public MODEL
     private:
         SUBSYSTEM_TYPE subsystem_type;
         bool voltage_source_flag;
-        double voltage_in_pu, frequency_deviation_in_pu;
+        bool bus_voltage_sensor_enabled_flag, bus_voltage_sensor_initialized_flag;
+        bool bus_angle_sensor_enabled_flag,   bus_angle_sensor_initialized_flag;
+        double voltage_in_pu, angle_in_rad, frequency_deviation_in_pu;
         complex<double> complex_voltage_in_pu;
 
         STEPS_SPARSE_MATRIX *Aptr, *Bptr, *Cptr, *Dptr;

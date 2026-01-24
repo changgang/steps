@@ -7,6 +7,8 @@
 LOAD_MODEL::LOAD_MODEL(STEPS& toolkit) : MODEL(toolkit)
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(STEPS_LOAD);
+    disable_bus_voltage_sensor();
+    disable_bus_angle_sensor();
     Aptr = NULL;
     Bptr = NULL;
     Cptr = NULL;
@@ -62,6 +64,7 @@ void LOAD_MODEL::synchronize_bus_voltage_and_frequency()
     BUS* bus = get_bus_pointer();
     voltage_in_pu = bus->get_positive_sequence_voltage_in_pu();
     complex_voltage_in_pu = bus->get_positive_sequence_complex_voltage_in_pu();
+    angle_in_rad = bus->get_positive_sequence_angle_in_rad();
     frequency_deviation_in_pu = bus->get_frequency_deviation_in_pu();
 }
 
