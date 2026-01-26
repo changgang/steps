@@ -1937,8 +1937,8 @@ bool DYNAMICS_SIMULATOR::solve_network()
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     break;
                 }
-                if(network_iter_count>5)
-                    alpha = original_alpha*steps_pow(0.95, network_iter_count-5);
+                //if(network_iter_count>0)
+                alpha = original_alpha*steps_pow(0.9, network_iter_count);
 
                 update_bus_voltage();
                 if(get_non_divergent_solution_logic()==true)
