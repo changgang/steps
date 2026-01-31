@@ -144,7 +144,7 @@ double vsc_hvdc_meter_interface::get_dc_line_current_in_kA(const METER_PARAMETER
 {
     VSC_HVDC* vsc_hvdc = (VSC_HVDC*) para.device_pointer;
     unsigned int dc_bus = para.metered_side_bus;
-    DC_DEVICE_ID dc_did = para.sub_dc_did;
+    DC_DEVICE_ID dc_did = *(para.sub_dc_did);
 
     if(vsc_hvdc != NULL)
     {
@@ -160,7 +160,7 @@ double vsc_hvdc_meter_interface::get_dc_line_power_in_MW(const METER_PARAMETER& 
 {
     VSC_HVDC* vsc_hvdc = (VSC_HVDC*) para.device_pointer;
     unsigned int dc_bus = para.metered_side_bus;
-    DC_DEVICE_ID dc_did = para.sub_dc_did;
+    DC_DEVICE_ID dc_did = *(para.sub_dc_did);
 
     if(vsc_hvdc != NULL)
     {

@@ -137,6 +137,9 @@ class POWER_SYSTEM_DATABASE
         void copy_transformer(DEVICE_ID& new_did, DEVICE_ID& old_did);
         void copy_lcc_hvdc2t(unsigned int new_rec_bus_number, unsigned int new_inv_bus_number, char* new_hvdcname, DEVICE_ID& old_did);
 
+        void merge_loads_at_same_buses();
+        void merge_loads_at_bus(unsigned int bus_number);
+
         unsigned int get_bus_with_greatest_vbase(unsigned int ibus, unsigned int jbus, unsigned int kbus) const;
         unsigned int get_bus_with_medium_vbase(unsigned int ibus, unsigned int jbus, unsigned int kbus) const;
         unsigned int get_bus_with_lowest_vbase(unsigned int ibus, unsigned int jbus, unsigned int kbus) const;

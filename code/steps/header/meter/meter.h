@@ -31,6 +31,7 @@ class METER
         DEVICE_ID get_device_id() const;
         STEPS_DEVICE_TYPE get_device_type() const;
         DC_DEVICE_ID get_sub_dc_device_id() const;
+        const DC_DEVICE_ID* get_sub_dc_device_id_pointer() const;
         string get_meter_type() const;
         unsigned int get_metered_side_bus() const;
         string get_internal_variable_name() const;

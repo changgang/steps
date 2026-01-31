@@ -481,6 +481,11 @@ DC_DEVICE_ID METER::get_sub_dc_device_id() const
     return sub_dc_did;
 }
 
+const DC_DEVICE_ID* METER::get_sub_dc_device_id_pointer() const
+{
+    return &sub_dc_did;
+}
+
 STEPS_DEVICE_TYPE METER::get_device_type() const
 {
     return device_type;
@@ -681,7 +686,7 @@ double METER::get_meter_value() const
     para.sub_device_name = get_sub_device_name();
     para.metered_side_bus = get_metered_side_bus();
     para.internal_var_name = get_internal_variable_name();
-    para.sub_dc_did = get_sub_dc_device_id();
+    para.sub_dc_did = get_sub_dc_device_id_pointer();
     return meter_function(para);
 }
 

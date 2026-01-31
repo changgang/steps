@@ -2050,6 +2050,39 @@ void POWER_SYSTEM_DATABASE::copy_lcc_hvdc2t(unsigned int new_rec_bus_number, uns
     }
 }
 
+
+void POWER_SYSTEM_DATABASE::merge_loads_at_same_buses()
+{
+    vector<unsigned int> buses = get_all_buses_number();
+    unsigned int n = buses.size();
+    for(unsigned int i=0; i<n; ++i)
+        merge_loads_at_bus(buses[i]);
+}
+
+void POWER_SYSTEM_DATABASE::merge_loads_at_bus(unsigned int bus_number)
+{
+    vector<DEVICE_ID> loads = get_loads_device_id_connecting_to_bus(bus_number);
+    unsigned int n = loads.size();
+    if(n>1)
+    {
+        LOAD& load0 = *(get_pointer_to_load(loads[0]));
+        complex<double> SP0 = load0.get_nominal_constant_power_load_in_MVA();
+        complex<double> SI0 = load0.get_nominal_constant_current_load_in_MVA();
+        complex<double> SZ0 = load0.get_nominal_constant_impedance_load_in_MVA();
+        for(unsigned int i=1; i<n; ++i)
+        {
+            LOAD& load = *(get_pointer_to_load(loads[i]));
+            SP0 += load.get_nominal_constant_power_load_in_MVA();
+            SI0 += load.get_nominal_constant_current_load_in_MVA();
+            SZ0 += load.get_nominal_constant_impedance_load_in_MVA();
+            clear_load(loads[i]);
+        }
+        load0.set_nominal_constant_power_load_in_MVA(SP0);
+        load0.set_nominal_constant_current_load_in_MVA(SI0);
+        load0.set_nominal_constant_impedance_load_in_MVA(SZ0);
+    }
+}
+
 void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new)
 {
     ostringstream osstream;

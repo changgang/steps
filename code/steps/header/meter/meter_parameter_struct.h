@@ -10,7 +10,7 @@ struct METER_PARAMETER
     std::string sub_device_name;
     unsigned int metered_side_bus;
     std::string internal_var_name;
-    DC_DEVICE_ID sub_dc_did;
+    const DC_DEVICE_ID* sub_dc_did;
 };
 
 
