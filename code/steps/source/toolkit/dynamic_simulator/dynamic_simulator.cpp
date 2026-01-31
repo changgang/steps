@@ -2080,8 +2080,9 @@ bool DYNAMICS_SIMULATOR::solve_network_core()
                 max_current_mismatch_pu = new_imax;
                 double max_active_current_mismatch_pu = greatest_mismatch_struct.greatest_active_current_mismatch_in_pu;
                 double max_reactive_current_mismatch_pu = greatest_mismatch_struct.greatest_reactive_current_mismatch_in_pu;
-                if(not(max_current_mismatch_pu<imax_th_pu or
-                   (max_active_current_mismatch_pu<imax_th_pu and max_reactive_current_mismatch_pu<imax_th_pu*10)))
+                //if(not(max_current_mismatch_pu<imax_th_pu or
+                //   (max_active_current_mismatch_pu<imax_th_pu and max_reactive_current_mismatch_pu<imax_th_pu*10)))
+                if(max_current_mismatch_pu>imax_th_pu)
                 #endif // USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
                     continue;
                 else
