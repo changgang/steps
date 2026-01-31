@@ -224,9 +224,36 @@ target_include_directories(STEPS_gprof_dy_nccc10k PRIVATE ${STEPSCODE_SOURCE_DIR
 target_link_libraries(STEPS_gprof_dy_nccc10k CSparse CXSparse CppTest)
 
 
-
 # to build STEPS as executable, you should include source with main() function
-# for example, the following code shows how to add main_gprof_dy_nccc10k.cpp for compilation
+# for example, the following code shows how to add main_gprof_dy_nccc10k_moreRES.cpp for compilation
+file(GLOB_RECURSE STEPS_MAIN_DY_NCCC10K_MORERES_SOURCE "${STEPS_SOURCE_DIR}/main_gprof_dy_nccc10k_moreRES.cpp")
+list(REMOVE_ITEM STEPS_SOURCES ${STEPS_MAIN_DY_NCCC10K_SOURCE})
+list(APPEND STEPS_SOURCES ${STEPS_MAIN_DY_NCCC10K_MORERES_SOURCE})
+# add target: executable
+add_executable(STEPS_gprof_dy_nccc10k_moreRES ${STEPS_SOURCES})
+# add headers
+target_include_directories(STEPS_gprof_dy_nccc10k_moreRES PRIVATE ${STEPS_SOURCE_DIR})
+target_include_directories(STEPS_gprof_dy_nccc10k_moreRES PRIVATE ${CSPARSE_SOURCE_DIR}/Include)
+target_include_directories(STEPS_gprof_dy_nccc10k_moreRES PRIVATE ${CXSPARSE_SOURCE_DIR}/Include)
+target_include_directories(STEPS_gprof_dy_nccc10k_moreRES PRIVATE ${SUITESPARSE_SOURCE_DIR}/SuiteSparse_config)
+target_include_directories(STEPS_gprof_dy_nccc10k_moreRES PRIVATE ${CPPTEST_SOURCE_DIR})
+set(KLU_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/KLU)
+target_include_directories(STEPS_gprof_dy_nccc10k_moreRES PRIVATE ${KLU_SOURCE_DIR}/Include)
+set(UMFPACK_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/UMFPACK)
+target_include_directories(STEPS_gprof_dy_nccc10k_moreRES PRIVATE ${UMFPACK_SOURCE_DIR}/Include)
+set(AMD_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/AMD)
+target_include_directories(STEPS_gprof_dy_nccc10k_moreRES PRIVATE ${AMD_SOURCE_DIR}/Include)
+set(COLAMD_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/COLAMD)
+target_include_directories(STEPS_gprof_dy_nccc10k_moreRES PRIVATE ${COLAMD_SOURCE_DIR}/Include)
+set(BTF_SOURCE_DIR ${SUITESPARSE_SOURCE_DIR}/BTF)
+target_include_directories(STEPS_gprof_dy_nccc10k_moreRES PRIVATE ${BTF_SOURCE_DIR}/Include)
+set(STEPSCODE_SOURCE_DIR "./code")
+target_include_directories(STEPS_gprof_dy_nccc10k_moreRES PRIVATE ${STEPSCODE_SOURCE_DIR})
+# static libraries CSparse, CXSparse, and CppTest must be included.
+target_link_libraries(STEPS_gprof_dy_nccc10k_moreRES CSparse CXSparse CppTest)
+
+
+# test new meters
 file(GLOB_RECURSE STEPS_MAIN_NEW_METER_TEST_SOURCE "${STEPS_SOURCE_DIR}/main_new_meter_test.cpp")
 list(REMOVE_ITEM STEPS_SOURCES ${STEPS_MAIN_DY_NCCC10K_SOURCE})
 list(APPEND STEPS_SOURCES ${STEPS_MAIN_NEW_METER_TEST_SOURCE})
