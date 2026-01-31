@@ -1984,7 +1984,8 @@ bool DYNAMICS_SIMULATOR::solve_network()
                 max_mismatch_bus = greatest_mismatch_struct.bus_with_greatest_power_mismatch;
                 if(new_smax>max_power_mismatch_MVA)
                 #else
-                double new_imax = get_max_current_mismatch_struct().greatest_current_mismatch_in_pu;
+                greatest_mismatch_struct = get_max_current_mismatch_struct();
+                double new_imax = greatest_mismatch_struct.greatest_current_mismatch_in_pu;
                 max_mismatch_bus = greatest_mismatch_struct.bus_with_greatest_current_mismatch;
 
                 if(new_imax>max_current_mismatch_pu)
@@ -2016,7 +2017,10 @@ bool DYNAMICS_SIMULATOR::solve_network()
                     }
                 }
                 max_current_mismatch_pu = new_imax;
-                if(max_current_mismatch_pu>imax_th_pu)
+                double max_active_current_mismatch_pu = greatest_mismatch_struct.greatest_active_current_mismatch_in_pu;
+                double max_reactive_current_mismatch_pu = greatest_mismatch_struct.greatest_reactive_current_mismatch_in_pu;
+                if(not(max_current_mismatch_pu<imax_th_pu or
+                   (max_active_current_mismatch_pu<imax_th_pu and max_reactive_current_mismatch_pu<imax_th_pu*10)))
                 #endif // USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
                     continue;
                 else
@@ -3126,6 +3130,12 @@ GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_current_misma
     GREATEST_POWER_CURRENT_MISMATCH_STRUCT i_mismatch;
     i_mismatch.greatest_current_mismatch_in_pu = Imax;
     i_mismatch.bus_with_greatest_current_mismatch = Imax_bus;
+
+    complex<double> max_delta_I = I_mismatch[Imax_internal_bus];
+    complex<double> V = internal_bus_complex_voltage_in_pu[Imax_internal_bus];
+    complex<double> max_delta_Ipq = V*conj(max_delta_I)/abs(V);
+    i_mismatch.greatest_active_current_mismatch_in_pu = abs(max_delta_Ipq.real());
+    i_mismatch.greatest_reactive_current_mismatch_in_pu = abs(max_delta_Ipq.imag());
 
     if(not toolkit.is_detailed_log_enabled())
         return i_mismatch;

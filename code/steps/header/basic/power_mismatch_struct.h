@@ -7,6 +7,8 @@ struct GREATEST_POWER_CURRENT_MISMATCH_STRUCT
     unsigned int bus_with_greatest_power_mismatch;
     double greatest_current_mismatch_in_pu;
     unsigned int bus_with_greatest_current_mismatch;
+    double greatest_active_current_mismatch_in_pu;
+    double greatest_reactive_current_mismatch_in_pu;
 };
 
 #endif // GREATEST_POWER_CURRENT_MISMATCH_STRUCT_H
