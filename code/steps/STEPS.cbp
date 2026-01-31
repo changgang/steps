@@ -547,6 +547,10 @@
 			<Option link="0" />
 		</Unit>
 		<Unit filename="main_gprof_dy_nccc10k.cpp" />
+		<Unit filename="main_gprof_dy_nccc10k_moreRES.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="main_gprof_dy_sd133.cpp">
 			<Option link="0" />
 		</Unit>
@@ -1107,9 +1111,6 @@
 				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
 			</AutoVersioning>
 			<lib_finder disable_auto="1" />
-			<code_completion />
-			<envvars />
-			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
