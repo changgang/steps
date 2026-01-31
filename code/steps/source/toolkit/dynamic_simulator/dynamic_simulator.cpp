@@ -1467,6 +1467,7 @@ void DYNAMICS_SIMULATOR::update_with_event(DYNAMIC_EVENT_TYPE event_type)
             break;
     }
     update_bus_frequency_blocks_when_applying_event(event_type);
+    check_relay_events();
 
     auto tduration = duration_cast<microseconds>(system_clock::now()-clock_start);
     time_elapse_in_a_step = tduration.count()*0.001;
@@ -3336,18 +3337,26 @@ void DYNAMICS_SIMULATOR::try_to_limit_delta_v_within_change_threshold()
 
 void DYNAMICS_SIMULATOR::build_jacobian()
 {
-    STEPS& toolkit = get_toolkit();
-    clock_t tstart = clock();
+    //clock_t tstart = clock();
     build_basic_jacobian_with_Y_matrix();
 
     update_jacobian_with_load_models();
 
-    clock_t tfinished = clock();
     /*
+    clock_t tfinished = clock();
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     osstream<<"Successful Jacobian build for dynamic simulation takes "<<(1000.0/double(CLOCKS_PER_SEC))*double(tfinished-tstart)<<" ms\n";
     toolkit.show_information_with_leading_time_stamp(osstream);
     */
+}
+
+bool DYNAMICS_SIMULATOR::jacobian_should_be_updated()
+{
+    NETWORK_MATRIX& network = get_network_matrix();
+    STEPS_COMPLEX_SPARSE_MATRIX& Y = network.get_dynamic_network_Y_matrix();
+
+    return jacobian.get_clock_when_matrix_is_changed() < Y.get_clock_when_matrix_is_changed();
 }
 
 void DYNAMICS_SIMULATOR::build_basic_jacobian_with_Y_matrix()
@@ -3388,8 +3397,7 @@ void DYNAMICS_SIMULATOR::build_basic_jacobian_with_Y_matrix()
 
 void DYNAMICS_SIMULATOR::update_jacobian_with_load_models()
 {
-    STEPS& toolkit = get_toolkit();
-    clock_t tstart = clock();
+    //clock_t tstart = clock();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
     unsigned int nload = loads.size();
     for(unsigned int i=0; i<nload; ++i)
@@ -3407,8 +3415,9 @@ void DYNAMICS_SIMULATOR::update_jacobian_with_load_models()
             jacobian.change_entry_value(k, s0+s);
         }
     }
-    clock_t tfinished = clock();
     /*
+    clock_t tfinished = clock();
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     osstream<<"Successful Jacobian update with load model for dynamic simulation takes "<<(1000.0/double(CLOCKS_PER_SEC))*double(tfinished-tstart)<<" ms\n";
     toolkit.show_information_with_leading_time_stamp(osstream);

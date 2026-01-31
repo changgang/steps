@@ -257,6 +257,8 @@ class DYNAMICS_SIMULATOR
         void build_basic_jacobian_with_Y_matrix();
         void update_jacobian_with_load_models();
 
+        bool jacobian_should_be_updated();
+
         void check_convergence() const;
 
         double get_max_active_power_imbalance_in_MW() const;
