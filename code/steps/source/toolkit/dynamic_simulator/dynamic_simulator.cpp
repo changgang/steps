@@ -1873,6 +1873,60 @@ bool DYNAMICS_SIMULATOR::get_system_angular_stable_flag() const
 
 bool DYNAMICS_SIMULATOR::solve_network()
 {
+    bool converged = false;
+    unsigned int total_network_iteration_count = 0;
+
+    converged = solve_network_core();
+    total_network_iteration_count = network_iteration_count;
+
+    if(not converged)
+    {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
+
+        vector<LCC_HVDC2T*> hvdcs_in_power_mode;
+        unsigned int n = hvdcs.size();
+        for(unsigned int i=0; i<n; ++i)
+        {
+            LCC_HVDC2T& hvdc = *(hvdcs[i]);
+            if(not hvdc.is_blocked() and hvdc.get_converter_operation_mode(RECTIFIER)==RECTIFIER_CONSTANT_POWER)
+            {
+                hvdcs_in_power_mode.push_back(hvdcs[i]);
+                hvdc.turn_rectifier_constant_power_mode_into_constant_current_mode();
+            }
+        }
+
+        converged = solve_network_core();
+        total_network_iteration_count += network_iteration_count;
+
+        n = hvdcs_in_power_mode.size();
+        for(unsigned int i=0; i<n; ++i)
+        {
+            LCC_HVDC2T& hvdc = *(hvdcs_in_power_mode[i]);
+            hvdc.turn_rectifier_constant_current_mode_into_constant_power_mode();
+        }
+
+        if(n>0 and not converged)
+        {
+            osstream<<"Warning. Stage 1 network solution failed to converge for DAE solution "<<ITER_DAE<<" at time "<<TIME<<" s.\n"
+                    <<"The following "<<n<<" LCC_HVDC2T links are turned from constant POWER mode to constant CURRENT mode for further solution:\n";
+            for(unsigned int i=0; i<n; ++i)
+            {
+                LCC_HVDC2T& hvdc = *(hvdcs_in_power_mode[i]);
+                osstream<<"("<<i+1<<") "<<hvdc.get_compound_device_name()<<"\n";
+            }
+            osstream<<"Stage 2 network solution failed to converge again\n"
+                    <<"The above LCC_HVDC2T links are recovered to constant POWER mode.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+
+    network_iteration_count = total_network_iteration_count;
+    return converged;
+}
+
+bool DYNAMICS_SIMULATOR::solve_network_core()
+{
     STEPS& toolkit = get_toolkit();
     auto clock_start = steady_clock::now();
 

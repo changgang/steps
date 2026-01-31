@@ -633,10 +633,12 @@ void LCC_HVDC2T::turn_rectifier_constant_power_mode_into_constant_current_mode()
         double V = get_nominal_dc_voltage_in_kV();
         set_nominal_dc_current_in_kA(P/V);
         set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_CURRENT);
+        /*
         ostringstream osstream;
         osstream<<get_compound_device_name()<<" operation mode is turned from constant power mode into constant current mode.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
+        */
     }
 }
 
@@ -648,10 +650,12 @@ void LCC_HVDC2T::turn_rectifier_constant_current_mode_into_constant_power_mode()
         double V = get_nominal_dc_voltage_in_kV();
         set_nominal_dc_power_in_MW(V*I);
         set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
+        /*
         ostringstream osstream;
         osstream<<get_compound_device_name()<<" operation mode is turned from constant current mode into constant power mode.";
         STEPS& toolkit = get_toolkit();
         toolkit.show_information_with_leading_time_stamp(osstream);
+        */
     }
 }
 

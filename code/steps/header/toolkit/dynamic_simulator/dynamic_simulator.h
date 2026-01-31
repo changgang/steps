@@ -221,6 +221,7 @@ class DYNAMICS_SIMULATOR
         void save_meter_values();
 
         bool solve_network();
+        bool solve_network_core();
         void initialize_internal_bus_voltage_vector();
 
         void build_vsc_hvdc_dynamic_dc_network_matrix();
