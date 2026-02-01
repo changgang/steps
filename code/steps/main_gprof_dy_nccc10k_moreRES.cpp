@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
     if(argc>0) nthread = str2int(argv[0]);
     default_toolkit.set_thread_number(nthread);
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     default_toolkit.set_dynamic_model_database_size_in_bytes(1000000000);

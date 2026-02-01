@@ -29,7 +29,7 @@ int main()
 
     solver.solve_with_fast_decoupled_solution();
 
-    DYNAMICS_SIMULATOR simulator(default_toolkit);
+    DYNAMIC_SIMULATOR simulator(default_toolkit);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 
     simulator.set_allowed_max_power_imbalance_in_MVA(0.001);

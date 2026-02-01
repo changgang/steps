@@ -382,7 +382,7 @@ bool CONTINGENCY_SCREENER::perform_simulation_with_clearing_time(double clearing
     solver.set_flat_start_logic(false);
     solver.solve_with_full_Newton_Raphson_solution();
 
-    DYNAMICS_SIMULATOR simulator(default_toolkit);
+    DYNAMIC_SIMULATOR simulator(default_toolkit);
     simulator.set_allowed_max_power_imbalance_in_MVA(get_simulator_allowed_max_power_imbalance_in_MVA());
     simulator.set_max_network_iteration(get_simulator_max_iteration());
     simulator.set_iteration_accelerator(get_simulator_iteration_accelerator());
@@ -437,7 +437,7 @@ DEVICE_ID CONTINGENCY_SCREENER::get_monitored_generator(unsigned int i) const
     }
 }
 
-void CONTINGENCY_SCREENER::set_meters(DYNAMICS_SIMULATOR& simulator)
+void CONTINGENCY_SCREENER::set_meters(DYNAMIC_SIMULATOR& simulator)
 {
     METER_BUILDER builder(default_toolkit);
 
@@ -455,7 +455,7 @@ void CONTINGENCY_SCREENER::set_meters(DYNAMICS_SIMULATOR& simulator)
     }
 }
 
-void CONTINGENCY_SCREENER::apply_fault(DYNAMICS_SIMULATOR& simulator)
+void CONTINGENCY_SCREENER::apply_fault(DYNAMIC_SIMULATOR& simulator)
 {
     DEVICE_ID did = get_fault_device();
     unsigned int bus = get_fault_side_bus();
@@ -464,7 +464,7 @@ void CONTINGENCY_SCREENER::apply_fault(DYNAMICS_SIMULATOR& simulator)
     simulator.set_ac_line_fault(did, bus, location, shunt);
 }
 
-void CONTINGENCY_SCREENER::clear_fault(DYNAMICS_SIMULATOR& simulator)
+void CONTINGENCY_SCREENER::clear_fault(DYNAMIC_SIMULATOR& simulator)
 {
     DEVICE_ID did = get_fault_device();
     unsigned int bus = get_fault_side_bus();
@@ -476,7 +476,7 @@ void CONTINGENCY_SCREENER::clear_fault(DYNAMICS_SIMULATOR& simulator)
         simulator.trip_ac_line(did);
 }
 
-bool CONTINGENCY_SCREENER::check_if_system_is_stable(DYNAMICS_SIMULATOR& simulator) const
+bool CONTINGENCY_SCREENER::check_if_system_is_stable(DYNAMIC_SIMULATOR& simulator) const
 {
     vector<double> angles = simulator.get_all_meters_value();
     double angle_max=0.0, angle_min = 0.0;

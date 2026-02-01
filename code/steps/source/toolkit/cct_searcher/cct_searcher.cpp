@@ -390,7 +390,7 @@ bool CCT_SEARCHER::perform_simulation_with_clearing_time(double clearing_time)
     solver.set_flat_start_logic(false);
     solver.solve_with_full_Newton_Raphson_solution();
 
-    DYNAMICS_SIMULATOR simulator(default_toolkit);
+    DYNAMIC_SIMULATOR simulator(default_toolkit);
     simulator.set_allowed_max_power_imbalance_in_MVA(get_simulator_allowed_max_power_imbalance_in_MVA());
     simulator.set_max_DAE_iteration(10);
     simulator.set_max_network_iteration(get_simulator_max_iteration());
@@ -446,7 +446,7 @@ bool CCT_SEARCHER::perform_simulation_with_clearing_time(double clearing_time)
 }
 
 
-void CCT_SEARCHER::prepare_generators_in_islands(DYNAMICS_SIMULATOR& simulator)
+void CCT_SEARCHER::prepare_generators_in_islands(DYNAMIC_SIMULATOR& simulator)
 {
     generators_in_islands.clear();
 
@@ -480,7 +480,7 @@ void CCT_SEARCHER::prepare_generators_in_islands(DYNAMICS_SIMULATOR& simulator)
     }
 }
 
-void CCT_SEARCHER::apply_fault(DYNAMICS_SIMULATOR& simulator)
+void CCT_SEARCHER::apply_fault(DYNAMIC_SIMULATOR& simulator)
 {
     DEVICE_ID did = get_fault_device();
     unsigned int bus = get_fault_side_bus();
@@ -489,7 +489,7 @@ void CCT_SEARCHER::apply_fault(DYNAMICS_SIMULATOR& simulator)
     simulator.set_ac_line_fault(did, bus, location, shunt);
 }
 
-void CCT_SEARCHER::clear_fault(DYNAMICS_SIMULATOR& simulator)
+void CCT_SEARCHER::clear_fault(DYNAMIC_SIMULATOR& simulator)
 {
     DEVICE_ID did = get_fault_device();
     unsigned int bus = get_fault_side_bus();
@@ -501,7 +501,7 @@ void CCT_SEARCHER::clear_fault(DYNAMICS_SIMULATOR& simulator)
         simulator.trip_ac_line(did);
 }
 
-//bool CCT_SEARCHER::check_if_system_is_stable(DYNAMICS_SIMULATOR& simulator) const
+//bool CCT_SEARCHER::check_if_system_is_stable(DYNAMIC_SIMULATOR& simulator) const
 bool CCT_SEARCHER::check_if_system_is_stable() const
 {
     ostringstream osstream;

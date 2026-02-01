@@ -16,7 +16,7 @@
 int main()
 {
     clock_t start = clock();
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     string file = "log.txt";

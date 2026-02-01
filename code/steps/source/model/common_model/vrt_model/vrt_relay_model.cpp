@@ -116,7 +116,7 @@ void VRT_RELAY_MODEL::trip_device()
 {
 
     STEPS& toolkit = get_toolkit();
-    DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& sim = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_device_id();
     STEPS_DEVICE_TYPE type = get_device_type();
     switch(type)

@@ -392,7 +392,7 @@ void WTRLY0::check_wind_speed_relay()
         DEVICE_ID did = get_device_id();
 
         STEPS& toolkit = get_toolkit();
-        DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
+        DYNAMIC_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
         double vwind = get_wind_speed_in_pu();
 
@@ -468,7 +468,7 @@ void WTRLY0::check_rotor_speed_relay()
         DEVICE_ID did = get_device_id();
 
         STEPS& toolkit = get_toolkit();
-        DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
+        DYNAMIC_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
         double speed = get_wt_generator_rotor_speed_in_pu();
 
@@ -544,7 +544,7 @@ void WTRLY0::check_bus_frequency_relay()
         DEVICE_ID did = get_device_id();
 
         STEPS& toolkit = get_toolkit();
-        DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
+        DYNAMIC_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
         double freq = get_bus_frequency_in_pu();
 
@@ -620,7 +620,7 @@ void WTRLY0::check_bus_voltage_relay()
         DEVICE_ID did = get_device_id();
 
         STEPS& toolkit = get_toolkit();
-        DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
+        DYNAMIC_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
         //double volt = get_bus_positive_sequence_voltage_in_pu();
         double volt = get_terminal_voltage_in_pu();

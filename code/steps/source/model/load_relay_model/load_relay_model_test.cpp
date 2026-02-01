@@ -58,7 +58,7 @@ void LOAD_RELAY_MODEL_TEST::tear_down()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.clear();
 
     show_test_end_information();

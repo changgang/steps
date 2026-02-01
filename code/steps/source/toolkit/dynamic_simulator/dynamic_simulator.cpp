@@ -19,7 +19,7 @@ class STEPS;
 
 #define USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
 
-DYNAMICS_SIMULATOR::DYNAMICS_SIMULATOR(STEPS& toolkit)
+DYNAMIC_SIMULATOR::DYNAMIC_SIMULATOR(STEPS& toolkit)
 {
     this->toolkit = (&toolkit);
 
@@ -28,7 +28,7 @@ DYNAMICS_SIMULATOR::DYNAMICS_SIMULATOR(STEPS& toolkit)
     detailed_log_enabled = false;
 }
 
-DYNAMICS_SIMULATOR::~DYNAMICS_SIMULATOR()
+DYNAMIC_SIMULATOR::~DYNAMIC_SIMULATOR()
 {
     stop();
     toolkit = NULL;
@@ -36,12 +36,12 @@ DYNAMICS_SIMULATOR::~DYNAMICS_SIMULATOR()
     clear();
 }
 
-STEPS& DYNAMICS_SIMULATOR::get_toolkit() const
+STEPS& DYNAMIC_SIMULATOR::get_toolkit() const
 {
     return *toolkit;
 }
 
-void DYNAMICS_SIMULATOR::clear()
+void DYNAMIC_SIMULATOR::clear()
 {
     clear_meters();
 
@@ -96,17 +96,17 @@ void DYNAMICS_SIMULATOR::clear()
     disable_hold_lcc_hvdc2t_current2network_flag();
 }
 
-void DYNAMICS_SIMULATOR::set_max_dynamic_simulation_time_step_in_s(double delt)
+void DYNAMIC_SIMULATOR::set_max_dynamic_simulation_time_step_in_s(double delt)
 {
     DELT_MAX = delt;
 }
 
-void DYNAMICS_SIMULATOR::set_min_dynamic_simulation_time_step_in_s(double delt)
+void DYNAMIC_SIMULATOR::set_min_dynamic_simulation_time_step_in_s(double delt)
 {
     DELT_MIN = delt;
 }
 
-void DYNAMICS_SIMULATOR::set_dynamic_simulation_time_step_in_s(double delt)
+void DYNAMIC_SIMULATOR::set_dynamic_simulation_time_step_in_s(double delt)
 {
     STEPS& toolkit = get_toolkit();
     DELT = delt;
@@ -115,49 +115,49 @@ void DYNAMICS_SIMULATOR::set_dynamic_simulation_time_step_in_s(double delt)
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-NETWORK_MATRIX& DYNAMICS_SIMULATOR::get_network_matrix()
+NETWORK_MATRIX& DYNAMIC_SIMULATOR::get_network_matrix()
 {
     STEPS& toolkit = get_toolkit();
     return toolkit.get_network_matrix();
 }
 
-void DYNAMICS_SIMULATOR::set_csv_file_export_enable_flag(bool flag)
+void DYNAMIC_SIMULATOR::set_csv_file_export_enable_flag(bool flag)
 {
     csv_file_export_enabled = flag;
 }
 
-void DYNAMICS_SIMULATOR::set_json_file_export_enable_flag(bool flag)
+void DYNAMIC_SIMULATOR::set_json_file_export_enable_flag(bool flag)
 {
     json_file_export_enabled = flag;
 }
 
-void DYNAMICS_SIMULATOR::set_bin_file_export_enable_flag(bool flag)
+void DYNAMIC_SIMULATOR::set_bin_file_export_enable_flag(bool flag)
 {
     bin_file_export_enabled = flag;
 }
 
-bool DYNAMICS_SIMULATOR::is_csv_file_export_enabled() const
+bool DYNAMIC_SIMULATOR::is_csv_file_export_enabled() const
 {
     return csv_file_export_enabled;
 }
 
-bool DYNAMICS_SIMULATOR::is_json_file_export_enabled() const
+bool DYNAMIC_SIMULATOR::is_json_file_export_enabled() const
 {
     return json_file_export_enabled;
 }
 
-bool DYNAMICS_SIMULATOR::is_bin_file_export_enabled() const
+bool DYNAMIC_SIMULATOR::is_bin_file_export_enabled() const
 {
     return bin_file_export_enabled;
 }
 
-void DYNAMICS_SIMULATOR::set_max_DAE_iteration(unsigned int iteration)
+void DYNAMIC_SIMULATOR::set_max_DAE_iteration(unsigned int iteration)
 {
     if(iteration>0)
         max_DAE_iteration = iteration;
 }
 
-void DYNAMICS_SIMULATOR::set_min_DAE_iteration(unsigned int iteration)
+void DYNAMIC_SIMULATOR::set_min_DAE_iteration(unsigned int iteration)
 {
     if(iteration>0)
     {
@@ -167,31 +167,31 @@ void DYNAMICS_SIMULATOR::set_min_DAE_iteration(unsigned int iteration)
     }
 }
 
-void DYNAMICS_SIMULATOR::set_max_network_iteration(unsigned int iteration)
+void DYNAMIC_SIMULATOR::set_max_network_iteration(unsigned int iteration)
 {
     if(iteration>0)
        max_network_iteration = iteration;
 }
 
-void DYNAMICS_SIMULATOR::set_max_update_iteration(unsigned int iteration)
+void DYNAMIC_SIMULATOR::set_max_update_iteration(unsigned int iteration)
 {
     if(iteration>0)
        max_update_iteration = iteration;
 }
 
-void DYNAMICS_SIMULATOR::set_max_event_update_iteration(unsigned int iteration)
+void DYNAMIC_SIMULATOR::set_max_event_update_iteration(unsigned int iteration)
 {
     if(iteration>0)
         max_event_update_iteration = iteration;
 }
 
-void DYNAMICS_SIMULATOR::set_max_network_solution_divergent_threshold(unsigned int div_th)
+void DYNAMIC_SIMULATOR::set_max_network_solution_divergent_threshold(unsigned int div_th)
 {
     if(div_th>0)
        max_network_solution_divergent_threshold = div_th;
 }
 
-void DYNAMICS_SIMULATOR::set_allowed_max_power_imbalance_in_MVA(double tol)
+void DYNAMIC_SIMULATOR::set_allowed_max_power_imbalance_in_MVA(double tol)
 {
     if(tol>0.0)
     {
@@ -200,23 +200,23 @@ void DYNAMICS_SIMULATOR::set_allowed_max_power_imbalance_in_MVA(double tol)
     }
 }
 
-void DYNAMICS_SIMULATOR::set_voltage_change_threshold_when_solving_network_in_pu(double v)
+void DYNAMIC_SIMULATOR::set_voltage_change_threshold_when_solving_network_in_pu(double v)
 {
     v_change_threshold_pu = v;
 }
 
-void DYNAMICS_SIMULATOR::set_iteration_accelerator(double iter_alpha)
+void DYNAMIC_SIMULATOR::set_iteration_accelerator(double iter_alpha)
 {
     if(iter_alpha>0.0)
        alpha = iter_alpha;
 }
 
-void DYNAMICS_SIMULATOR::set_non_divergent_solution_logic(bool logic)
+void DYNAMIC_SIMULATOR::set_non_divergent_solution_logic(bool logic)
 {
     non_divergent_solution_enabled = logic;
 }
 
-void DYNAMICS_SIMULATOR::set_automatic_iteration_accelerator_tune_logic(bool logic)
+void DYNAMIC_SIMULATOR::set_automatic_iteration_accelerator_tune_logic(bool logic)
 {
     automatic_iteration_accelerator_tune_enabled = logic;
     if(logic==true)
@@ -236,160 +236,160 @@ void DYNAMICS_SIMULATOR::set_automatic_iteration_accelerator_tune_logic(bool log
     }
 }
 
-void DYNAMICS_SIMULATOR::set_rotor_angle_stability_surveillance_flag(bool flag)
+void DYNAMIC_SIMULATOR::set_rotor_angle_stability_surveillance_flag(bool flag)
 {
     flag_rotor_angle_stability_surveillance = flag;
 }
 
-void DYNAMICS_SIMULATOR::set_rotor_angle_stability_threshold_in_deg(double angle_th)
+void DYNAMIC_SIMULATOR::set_rotor_angle_stability_threshold_in_deg(double angle_th)
 {
     if(angle_th<0.0) angle_th = - angle_th;
     rotor_angle_stability_threshold_in_deg = angle_th;
 }
 
-void DYNAMICS_SIMULATOR::set_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s(double delt)
+void DYNAMIC_SIMULATOR::set_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s(double delt)
 {
     time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled = delt;
 }
 
-void DYNAMICS_SIMULATOR::set_k_for_leading_part_of_bus_frequency_model(double k)
+void DYNAMIC_SIMULATOR::set_k_for_leading_part_of_bus_frequency_model(double k)
 {
     k_for_leading_part_of_bus_frequency_model = k;
 }
 
-void DYNAMICS_SIMULATOR::set_change_time_step_adaptively_logic(bool logic)
+void DYNAMIC_SIMULATOR::set_change_time_step_adaptively_logic(bool logic)
 {
     change_time_step_adaptively_flag = logic;
 }
 
-void DYNAMICS_SIMULATOR::set_system_change_detection_time_range_in_s(double t)
+void DYNAMIC_SIMULATOR::set_system_change_detection_time_range_in_s(double t)
 {
     system_change_detection_time_range = t;
 }
 
-void DYNAMICS_SIMULATOR::set_system_change_detection_bus_voltage_threshold_in_pu(double v)
+void DYNAMIC_SIMULATOR::set_system_change_detection_bus_voltage_threshold_in_pu(double v)
 {
     system_change_detection_bus_voltage_threshold = v;
 }
 
-void DYNAMICS_SIMULATOR::set_system_change_detection_rotor_speed_threshold_in_pu(double w)
+void DYNAMIC_SIMULATOR::set_system_change_detection_rotor_speed_threshold_in_pu(double w)
 {
     system_change_detection_rotor_speed_threshold = w;
 }
 
-/*void DYNAMICS_SIMULATOR::set_current_simulation_time_in_s(double time)
+/*void DYNAMIC_SIMULATOR::set_current_simulation_time_in_s(double time)
 {
     TIME = time;
 }
 
-double DYNAMICS_SIMULATOR::get_current_simulation_time_in_s() const
+double DYNAMIC_SIMULATOR::get_current_simulation_time_in_s() const
 {
     return TIME;
 }*/
 
-unsigned int DYNAMICS_SIMULATOR::get_max_DAE_iteration() const
+unsigned int DYNAMIC_SIMULATOR::get_max_DAE_iteration() const
 {
     return max_DAE_iteration;
 }
 
-unsigned int DYNAMICS_SIMULATOR::get_min_DAE_iteration() const
+unsigned int DYNAMIC_SIMULATOR::get_min_DAE_iteration() const
 {
     return min_DAE_iteration;
 }
 
-unsigned int DYNAMICS_SIMULATOR::get_max_network_iteration() const
+unsigned int DYNAMIC_SIMULATOR::get_max_network_iteration() const
 {
     return max_network_iteration;
 }
 
-unsigned int DYNAMICS_SIMULATOR::get_max_update_iteration() const
+unsigned int DYNAMIC_SIMULATOR::get_max_update_iteration() const
 {
     return max_update_iteration;
 }
 
-unsigned int DYNAMICS_SIMULATOR::get_max_event_update_iteration() const
+unsigned int DYNAMIC_SIMULATOR::get_max_event_update_iteration() const
 {
     return max_event_update_iteration;
 }
 
-unsigned int DYNAMICS_SIMULATOR::get_max_network_solution_divergent_threshold() const
+unsigned int DYNAMIC_SIMULATOR::get_max_network_solution_divergent_threshold() const
 {
     return max_network_solution_divergent_threshold;
 }
 
-double DYNAMICS_SIMULATOR::get_allowed_max_power_imbalance_in_MVA() const
+double DYNAMIC_SIMULATOR::get_allowed_max_power_imbalance_in_MVA() const
 {
     return P_threshold_in_MW;
 }
 
-double DYNAMICS_SIMULATOR::get_voltage_change_threshold_when_solving_network_in_pu() const
+double DYNAMIC_SIMULATOR::get_voltage_change_threshold_when_solving_network_in_pu() const
 {
     return v_change_threshold_pu;
 }
 
-double DYNAMICS_SIMULATOR::get_iteration_accelerator() const
+double DYNAMIC_SIMULATOR::get_iteration_accelerator() const
 {
     return alpha;
 }
 
-bool DYNAMICS_SIMULATOR::get_non_divergent_solution_logic() const
+bool DYNAMIC_SIMULATOR::get_non_divergent_solution_logic() const
 {
     return non_divergent_solution_enabled;
 }
 
-bool DYNAMICS_SIMULATOR::get_automatic_iteration_accelerator_tune_logic() const
+bool DYNAMIC_SIMULATOR::get_automatic_iteration_accelerator_tune_logic() const
 {
     return automatic_iteration_accelerator_tune_enabled;
 }
 
-bool DYNAMICS_SIMULATOR::get_rotor_angle_stability_surveillance_flag() const
+bool DYNAMIC_SIMULATOR::get_rotor_angle_stability_surveillance_flag() const
 {
     return flag_rotor_angle_stability_surveillance;
 }
 
-double DYNAMICS_SIMULATOR::get_rotor_angle_stability_threshold_in_deg() const
+double DYNAMIC_SIMULATOR::get_rotor_angle_stability_threshold_in_deg() const
 {
     return rotor_angle_stability_threshold_in_deg;
 }
 
-double DYNAMICS_SIMULATOR::get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s() const
+double DYNAMIC_SIMULATOR::get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s() const
 {
     return time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled;
 }
 
-double DYNAMICS_SIMULATOR::get_k_for_leading_part_of_bus_frequency_model() const
+double DYNAMIC_SIMULATOR::get_k_for_leading_part_of_bus_frequency_model() const
 {
     return k_for_leading_part_of_bus_frequency_model;
 }
 
-bool DYNAMICS_SIMULATOR::get_change_time_step_adaptively_logic() const
+bool DYNAMIC_SIMULATOR::get_change_time_step_adaptively_logic() const
 {
     return change_time_step_adaptively_flag;
 }
 
-double DYNAMICS_SIMULATOR::get_system_change_detection_time_range_in_s() const
+double DYNAMIC_SIMULATOR::get_system_change_detection_time_range_in_s() const
 {
     return system_change_detection_time_range;
 }
 
-double DYNAMICS_SIMULATOR::get_system_change_detection_bus_voltage_threshold_in_pu() const
+double DYNAMIC_SIMULATOR::get_system_change_detection_bus_voltage_threshold_in_pu() const
 {
     return system_change_detection_bus_voltage_threshold;
 }
 
-double DYNAMICS_SIMULATOR::get_system_change_detection_rotor_speed_threshold_in_pu() const
+double DYNAMIC_SIMULATOR::get_system_change_detection_rotor_speed_threshold_in_pu() const
 {
     return system_change_detection_rotor_speed_threshold;
 }
 
-void DYNAMICS_SIMULATOR::add_buses_for_system_change_detection(vector<unsigned int> buses)
+void DYNAMIC_SIMULATOR::add_buses_for_system_change_detection(vector<unsigned int> buses)
 {
     unsigned int n = buses.size();
     for(unsigned int i =0; i<n; ++i)
         add_bus_for_system_change_detection(buses[i]);
 }
 
-void DYNAMICS_SIMULATOR::add_bus_for_system_change_detection(unsigned int bus_number)
+void DYNAMIC_SIMULATOR::add_bus_for_system_change_detection(unsigned int bus_number)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -411,14 +411,14 @@ void DYNAMICS_SIMULATOR::add_bus_for_system_change_detection(unsigned int bus_nu
     }
 }
 
-void DYNAMICS_SIMULATOR::add_generators_for_system_change_detection(vector<DEVICE_ID> dids)
+void DYNAMIC_SIMULATOR::add_generators_for_system_change_detection(vector<DEVICE_ID> dids)
 {
     unsigned int n = dids.size();
     for(unsigned int i=0; i<n; ++i)
         add_generator_for_system_change_detection(dids[i]);
 }
 
-void DYNAMICS_SIMULATOR::add_generator_for_system_change_detection(DEVICE_ID did)
+void DYNAMIC_SIMULATOR::add_generator_for_system_change_detection(DEVICE_ID did)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -440,7 +440,7 @@ void DYNAMICS_SIMULATOR::add_generator_for_system_change_detection(DEVICE_ID did
     }
 }
 
-void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
+void DYNAMIC_SIMULATOR::show_dynamic_simulator_configuration() const
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -498,7 +498,7 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
     }
 }
 
-unsigned int DYNAMICS_SIMULATOR::get_memory_usage_in_bytes()
+unsigned int DYNAMIC_SIMULATOR::get_memory_usage_in_bytes()
 {
     return in_service_buses.capacity()*sizeof(BUS*)+
            generators.capacity()*sizeof(GENERATOR*)+
@@ -526,29 +526,29 @@ unsigned int DYNAMICS_SIMULATOR::get_memory_usage_in_bytes()
            meter_values.capacity()*sizeof(double);
 }
 
-void DYNAMICS_SIMULATOR::set_network_matrix_update_as_unrequired()
+void DYNAMIC_SIMULATOR::set_network_matrix_update_as_unrequired()
 {
     network_matrix_update_required = false;
 }
 
-void DYNAMICS_SIMULATOR::set_network_matrix_update_as_required()
+void DYNAMIC_SIMULATOR::set_network_matrix_update_as_required()
 {
     network_matrix_update_required = true;
 }
 
-bool DYNAMICS_SIMULATOR::is_network_matrix_update_required() const
+bool DYNAMIC_SIMULATOR::is_network_matrix_update_required() const
 {
     return network_matrix_update_required;
 }
 
-void DYNAMICS_SIMULATOR::install_meters(const vector<METER>& meters)
+void DYNAMIC_SIMULATOR::install_meters(const vector<METER>& meters)
 {
     unsigned int n = meters.size();
     for(unsigned int i = 0; i < n; ++i)
         install_meter(meters[i]);
 }
 
-void DYNAMICS_SIMULATOR::install_meter(const METER& meter)
+void DYNAMIC_SIMULATOR::install_meter(const METER& meter)
 {
     if(meter.is_valid())
     {
@@ -565,12 +565,12 @@ void DYNAMICS_SIMULATOR::install_meter(const METER& meter)
     }
 }
 
-unsigned int DYNAMICS_SIMULATOR::get_meter_count() const
+unsigned int DYNAMIC_SIMULATOR::get_meter_count() const
 {
     return meters.size();
 }
 
-METER DYNAMICS_SIMULATOR::get_meter(unsigned int i)
+METER DYNAMIC_SIMULATOR::get_meter(unsigned int i)
 {
     METER voidmeter(get_toolkit());
 
@@ -585,7 +585,7 @@ METER DYNAMICS_SIMULATOR::get_meter(unsigned int i)
         return voidmeter;
 }
 
-void DYNAMICS_SIMULATOR::update_all_meters_value()
+void DYNAMIC_SIMULATOR::update_all_meters_value()
 {
     STEPS& toolkit = get_toolkit();
     unsigned int n = meters.size();
@@ -613,13 +613,13 @@ void DYNAMICS_SIMULATOR::update_all_meters_value()
     }
 }
 
-vector<double> DYNAMICS_SIMULATOR::get_all_meters_value()
+vector<double> DYNAMIC_SIMULATOR::get_all_meters_value()
 {
     update_all_meters_value();
     return meter_values;
 }
 
-double DYNAMICS_SIMULATOR::get_user_meter_value(unsigned int i)
+double DYNAMIC_SIMULATOR::get_user_meter_value(unsigned int i)
 {
     if(i>0 and i<=meters.size())
         return meter_values[i-1];
@@ -627,7 +627,7 @@ double DYNAMICS_SIMULATOR::get_user_meter_value(unsigned int i)
         return 0.0;
 }
 
-double DYNAMICS_SIMULATOR::get_basic_meter_value(string meter_name)
+double DYNAMIC_SIMULATOR::get_basic_meter_value(string meter_name)
 {
     meter_name = string2upper(meter_name);
 
@@ -648,23 +648,23 @@ double DYNAMICS_SIMULATOR::get_basic_meter_value(string meter_name)
     return 0.0;
 }
 
-void DYNAMICS_SIMULATOR::clear_meters()
+void DYNAMIC_SIMULATOR::clear_meters()
 {
     meters.clear();
     meter_values.clear();
 }
 
-void DYNAMICS_SIMULATOR::set_output_file(string filename)
+void DYNAMIC_SIMULATOR::set_output_file(string filename)
 {
     output_filename = filename;
 }
 
-string DYNAMICS_SIMULATOR::get_output_file() const
+string DYNAMIC_SIMULATOR::get_output_file() const
 {
     return output_filename;
 }
 
-void DYNAMICS_SIMULATOR::open_meter_output_files()
+void DYNAMIC_SIMULATOR::open_meter_output_files()
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -740,7 +740,7 @@ void DYNAMICS_SIMULATOR::open_meter_output_files()
     }
 }
 
-void DYNAMICS_SIMULATOR::close_meter_output_files()
+void DYNAMIC_SIMULATOR::close_meter_output_files()
 {
     ostringstream osstream;
     if(is_csv_file_export_enabled() and csv_output_file.is_open())
@@ -776,7 +776,7 @@ void DYNAMICS_SIMULATOR::close_meter_output_files()
     }
 }
 
-void DYNAMICS_SIMULATOR::save_meter_information()
+void DYNAMIC_SIMULATOR::save_meter_information()
 {
     ostringstream osstream;
 
@@ -875,7 +875,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
     }
 }
 
-void DYNAMICS_SIMULATOR::save_meter_values()
+void DYNAMIC_SIMULATOR::save_meter_values()
 {
     STEPS& toolkit = get_toolkit();
     #ifdef USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
@@ -966,7 +966,7 @@ void DYNAMICS_SIMULATOR::save_meter_values()
     }
 }
 
-void DYNAMICS_SIMULATOR::optimize_network_ordering()
+void DYNAMIC_SIMULATOR::optimize_network_ordering()
 {
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -975,7 +975,7 @@ void DYNAMICS_SIMULATOR::optimize_network_ordering()
     set_internal_bus_pointer();
 }
 
-void DYNAMICS_SIMULATOR::set_internal_bus_pointer()
+void DYNAMIC_SIMULATOR::set_internal_bus_pointer()
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -993,7 +993,7 @@ void DYNAMICS_SIMULATOR::set_internal_bus_pointer()
     initialize_internal_bus_voltage_vector();
 }
 
-void DYNAMICS_SIMULATOR::initialize_internal_bus_voltage_vector()
+void DYNAMIC_SIMULATOR::initialize_internal_bus_voltage_vector()
 {
     STEPS& toolkit = get_toolkit();
     unsigned int nbus = internal_bus_complex_voltage_in_pu.size();
@@ -1009,7 +1009,7 @@ void DYNAMICS_SIMULATOR::initialize_internal_bus_voltage_vector()
     }
 }
 
-void DYNAMICS_SIMULATOR::build_vsc_hvdc_dynamic_dc_network_matrix()
+void DYNAMIC_SIMULATOR::build_vsc_hvdc_dynamic_dc_network_matrix()
 {
     STEPS& toolkit = get_toolkit();
     unsigned int nvsc_hvdc = vsc_hvdcs.size();
@@ -1027,7 +1027,7 @@ void DYNAMICS_SIMULATOR::build_vsc_hvdc_dynamic_dc_network_matrix()
     }
 }
 
-complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const
+complex<double> DYNAMIC_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const
 {
     return internal_bus_complex_voltage_in_pu[internal_bus];
 
@@ -1044,7 +1044,7 @@ complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_
     */
 }
 
-void DYNAMICS_SIMULATOR::start()
+void DYNAMIC_SIMULATOR::start()
 {
     STEPS& toolkit = get_toolkit();
     microseconds_elapse_of_differential_equations_in_a_step = 0;
@@ -1145,7 +1145,7 @@ void DYNAMICS_SIMULATOR::start()
     save_meter_values();
 }
 
-void DYNAMICS_SIMULATOR::prepare_devices_for_run()
+void DYNAMIC_SIMULATOR::prepare_devices_for_run()
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -1168,7 +1168,7 @@ void DYNAMICS_SIMULATOR::prepare_devices_for_run()
     e_devices = psdb.get_all_equivalent_devices();
 }
 
-void DYNAMICS_SIMULATOR::stop()
+void DYNAMIC_SIMULATOR::stop()
 {
     //if(TIME >0.0)
     STEPS& toolkit = get_toolkit();
@@ -1184,7 +1184,7 @@ void DYNAMICS_SIMULATOR::stop()
 }
 
 
-double DYNAMICS_SIMULATOR::get_system_max_angle_difference_in_deg()
+double DYNAMIC_SIMULATOR::get_system_max_angle_difference_in_deg()
 {
     unsigned int n = generators.size();
     double max_angle = -1e10, min_angle = 1e10;
@@ -1209,7 +1209,7 @@ double DYNAMICS_SIMULATOR::get_system_max_angle_difference_in_deg()
     return max_angle-min_angle;
 }
 
-void DYNAMICS_SIMULATOR::enable_bus_voltage_and_angle_sensor_of_dynamic_models()
+void DYNAMIC_SIMULATOR::enable_bus_voltage_and_angle_sensor_of_dynamic_models()
 {
     unsigned int nload = loads.size();
     for(unsigned int i=0; i<nload; ++i)
@@ -1234,7 +1234,7 @@ void DYNAMICS_SIMULATOR::enable_bus_voltage_and_angle_sensor_of_dynamic_models()
     */
 }
 
-void DYNAMICS_SIMULATOR::disable_bus_voltage_and_angle_sensor_of_dynamic_models()
+void DYNAMIC_SIMULATOR::disable_bus_voltage_and_angle_sensor_of_dynamic_models()
 {
     unsigned int nload = loads.size();
     for(unsigned int i=0; i<nload; ++i)
@@ -1259,7 +1259,7 @@ void DYNAMICS_SIMULATOR::disable_bus_voltage_and_angle_sensor_of_dynamic_models(
     */
 }
 
-void DYNAMICS_SIMULATOR::run_to(double time)
+void DYNAMIC_SIMULATOR::run_to(double time)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -1322,7 +1322,7 @@ void DYNAMICS_SIMULATOR::run_to(double time)
     }
 }
 
-void DYNAMICS_SIMULATOR::run_a_step()
+void DYNAMIC_SIMULATOR::run_a_step()
 {
     STEPS& toolkit = get_toolkit();
     auto clock_start = system_clock::now();
@@ -1420,7 +1420,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
     save_meter_values();
 }
 
-void DYNAMICS_SIMULATOR::update_with_event(DYNAMIC_EVENT_TYPE event_type)
+void DYNAMIC_SIMULATOR::update_with_event(DYNAMIC_EVENT_TYPE event_type)
 {
     STEPS& toolkit = get_toolkit();
     auto clock_start = system_clock::now();
@@ -1483,14 +1483,14 @@ void DYNAMICS_SIMULATOR::update_with_event(DYNAMIC_EVENT_TYPE event_type)
     }
 }
 
-void DYNAMICS_SIMULATOR::integrate()
+void DYNAMIC_SIMULATOR::integrate()
 {
     //clock_t start = clock();
     run_all_models(DYNAMIC_INTEGRATE_MODE);
     //cout<<"    elapsed time for integration: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
 }
 
-void DYNAMICS_SIMULATOR::update()
+void DYNAMIC_SIMULATOR::update()
 {
     update_with_specific_mode(DYNAMIC_UPDATE_MODE);
 
@@ -1509,12 +1509,12 @@ void DYNAMICS_SIMULATOR::update()
     }
 }
 
-void DYNAMICS_SIMULATOR::update_when_time_step_is_change()
+void DYNAMIC_SIMULATOR::update_when_time_step_is_change()
 {
     update_with_specific_mode(DYNAMIC_UPDATE_TIME_STEP_MODE);
 }
 
-void DYNAMICS_SIMULATOR::update_with_specific_mode(DYNAMIC_MODE mode)
+void DYNAMIC_SIMULATOR::update_with_specific_mode(DYNAMIC_MODE mode)
 {
     STEPS& toolkit = get_toolkit();
     if(mode==DYNAMIC_UPDATE_MODE or mode==DYNAMIC_UPDATE_TIME_STEP_MODE)
@@ -1565,7 +1565,7 @@ void DYNAMICS_SIMULATOR::update_with_specific_mode(DYNAMIC_MODE mode)
     }
 }
 
-void DYNAMICS_SIMULATOR::check_relay_events()
+void DYNAMIC_SIMULATOR::check_relay_events()
 {
     disable_relay_action_flag();
     run_all_models(DYNAMIC_RELAY_MODE);
@@ -1574,7 +1574,7 @@ void DYNAMICS_SIMULATOR::check_relay_events()
         update();
 }
 
-void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
+void DYNAMIC_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 {
     STEPS& toolkit = get_toolkit();
     //ostringstream osstream;
@@ -1774,7 +1774,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     microseconds_elapse_of_differential_equations_in_a_step += tdurationx.count();
 }
 
-void DYNAMICS_SIMULATOR::run_bus_frequency_blocks(DYNAMIC_MODE mode)
+void DYNAMIC_SIMULATOR::run_bus_frequency_blocks(DYNAMIC_MODE mode)
 {
     STEPS& toolkit = get_toolkit();
     auto clock_start = steady_clock::now();
@@ -1796,7 +1796,7 @@ void DYNAMICS_SIMULATOR::run_bus_frequency_blocks(DYNAMIC_MODE mode)
     microseconds_elapse_of_differential_equations_in_a_step += tduration.count();
 }
 
-void DYNAMICS_SIMULATOR::update_bus_frequency_blocks_when_applying_event(DYNAMIC_EVENT_TYPE type)
+void DYNAMIC_SIMULATOR::update_bus_frequency_blocks_when_applying_event(DYNAMIC_EVENT_TYPE type)
 {
     STEPS& toolkit = get_toolkit();
     unsigned int n = in_service_buses.size();
@@ -1815,22 +1815,22 @@ void DYNAMICS_SIMULATOR::update_bus_frequency_blocks_when_applying_event(DYNAMIC
     }
 }
 
-void DYNAMICS_SIMULATOR::enable_relay_action_flag()
+void DYNAMIC_SIMULATOR::enable_relay_action_flag()
 {
     relay_action_flag = true;
 }
 
-void DYNAMICS_SIMULATOR::disable_relay_action_flag()
+void DYNAMIC_SIMULATOR::disable_relay_action_flag()
 {
     relay_action_flag = false;
 }
 
-bool DYNAMICS_SIMULATOR::is_relay_action_detected() const
+bool DYNAMIC_SIMULATOR::is_relay_action_detected() const
 {
     return relay_action_flag;
 }
 
-void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
+void DYNAMIC_SIMULATOR::update_equivalent_devices_buffer()
 {
     STEPS& toolkit = get_toolkit();
     unsigned int n = e_devices.size();
@@ -1848,7 +1848,7 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
     }
 }
 
-void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
+void DYNAMIC_SIMULATOR::update_equivalent_devices_output()
 {
     STEPS& toolkit = get_toolkit();
     unsigned int n = e_devices.size();
@@ -1869,12 +1869,12 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
     }
 }
 
-bool DYNAMICS_SIMULATOR::get_system_angular_stable_flag() const
+bool DYNAMIC_SIMULATOR::get_system_angular_stable_flag() const
 {
     return flag_rotor_angle_stable;
 }
 
-bool DYNAMICS_SIMULATOR::solve_network()
+bool DYNAMIC_SIMULATOR::solve_network()
 {
     bool converged = false;
     unsigned int total_network_iteration_count = 0;
@@ -1936,7 +1936,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     return converged;
 }
 
-bool DYNAMICS_SIMULATOR::solve_network_core()
+bool DYNAMIC_SIMULATOR::solve_network_core()
 {
     STEPS& toolkit = get_toolkit();
     auto clock_start = steady_clock::now();
@@ -2065,7 +2065,7 @@ bool DYNAMICS_SIMULATOR::solve_network_core()
                         max_current_mismatch_pu = new_imax;
                         #endif // USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
                         converged = false;
-                        osstream<<"At time "<<TIME<<" s, when calling DYNAMICS_SIMULATOR::solve_network() in iteration "<<network_iter_count<<", "<<network_solution_divergent_count<<" times of divergence is detected, and network solution failed.";
+                        osstream<<"At time "<<TIME<<" s, when calling DYNAMIC_SIMULATOR::solve_network() in iteration "<<network_iter_count<<", "<<network_solution_divergent_count<<" times of divergence is detected, and network solution failed.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
                         break;
                     }
@@ -2079,7 +2079,7 @@ bool DYNAMICS_SIMULATOR::solve_network_core()
                     double scale = new_imax/max_current_mismatch_pu;
                     if(scale>1.0)
                     {
-                        osstream<<"At time "<<TIME<<" s, when calling DYNAMICS_SIMULATOR::solve_network() in iteration "<<network_iter_count<<", max current mismatch diverges to "<<new_imax<<" pu (increase scale: "<<scale<<").";
+                        osstream<<"At time "<<TIME<<" s, when calling DYNAMIC_SIMULATOR::solve_network() in iteration "<<network_iter_count<<", max current mismatch diverges to "<<new_imax<<" pu (increase scale: "<<scale<<").";
                         toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                 }
@@ -2114,7 +2114,7 @@ bool DYNAMICS_SIMULATOR::solve_network_core()
     return converged;
 }
 
-void DYNAMICS_SIMULATOR::tune_iteration_accelerator_based_on_maximum_current_mismatch(double imax)
+void DYNAMIC_SIMULATOR::tune_iteration_accelerator_based_on_maximum_current_mismatch(double imax)
 {
     STEPS& toolkit = get_toolkit();
     double mbase = toolkit.get_system_base_power_in_MVA();
@@ -2164,7 +2164,7 @@ void DYNAMICS_SIMULATOR::tune_iteration_accelerator_based_on_maximum_current_mis
     //toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void DYNAMICS_SIMULATOR::solve_lcc_hvdc2ts_without_integration()
+void DYNAMIC_SIMULATOR::solve_lcc_hvdc2ts_without_integration()
 {
     if(not is_hold_lcc_hvdc2t_current2network_flag_enabled())
     {
@@ -2189,7 +2189,7 @@ void DYNAMICS_SIMULATOR::solve_lcc_hvdc2ts_without_integration()
     }
 }
 
-void DYNAMICS_SIMULATOR::update_vsc_hvdcs_converter_model()
+void DYNAMIC_SIMULATOR::update_vsc_hvdcs_converter_model()
 {
     STEPS& toolkit = get_toolkit();
     unsigned int n = vsc_hvdcs.size();
@@ -2215,7 +2215,7 @@ void DYNAMICS_SIMULATOR::update_vsc_hvdcs_converter_model()
     }
 }
 
-void DYNAMICS_SIMULATOR::solve_mt_hvdc_systems()
+void DYNAMIC_SIMULATOR::solve_mt_hvdc_systems()
 {
      STEPS& toolkit = get_toolkit();
      unsigned int n = mt_hvdcs.size();
@@ -2235,7 +2235,7 @@ void DYNAMICS_SIMULATOR::solve_mt_hvdc_systems()
     }
  }
 
-void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
+void DYNAMIC_SIMULATOR::get_bus_current_mismatch()
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -2260,7 +2260,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
-                osstream<<"warning. NAN is detected when getting bus current mismatch after get_bus_current_into_network() when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                osstream<<"warning. NAN is detected when getting bus current mismatch after get_bus_current_into_network() when calling DYNAMIC_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
@@ -2284,7 +2284,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
-                osstream<<"warning. NAN is detected when getting bus current mismatch after adding generators when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding generators when calling DYNAMIC_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
@@ -2307,7 +2307,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
-                osstream<<"warning. NAN is detected when getting bus current mismatch after adding wt generators when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding wt generators when calling DYNAMIC_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
@@ -2330,7 +2330,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
-                osstream<<"warning. NAN is detected when getting bus current mismatch after adding pv units when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding pv units when calling DYNAMIC_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
@@ -2353,7 +2353,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
-                osstream<<"warning. NAN is detected when getting bus current mismatch after adding energy storages when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding energy storages when calling DYNAMIC_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
@@ -2376,7 +2376,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
-                osstream<<"warning. NAN is detected when getting bus current mismatch after adding sv sources when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding sv sources when calling DYNAMIC_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
@@ -2399,7 +2399,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
-                osstream<<"warning. NAN is detected when getting bus current mismatch after adding loads when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding loads when calling DYNAMIC_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
@@ -2422,7 +2422,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
-                osstream<<"warning. NAN is detected when getting bus current mismatch after adding hvdcs when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding hvdcs when calling DYNAMIC_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
@@ -2445,7 +2445,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
-                osstream<<"warning. NAN is detected when getting bus current mismatch after adding vsc hvdcs when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding vsc hvdcs when calling DYNAMIC_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
@@ -2468,7 +2468,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
-                osstream<<"warning. NAN is detected when getting bus current mismatch after adding equivalent devices when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding equivalent devices when calling DYNAMIC_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
@@ -2491,7 +2491,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(std::isnan(I_mismatch[i].real()) or std::isnan(I_mismatch[i].imag()))
             {
-                osstream<<"warning. NAN is detected when getting bus current mismatch after adding equivalent devices when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding equivalent devices when calling DYNAMIC_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(unsigned int j = 0; j<n; ++j)
                 {
                     if(std::isnan(I_mismatch[j].real()) or std::isnan(I_mismatch[j].imag()))
@@ -2548,7 +2548,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     */
 }
 
-void DYNAMICS_SIMULATOR::get_bus_current_into_network()
+void DYNAMIC_SIMULATOR::get_bus_current_into_network()
 {
     NETWORK_MATRIX& network_matrix = get_network_matrix();
     STEPS_COMPLEX_SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
@@ -2559,7 +2559,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_into_network()
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
-void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
+void DYNAMIC_SIMULATOR::add_generators_to_bus_current_mismatch()
 {
     STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -2600,7 +2600,7 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
-void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
+void DYNAMIC_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 {
     STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -2646,7 +2646,7 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
-void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
+void DYNAMIC_SIMULATOR::add_pv_units_to_bus_current_mismatch()
 {
     STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -2695,7 +2695,7 @@ void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
-void DYNAMICS_SIMULATOR::add_energy_storage_to_bus_current_mismatch()
+void DYNAMIC_SIMULATOR::add_energy_storage_to_bus_current_mismatch()
 {
     STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -2743,7 +2743,7 @@ void DYNAMICS_SIMULATOR::add_energy_storage_to_bus_current_mismatch()
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
-void DYNAMICS_SIMULATOR::add_sv_source_to_bus_current_mismatch()
+void DYNAMIC_SIMULATOR::add_sv_source_to_bus_current_mismatch()
 {
     STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -2780,7 +2780,7 @@ void DYNAMICS_SIMULATOR::add_sv_source_to_bus_current_mismatch()
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
-void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
+void DYNAMIC_SIMULATOR::add_loads_to_bus_current_mismatch()
 {
     STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -2829,7 +2829,7 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
-void DYNAMICS_SIMULATOR::add_lcc_hvdc2ts_to_bus_current_mismatch()
+void DYNAMIC_SIMULATOR::add_lcc_hvdc2ts_to_bus_current_mismatch()
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -2895,7 +2895,7 @@ void DYNAMICS_SIMULATOR::add_lcc_hvdc2ts_to_bus_current_mismatch()
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
-void DYNAMICS_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
+void DYNAMIC_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -2954,7 +2954,7 @@ void DYNAMICS_SIMULATOR::add_vsc_hvdcs_to_bus_current_mismatch()
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
-void DYNAMICS_SIMULATOR::add_mt_hvdcs_to_bus_current_mismatch()
+void DYNAMIC_SIMULATOR::add_mt_hvdcs_to_bus_current_mismatch()
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -3049,7 +3049,7 @@ void DYNAMICS_SIMULATOR::add_mt_hvdcs_to_bus_current_mismatch()
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
-void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
+void DYNAMIC_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 {
     STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -3080,7 +3080,7 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
         check_abnormal_current_mismatch_after_calling_function(__FUNCTION__);
 }
 
-void DYNAMICS_SIMULATOR::check_abnormal_current_mismatch_after_calling_function(string f)
+void DYNAMIC_SIMULATOR::check_abnormal_current_mismatch_after_calling_function(string f)
 {
     STEPS& toolkit = get_toolkit();
     GREATEST_POWER_CURRENT_MISMATCH_STRUCT greatest_mismatch_struct = get_max_current_mismatch_struct();
@@ -3095,7 +3095,7 @@ void DYNAMICS_SIMULATOR::check_abnormal_current_mismatch_after_calling_function(
     }
 }
 
-bool DYNAMICS_SIMULATOR::is_converged()
+bool DYNAMIC_SIMULATOR::is_converged()
 {
     calculate_bus_power_mismatch_in_MVA();
 
@@ -3106,7 +3106,7 @@ bool DYNAMICS_SIMULATOR::is_converged()
     return (smax>s_allowed)? false : true;
 }
 
-void DYNAMICS_SIMULATOR:: calculate_bus_power_mismatch_in_MVA()
+void DYNAMIC_SIMULATOR:: calculate_bus_power_mismatch_in_MVA()
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -3129,7 +3129,7 @@ void DYNAMICS_SIMULATOR:: calculate_bus_power_mismatch_in_MVA()
     }
 }
 
-GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_power_mismatch_struct()
+GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMIC_SIMULATOR::get_max_power_mismatch_struct()
 {
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -3155,7 +3155,7 @@ GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_power_mismatc
     return s_mismatch;
 }
 
-GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_current_mismatch_struct()
+GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMIC_SIMULATOR::get_max_current_mismatch_struct()
 {
     STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -3221,7 +3221,7 @@ GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_current_misma
 }
 
 
-void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
+void DYNAMIC_SIMULATOR::build_bus_current_mismatch_vector()
 {
     STEPS& toolkit = get_toolkit();
     unsigned int n = I_mismatch.size();
@@ -3240,7 +3240,7 @@ void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
 }
 
 
-void DYNAMICS_SIMULATOR::update_bus_voltage()
+void DYNAMIC_SIMULATOR::update_bus_voltage()
 {
     STEPS& toolkit = get_toolkit();
     try_to_limit_delta_v_within_change_threshold();
@@ -3311,7 +3311,7 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
     */
 }
 
-void DYNAMICS_SIMULATOR::try_to_limit_delta_v_within_change_threshold()
+void DYNAMIC_SIMULATOR::try_to_limit_delta_v_within_change_threshold()
 {
     STEPS& toolkit = get_toolkit();
     double v_change_threshold = get_voltage_change_threshold_when_solving_network_in_pu();
@@ -3345,7 +3345,7 @@ void DYNAMICS_SIMULATOR::try_to_limit_delta_v_within_change_threshold()
     }
 }
 
-void DYNAMICS_SIMULATOR::build_jacobian()
+void DYNAMIC_SIMULATOR::build_jacobian()
 {
     //clock_t tstart = clock();
     build_basic_jacobian_with_Y_matrix();
@@ -3361,7 +3361,7 @@ void DYNAMICS_SIMULATOR::build_jacobian()
     */
 }
 
-bool DYNAMICS_SIMULATOR::jacobian_should_be_updated()
+bool DYNAMIC_SIMULATOR::jacobian_should_be_updated()
 {
     NETWORK_MATRIX& network = get_network_matrix();
     STEPS_COMPLEX_SPARSE_MATRIX& Y = network.get_dynamic_network_Y_matrix();
@@ -3369,7 +3369,7 @@ bool DYNAMICS_SIMULATOR::jacobian_should_be_updated()
     return jacobian.get_clock_when_matrix_is_changed() < Y.get_clock_when_matrix_is_changed();
 }
 
-void DYNAMICS_SIMULATOR::build_basic_jacobian_with_Y_matrix()
+void DYNAMIC_SIMULATOR::build_basic_jacobian_with_Y_matrix()
 {
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -3405,7 +3405,7 @@ void DYNAMICS_SIMULATOR::build_basic_jacobian_with_Y_matrix()
     jacobian.compress_and_merge_duplicate_entries();
 }
 
-void DYNAMICS_SIMULATOR::update_jacobian_with_load_models()
+void DYNAMIC_SIMULATOR::update_jacobian_with_load_models()
 {
     //clock_t tstart = clock();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -3434,7 +3434,7 @@ void DYNAMICS_SIMULATOR::update_jacobian_with_load_models()
     */
 }
 
-void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_in_s(double delt)
+void DYNAMIC_SIMULATOR::change_dynamic_simulator_time_step_in_s(double delt)
 {
     STEPS& toolkit = get_toolkit();
     if(fabs(DELT-delt)>FLOAT_EPSILON)
@@ -3450,7 +3450,7 @@ void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_in_s(double delt)
 }
 
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(unsigned int bus_number, const FAULT& fault)
+void DYNAMIC_SIMULATOR::guess_bus_voltage_with_bus_fault_set(unsigned int bus_number, const FAULT& fault)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -3491,7 +3491,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(unsigned int bus_n
     internal_bus_complex_voltage_in_pu[internal_bus] = bus.get_positive_sequence_complex_voltage_in_pu();
 }
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(unsigned int bus_number, const FAULT& fault)
+void DYNAMIC_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(unsigned int bus_number, const FAULT& fault)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -3532,7 +3532,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(unsigned int b
 }
 
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_set(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault)
+void DYNAMIC_SIMULATOR::guess_bus_voltage_with_ac_line_fault_set(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault)
 {
     STEPS& toolkit = get_toolkit();
     if(location >=0.0 and location <= 1.0)
@@ -3575,7 +3575,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_set(const DEVICE_I
     }
 }
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_cleared(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault)
+void DYNAMIC_SIMULATOR::guess_bus_voltage_with_ac_line_fault_cleared(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault)
 {
     STEPS& toolkit = get_toolkit();
     if(location >= 0.0 and location <= 1.0)
@@ -3618,7 +3618,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_ac_line_fault_cleared(const DEVI
     }
 }
 
-void DYNAMICS_SIMULATOR::update_generators_in_islands()
+void DYNAMIC_SIMULATOR::update_generators_in_islands()
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -3656,7 +3656,7 @@ void DYNAMICS_SIMULATOR::update_generators_in_islands()
     }
 }
 
-bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
+bool DYNAMIC_SIMULATOR::is_system_angular_stable() const
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -3731,7 +3731,7 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
     return system_is_stable;
 }
 
-void DYNAMICS_SIMULATOR::set_bus_fault(unsigned int bus_number, const complex<double>& fault_shunt)
+void DYNAMIC_SIMULATOR::set_bus_fault(unsigned int bus_number, const complex<double>& fault_shunt)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -3779,7 +3779,7 @@ void DYNAMICS_SIMULATOR::set_bus_fault(unsigned int bus_number, const complex<do
     }
 }
 
-void DYNAMICS_SIMULATOR::clear_bus_fault(unsigned int bus_number)
+void DYNAMIC_SIMULATOR::clear_bus_fault(unsigned int bus_number)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -3810,7 +3810,7 @@ void DYNAMICS_SIMULATOR::clear_bus_fault(unsigned int bus_number)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_bus(unsigned int bus_number)
+void DYNAMIC_SIMULATOR::trip_bus(unsigned int bus_number)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -3843,14 +3843,14 @@ void DYNAMICS_SIMULATOR::trip_bus(unsigned int bus_number)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_buses(const vector<unsigned int>& buses)
+void DYNAMIC_SIMULATOR::trip_buses(const vector<unsigned int>& buses)
 {
     unsigned int n = buses.size();
     for(unsigned int i=0; i!=n; ++i)
         trip_bus(buses[i]);
 }
 
-void DYNAMICS_SIMULATOR::set_ac_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, const complex<double>& fault_shunt)
+void DYNAMIC_SIMULATOR::set_ac_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, const complex<double>& fault_shunt)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -3927,7 +3927,7 @@ void DYNAMICS_SIMULATOR::set_ac_line_fault(const DEVICE_ID& line_id, unsigned in
     }
 }
 
-void DYNAMICS_SIMULATOR::clear_ac_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location)
+void DYNAMIC_SIMULATOR::clear_ac_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -3992,7 +3992,7 @@ void DYNAMICS_SIMULATOR::clear_ac_line_fault(const DEVICE_ID& line_id, unsigned 
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_ac_line(const DEVICE_ID& line_id)
+void DYNAMIC_SIMULATOR::trip_ac_line(const DEVICE_ID& line_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4039,7 +4039,7 @@ void DYNAMICS_SIMULATOR::trip_ac_line(const DEVICE_ID& line_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_ac_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus)
+void DYNAMIC_SIMULATOR::trip_ac_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4096,7 +4096,7 @@ void DYNAMICS_SIMULATOR::trip_ac_line_breaker(const DEVICE_ID& line_id, unsigned
     }
 }
 
-void DYNAMICS_SIMULATOR::close_ac_line(const DEVICE_ID& line_id)
+void DYNAMIC_SIMULATOR::close_ac_line(const DEVICE_ID& line_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4137,7 +4137,7 @@ void DYNAMICS_SIMULATOR::close_ac_line(const DEVICE_ID& line_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::close_ac_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus)
+void DYNAMIC_SIMULATOR::close_ac_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4192,7 +4192,7 @@ void DYNAMICS_SIMULATOR::close_ac_line_breaker(const DEVICE_ID& line_id, unsigne
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_transformer(const DEVICE_ID& trans_id)
+void DYNAMIC_SIMULATOR::trip_transformer(const DEVICE_ID& trans_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4241,7 +4241,7 @@ void DYNAMICS_SIMULATOR::trip_transformer(const DEVICE_ID& trans_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, unsigned int side_bus)
+void DYNAMIC_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, unsigned int side_bus)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4319,7 +4319,7 @@ void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, uns
     }
 }
 
-void DYNAMICS_SIMULATOR::close_transformer(const DEVICE_ID& trans_id)
+void DYNAMIC_SIMULATOR::close_transformer(const DEVICE_ID& trans_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4368,7 +4368,7 @@ void DYNAMICS_SIMULATOR::close_transformer(const DEVICE_ID& trans_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, unsigned int side_bus)
+void DYNAMIC_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, unsigned int side_bus)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4441,7 +4441,7 @@ void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, un
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
+void DYNAMIC_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4481,7 +4481,7 @@ void DYNAMICS_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
+void DYNAMIC_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4538,7 +4538,7 @@ void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
 }
 
 
-void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id)
+void DYNAMIC_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4578,7 +4578,7 @@ void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::shed_wt_generator(const DEVICE_ID& gen_id,double percent)
+void DYNAMIC_SIMULATOR::shed_wt_generator(const DEVICE_ID& gen_id,double percent)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4634,7 +4634,7 @@ void DYNAMICS_SIMULATOR::shed_wt_generator(const DEVICE_ID& gen_id,double percen
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_pv_unit(const DEVICE_ID& gen_id)
+void DYNAMIC_SIMULATOR::trip_pv_unit(const DEVICE_ID& gen_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4674,7 +4674,7 @@ void DYNAMICS_SIMULATOR::trip_pv_unit(const DEVICE_ID& gen_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::shed_pv_unit(const DEVICE_ID& gen_id,double percent)
+void DYNAMIC_SIMULATOR::shed_pv_unit(const DEVICE_ID& gen_id,double percent)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4730,7 +4730,7 @@ void DYNAMICS_SIMULATOR::shed_pv_unit(const DEVICE_ID& gen_id,double percent)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_energy_storage(const DEVICE_ID& gen_id)
+void DYNAMIC_SIMULATOR::trip_energy_storage(const DEVICE_ID& gen_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4770,7 +4770,7 @@ void DYNAMICS_SIMULATOR::trip_energy_storage(const DEVICE_ID& gen_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::shed_energy_storage(const DEVICE_ID& gen_id,double percent)
+void DYNAMIC_SIMULATOR::shed_energy_storage(const DEVICE_ID& gen_id,double percent)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4826,7 +4826,7 @@ void DYNAMICS_SIMULATOR::shed_energy_storage(const DEVICE_ID& gen_id,double perc
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_sv_source(const DEVICE_ID& gen_id)
+void DYNAMIC_SIMULATOR::trip_sv_source(const DEVICE_ID& gen_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4866,7 +4866,7 @@ void DYNAMICS_SIMULATOR::trip_sv_source(const DEVICE_ID& gen_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::shed_sv_source(const DEVICE_ID& gen_id,double percent)
+void DYNAMIC_SIMULATOR::shed_sv_source(const DEVICE_ID& gen_id,double percent)
 {/*
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4922,7 +4922,7 @@ void DYNAMICS_SIMULATOR::shed_sv_source(const DEVICE_ID& gen_id,double percent)
     }*/
 }
 
-void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
+void DYNAMIC_SIMULATOR::trip_load(const DEVICE_ID& load_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -4962,7 +4962,7 @@ void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::close_load(const DEVICE_ID& load_id)
+void DYNAMIC_SIMULATOR::close_load(const DEVICE_ID& load_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -5003,7 +5003,7 @@ void DYNAMICS_SIMULATOR::close_load(const DEVICE_ID& load_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
+void DYNAMIC_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -5056,7 +5056,7 @@ void DYNAMICS_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
     }
 }
 
-void DYNAMICS_SIMULATOR::scale_all_load(double percent)
+void DYNAMIC_SIMULATOR::scale_all_load(double percent)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -5079,7 +5079,7 @@ void DYNAMICS_SIMULATOR::scale_all_load(double percent)
 }
 
 
-void DYNAMICS_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
+void DYNAMIC_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -5119,7 +5119,7 @@ void DYNAMICS_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
+void DYNAMIC_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -5160,7 +5160,7 @@ void DYNAMICS_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
 }
 
 
-void DYNAMICS_SIMULATOR::manual_bypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
+void DYNAMIC_SIMULATOR::manual_bypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -5180,7 +5180,7 @@ void DYNAMICS_SIMULATOR::manual_bypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::manual_unbypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
+void DYNAMIC_SIMULATOR::manual_unbypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -5200,7 +5200,7 @@ void DYNAMICS_SIMULATOR::manual_unbypass_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::manual_block_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
+void DYNAMIC_SIMULATOR::manual_block_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -5220,7 +5220,7 @@ void DYNAMICS_SIMULATOR::manual_block_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::manual_unblock_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
+void DYNAMIC_SIMULATOR::manual_unblock_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -5240,7 +5240,7 @@ void DYNAMICS_SIMULATOR::manual_unblock_lcc_hvdc2t(const DEVICE_ID& hvdc_id)
 }
 
 
-double DYNAMICS_SIMULATOR::get_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id)
+double DYNAMIC_SIMULATOR::get_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5261,7 +5261,7 @@ double DYNAMICS_SIMULATOR::get_generator_voltage_reference_in_pu(const DEVICE_ID
         return 0.0;
 }
 
-double DYNAMICS_SIMULATOR::get_generator_mechanical_power_reference_in_pu_based_on_mbase(const DEVICE_ID& gen_id)
+double DYNAMIC_SIMULATOR::get_generator_mechanical_power_reference_in_pu_based_on_mbase(const DEVICE_ID& gen_id)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5282,7 +5282,7 @@ double DYNAMICS_SIMULATOR::get_generator_mechanical_power_reference_in_pu_based_
         return 0.0;
 }
 
-double DYNAMICS_SIMULATOR::get_generator_mechanical_power_reference_in_MW(const DEVICE_ID& gen_id)
+double DYNAMIC_SIMULATOR::get_generator_mechanical_power_reference_in_MW(const DEVICE_ID& gen_id)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5296,7 +5296,7 @@ double DYNAMICS_SIMULATOR::get_generator_mechanical_power_reference_in_MW(const 
         return 0.0;
 }
 
-double DYNAMICS_SIMULATOR::get_generator_excitation_voltage_in_pu(const DEVICE_ID& gen_id)
+double DYNAMIC_SIMULATOR::get_generator_excitation_voltage_in_pu(const DEVICE_ID& gen_id)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5326,7 +5326,7 @@ double DYNAMICS_SIMULATOR::get_generator_excitation_voltage_in_pu(const DEVICE_I
         return 0.0;
 }
 
-double DYNAMICS_SIMULATOR::get_generator_mechanical_power_in_pu_based_on_mbase(const DEVICE_ID& gen_id)
+double DYNAMIC_SIMULATOR::get_generator_mechanical_power_in_pu_based_on_mbase(const DEVICE_ID& gen_id)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5355,7 +5355,7 @@ double DYNAMICS_SIMULATOR::get_generator_mechanical_power_in_pu_based_on_mbase(c
     else
         return 0.0;
 }
-double DYNAMICS_SIMULATOR::get_generator_mechanical_power_in_MW(const DEVICE_ID& gen_id)
+double DYNAMIC_SIMULATOR::get_generator_mechanical_power_in_MW(const DEVICE_ID& gen_id)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5370,7 +5370,7 @@ double DYNAMICS_SIMULATOR::get_generator_mechanical_power_in_MW(const DEVICE_ID&
 }
 
 
-void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id, double vref)
+void DYNAMIC_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id, double vref)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5398,7 +5398,7 @@ void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_I
     }
 }
 
-void DYNAMICS_SIMULATOR::change_generator_mechanical_power_reference_in_pu_based_on_mbase(const DEVICE_ID& gen_id, double Pref)
+void DYNAMIC_SIMULATOR::change_generator_mechanical_power_reference_in_pu_based_on_mbase(const DEVICE_ID& gen_id, double Pref)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5421,7 +5421,7 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_reference_in_pu_based
     }
 }
 
-void DYNAMICS_SIMULATOR::change_generator_mechanical_power_reference_in_MW(const DEVICE_ID& gen_id, double Pref)
+void DYNAMIC_SIMULATOR::change_generator_mechanical_power_reference_in_MW(const DEVICE_ID& gen_id, double Pref)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5440,7 +5440,7 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_reference_in_MW(const
     }
 }
 
-void DYNAMICS_SIMULATOR::change_generator_excitation_voltage_in_pu(const DEVICE_ID& gen_id, double efd)
+void DYNAMIC_SIMULATOR::change_generator_excitation_voltage_in_pu(const DEVICE_ID& gen_id, double efd)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5473,7 +5473,7 @@ void DYNAMICS_SIMULATOR::change_generator_excitation_voltage_in_pu(const DEVICE_
     }
 }
 
-void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_pu_based_on_mbase(const DEVICE_ID& gen_id, double pmech)
+void DYNAMIC_SIMULATOR::change_generator_mechanical_power_in_pu_based_on_mbase(const DEVICE_ID& gen_id, double pmech)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5506,7 +5506,7 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_pu_based_on_mbase(
     }
 }
 
-void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_MW(const DEVICE_ID& gen_id, double pmech)
+void DYNAMIC_SIMULATOR::change_generator_mechanical_power_in_MW(const DEVICE_ID& gen_id, double pmech)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5525,7 +5525,7 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_MW(const DEVICE_ID
     }
 }
 
-void DYNAMICS_SIMULATOR::change_energy_storage_active_power_reference_in_pu_based_on_mbase(const DEVICE_ID& es_id, double pref)
+void DYNAMIC_SIMULATOR::change_energy_storage_active_power_reference_in_pu_based_on_mbase(const DEVICE_ID& es_id, double pref)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5543,7 +5543,7 @@ void DYNAMICS_SIMULATOR::change_energy_storage_active_power_reference_in_pu_base
     }
 }
 
-double DYNAMICS_SIMULATOR::get_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hvdc_id)
+double DYNAMIC_SIMULATOR::get_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hvdc_id)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5557,7 +5557,7 @@ double DYNAMICS_SIMULATOR::get_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hvd
         return 0.0;
 }
 
-void DYNAMICS_SIMULATOR::change_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hvdc_id, double porder)
+void DYNAMIC_SIMULATOR::change_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hvdc_id, double porder)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5576,7 +5576,7 @@ void DYNAMICS_SIMULATOR::change_lcc_hvdc2t_power_order_in_MW(const DEVICE_ID& hv
 }
 
 
-void DYNAMICS_SIMULATOR::set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location, double fault_r)
+void DYNAMIC_SIMULATOR::set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did, unsigned int side_bus, double location, double fault_r)
 {
     STEPS& toolkit = get_toolkit();
     ostringstream osstream;
@@ -5604,7 +5604,7 @@ void DYNAMICS_SIMULATOR::set_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID l
     }
 }
 
-void DYNAMICS_SIMULATOR::clear_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did)
+void DYNAMIC_SIMULATOR::clear_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID line_did)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5615,7 +5615,7 @@ void DYNAMICS_SIMULATOR::clear_vsc_hvdc_line_fault(string vsc_name, DC_DEVICE_ID
         vsc_hvdc.clear_dc_line_fault(line_index);
 }
 
-void DYNAMICS_SIMULATOR::trip_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_did)
+void DYNAMIC_SIMULATOR::trip_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_did)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5626,7 +5626,7 @@ void DYNAMICS_SIMULATOR::trip_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_d
         vsc_hvdc.set_dc_line_status(line_index, false);
 }
 
-void DYNAMICS_SIMULATOR::close_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_did)
+void DYNAMIC_SIMULATOR::close_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_did)
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -5637,7 +5637,7 @@ void DYNAMICS_SIMULATOR::close_vsc_hvdc_line(string vsc_name, DC_DEVICE_ID line_
         vsc_hvdc.set_dc_line_status(line_index, true);
 }
 
-void DYNAMICS_SIMULATOR::switch_on_equivalent_device()
+void DYNAMIC_SIMULATOR::switch_on_equivalent_device()
 {
     STEPS& toolkit = get_toolkit();
     unsigned int n = e_devices.size();
@@ -5652,7 +5652,7 @@ void DYNAMICS_SIMULATOR::switch_on_equivalent_device()
 }
 
 
-void DYNAMICS_SIMULATOR::prepare_buffers_for_system_change_detection()
+void DYNAMIC_SIMULATOR::prepare_buffers_for_system_change_detection()
 {
     unsigned int n = 0;
     unsigned int N = (unsigned int)(get_system_change_detection_time_range_in_s()/get_min_dynamic_simulation_time_step_in_s());
@@ -5681,7 +5681,7 @@ void DYNAMICS_SIMULATOR::prepare_buffers_for_system_change_detection()
     }
 }
 
-void DYNAMICS_SIMULATOR::initialize_buffers_for_system_change_detection()
+void DYNAMIC_SIMULATOR::initialize_buffers_for_system_change_detection()
 {
     STEPS& toolkit = get_toolkit();
     unsigned int n = 0;
@@ -5717,7 +5717,7 @@ void DYNAMICS_SIMULATOR::initialize_buffers_for_system_change_detection()
     }
 }
 
-void DYNAMICS_SIMULATOR::update_buffers_for_system_change_detection()
+void DYNAMIC_SIMULATOR::update_buffers_for_system_change_detection()
 {
     STEPS& toolkit = get_toolkit();
     unsigned int n = 0;
@@ -5742,7 +5742,7 @@ void DYNAMICS_SIMULATOR::update_buffers_for_system_change_detection()
     }
 }
 
-void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_to_minimum()
+void DYNAMIC_SIMULATOR::change_dynamic_simulator_time_step_to_minimum()
 {
     double min_delt = get_min_dynamic_simulation_time_step_in_s();
     double current_delt = get_dynamic_simulation_time_step_in_s();
@@ -5756,12 +5756,12 @@ void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_to_minimum()
     }
 }
 
-bool DYNAMICS_SIMULATOR::is_system_changing_suddenly() const
+bool DYNAMIC_SIMULATOR::is_system_changing_suddenly() const
 {
     return is_buses_voltage_changing_suddenly();
 }
 
-bool DYNAMICS_SIMULATOR::is_buses_voltage_changing_suddenly() const
+bool DYNAMIC_SIMULATOR::is_buses_voltage_changing_suddenly() const
 {
     bool voltage_changing_flag = false;
     unsigned int n = buses4change_detection.size();
@@ -5778,7 +5778,7 @@ bool DYNAMICS_SIMULATOR::is_buses_voltage_changing_suddenly() const
     return voltage_changing_flag;
 }
 
-void DYNAMICS_SIMULATOR::increase_dynamic_simulator_time_step_automatically()
+void DYNAMIC_SIMULATOR::increase_dynamic_simulator_time_step_automatically()
 {
     double current_delt = get_dynamic_simulation_time_step_in_s();
     double max_delt = get_max_dynamic_simulation_time_step_in_s();
@@ -5792,7 +5792,7 @@ void DYNAMICS_SIMULATOR::increase_dynamic_simulator_time_step_automatically()
     change_dynamic_simulator_time_step_by(delt);
 }
 
-void DYNAMICS_SIMULATOR::decrease_dynamic_simulator_time_step_automatically()
+void DYNAMIC_SIMULATOR::decrease_dynamic_simulator_time_step_automatically()
 {
     double current_delt = get_dynamic_simulation_time_step_in_s();
     double min_delt = get_min_dynamic_simulation_time_step_in_s();
@@ -5806,7 +5806,7 @@ void DYNAMICS_SIMULATOR::decrease_dynamic_simulator_time_step_automatically()
     change_dynamic_simulator_time_step_by(delt);
 }
 
-void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_by(double delt)
+void DYNAMIC_SIMULATOR::change_dynamic_simulator_time_step_by(double delt)
 {
     double current_delt = get_dynamic_simulation_time_step_in_s();
     double max_delt = get_max_dynamic_simulation_time_step_in_s();
@@ -5823,13 +5823,13 @@ void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step_by(double delt)
     }
 }
 
-bool DYNAMICS_SIMULATOR::is_system_in_quasi_steady_state() const
+bool DYNAMIC_SIMULATOR::is_system_in_quasi_steady_state() const
 {
     return is_buses_voltage_not_changing_in_detection_time_range() and
            is_generators_rotor_speed_not_changing_in_detection_time_range();
 }
 
-bool DYNAMICS_SIMULATOR::is_buses_voltage_not_changing_in_detection_time_range() const
+bool DYNAMIC_SIMULATOR::is_buses_voltage_not_changing_in_detection_time_range() const
 {
     bool voltage_changing_flag = false;
     unsigned int n = buses4change_detection.size();
@@ -5848,7 +5848,7 @@ bool DYNAMICS_SIMULATOR::is_buses_voltage_not_changing_in_detection_time_range()
     return not voltage_changing_flag;
 }
 
-bool DYNAMICS_SIMULATOR::is_generators_rotor_speed_not_changing_in_detection_time_range() const
+bool DYNAMIC_SIMULATOR::is_generators_rotor_speed_not_changing_in_detection_time_range() const
 {
     bool rotor_speed_changing_flag = false;
     unsigned int n = generators4change_detection.size();

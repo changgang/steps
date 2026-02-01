@@ -65,14 +65,14 @@ class CCT_SEARCHER
     private:
         bool is_searcher_is_properly_set() const;
 
-        void prepare_generators_in_islands(DYNAMICS_SIMULATOR& simulator);
+        void prepare_generators_in_islands(DYNAMIC_SIMULATOR& simulator);
 
         bool perform_simulation_with_clearing_time(double clearing_time);
 
-        void apply_fault(DYNAMICS_SIMULATOR& simulator);
-        void clear_fault(DYNAMICS_SIMULATOR& simulator);
+        void apply_fault(DYNAMIC_SIMULATOR& simulator);
+        void clear_fault(DYNAMIC_SIMULATOR& simulator);
         bool check_if_system_is_stable() const;
-        //bool check_if_system_is_stable(DYNAMICS_SIMULATOR& simulator) const;
+        //bool check_if_system_is_stable(DYNAMIC_SIMULATOR& simulator) const;
 
         string search_title;
         string powerflow_data_filename, dynamic_data_filename;

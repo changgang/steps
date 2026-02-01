@@ -17,7 +17,7 @@ void prepare_training_generation_shed_case();
 void prepare_training_load_scale_case()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
     psdb.set_allowed_max_bus_number(1000);
     psdb.set_system_base_power_in_MVA(100.0);
@@ -69,7 +69,7 @@ void prepare_training_load_scale_case()
 void prepare_training_generation_shed_case()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
     psdb.set_allowed_max_bus_number(1000);
     psdb.set_system_base_power_in_MVA(100.0);
@@ -125,7 +125,7 @@ int main()
     //prepare_training_generation_shed_case();
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
     psdb.set_allowed_max_bus_number(1000);
     psdb.set_system_base_power_in_MVA(100.0);

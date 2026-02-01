@@ -1,5 +1,5 @@
-#ifndef DYNAMICS_SIMULATOR_TEST_H
-#define DYNAMICS_SIMULATOR_TEST_H
+#ifndef DYNAMIC_SIMULATOR_TEST_H
+#define DYNAMIC_SIMULATOR_TEST_H
 
 #include <istream>
 #include <cstdlib>
@@ -17,10 +17,10 @@
 
 using namespace std;
 
-class DYNAMICS_SIMULATOR_TEST : public Test::Suite
+class DYNAMIC_SIMULATOR_TEST : public Test::Suite
 {
     public:
-        DYNAMICS_SIMULATOR_TEST();
+        DYNAMIC_SIMULATOR_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
@@ -69,4 +69,4 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
         void run_single_machine_model_for_model_test();
 };
 
-#endif//DYNAMICS_SIMULATOR_TEST_H
+#endif//DYNAMIC_SIMULATOR_TEST_H

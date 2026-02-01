@@ -397,7 +397,7 @@ void UFLS::trip_stage(unsigned int i)
         {
             flag_stage_is_tripped[i] = true;
             reset_stage_breaker_timer(i);
-            DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
+            DYNAMIC_SIMULATOR& sim = toolkit.get_dynamic_simulator();
             sim.enable_relay_action_flag();
         }
     }

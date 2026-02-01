@@ -78,10 +78,10 @@ class CONTINGENCY_SCREENER
         bool perform_simulation_with_clearing_time(double clearing_time);
         unsigned int get_monitored_generator_count() const;
         DEVICE_ID get_monitored_generator(unsigned int i) const;
-        void set_meters(DYNAMICS_SIMULATOR& simulator);
-        void apply_fault(DYNAMICS_SIMULATOR& simulator);
-        void clear_fault(DYNAMICS_SIMULATOR& simulator);
-        bool check_if_system_is_stable(DYNAMICS_SIMULATOR& simulator) const;
+        void set_meters(DYNAMIC_SIMULATOR& simulator);
+        void apply_fault(DYNAMIC_SIMULATOR& simulator);
+        void clear_fault(DYNAMIC_SIMULATOR& simulator);
+        bool check_if_system_is_stable(DYNAMIC_SIMULATOR& simulator) const;
 
         string search_title;
         string powerflow_data_filename, dynamic_data_filename;

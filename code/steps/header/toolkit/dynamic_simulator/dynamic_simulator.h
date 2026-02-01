@@ -1,5 +1,5 @@
-#ifndef DYNAMICS_SIMULATOR_H
-#define DYNAMICS_SIMULATOR_H
+#ifndef DYNAMIC_SIMULATOR_H
+#define DYNAMIC_SIMULATOR_H
 
 #include "header/basic/power_mismatch_struct.h"
 #include "header/basic/continuous_buffer.h"
@@ -10,11 +10,11 @@
 
 class POWER_SYSTEM_DATABASE;
 
-class DYNAMICS_SIMULATOR
+class DYNAMIC_SIMULATOR
 {
     public:
-        DYNAMICS_SIMULATOR(STEPS& toolkit);
-        ~DYNAMICS_SIMULATOR();
+        DYNAMIC_SIMULATOR(STEPS& toolkit);
+        ~DYNAMIC_SIMULATOR();
         STEPS& get_toolkit() const;
 
         void clear();
@@ -384,4 +384,4 @@ class DYNAMICS_SIMULATOR
         bool hold_lcc_hvdc2t_current2network_flag;
 };
 
-#endif // DYNAMICS_SIMULATOR_H
+#endif // DYNAMIC_SIMULATOR_H

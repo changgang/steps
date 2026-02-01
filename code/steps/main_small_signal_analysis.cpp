@@ -20,7 +20,7 @@ int main()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     EIGN_CALCULATOR& ssa_calculator = default_toolkit.get_eign_calculator();
 
     psdb.set_allowed_max_bus_number(10000);

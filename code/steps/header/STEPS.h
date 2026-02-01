@@ -83,7 +83,7 @@ class STEPS
         inline DYNAMIC_MODEL_DATABASE& get_dynamic_model_database(){return dynamic_model_db;}
         inline POWERFLOW_SOLVER& get_powerflow_solver(){return powerflow_solver;}
         inline SHORT_CIRCUIT_SOLVER& get_short_circuit_solver(){return short_circuit_solver;}
-        inline DYNAMICS_SIMULATOR& get_dynamic_simulator(){return dynamic_simulator;}
+        inline DYNAMIC_SIMULATOR& get_dynamic_simulator(){return dynamic_simulator;}
         inline EIGN_CALCULATOR& get_eign_calculator(){return eign_calculator;}
         inline NETWORK_MATRIX& get_network_matrix(){return network_matrix;}
 
@@ -109,7 +109,7 @@ class STEPS
         DYNAMIC_MODEL_DATABASE dynamic_model_db;
 
         POWERFLOW_SOLVER powerflow_solver;
-        DYNAMICS_SIMULATOR dynamic_simulator;
+        DYNAMIC_SIMULATOR dynamic_simulator;
         SHORT_CIRCUIT_SOLVER short_circuit_solver;
         EIGN_CALCULATOR eign_calculator;
 

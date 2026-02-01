@@ -16,67 +16,67 @@
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
 
-DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
+DYNAMIC_SIMULATOR_TEST::DYNAMIC_SIMULATOR_TEST()
 {
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_constructor);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_constructor);
 
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_bin_file_export_enable_flag);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_csv_file_export_enable_flag);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_json_file_export_enable_flag);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_bin_file_export_enable_flag);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_csv_file_export_enable_flag);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_json_file_export_enable_flag);
 
-    //TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_current_simulation_time);
+    //TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_current_simulation_time);
 
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_DELT);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_TIME);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_DAE_iteration);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_min_DAE_iteration);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_iteration);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_update_iteration);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_event_update_iteration);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_solution_divergent_threshold);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_allowed_max_power_imbalance_in_MVA);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_iteration_accelerator);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_surveillance_flag);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_threshold);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_DELT);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_TIME);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_max_DAE_iteration);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_min_DAE_iteration);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_max_network_iteration);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_max_update_iteration);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_max_event_update_iteration);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_max_network_solution_divergent_threshold);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_allowed_max_power_imbalance_in_MVA);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_iteration_accelerator);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_rotor_angle_stability_surveillance_flag);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_rotor_angle_stability_threshold);
 
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_append_and_get_meter);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_get_meter_count);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_get_all_meters_value);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_clear_meters);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_append_and_get_meter);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_get_meter_count);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_get_all_meters_value);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_clear_meters);
 
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_output_file);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_set_get_output_file);
 
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_single_machine_model);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_classical_model);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_SD_133_bus_model);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_run_single_machine_model);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_run_IEEE_9_bus_classical_model);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_run_IEEE_39_bus_model);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_run_SD_133_bus_model);
 
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T);
+    TEST_ADD(DYNAMIC_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T);
 }
 
-void DYNAMICS_SIMULATOR_TEST::setup()
+void DYNAMIC_SIMULATOR_TEST::setup()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.clear();
     psdb.set_allowed_max_bus_number(10000);
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
     simulator.set_allowed_max_power_imbalance_in_MVA(0.001);
     simulator.set_csv_file_export_enable_flag(true);
 }
 
-void DYNAMICS_SIMULATOR_TEST::tear_down()
+void DYNAMIC_SIMULATOR_TEST::tear_down()
 {
     default_toolkit.clear();
 
     show_test_end_information();
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_constructor()
+void DYNAMIC_SIMULATOR_TEST::test_constructor()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     TEST_ASSERT(simulator.get_meter_count()==0);
     TEST_ASSERT(simulator.get_max_DAE_iteration()==100);
     TEST_ASSERT(simulator.get_min_DAE_iteration()==3);
@@ -90,33 +90,33 @@ void DYNAMICS_SIMULATOR_TEST::test_constructor()
     TEST_ASSERT(simulator.is_json_file_export_enabled()==false);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_bin_file_export_enable_flag()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_bin_file_export_enable_flag()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_bin_file_export_enable_flag(true);
     TEST_ASSERT(simulator.is_bin_file_export_enabled()==true);
     simulator.set_bin_file_export_enable_flag(false);
     TEST_ASSERT(simulator.is_bin_file_export_enabled()==false);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_csv_file_export_enable_flag()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_csv_file_export_enable_flag()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_csv_file_export_enable_flag(true);
     TEST_ASSERT(simulator.is_csv_file_export_enabled()==true);
     simulator.set_csv_file_export_enable_flag(false);
     TEST_ASSERT(simulator.is_csv_file_export_enabled()==false);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_json_file_export_enable_flag()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_json_file_export_enable_flag()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_json_file_export_enable_flag(true);
     TEST_ASSERT(simulator.is_json_file_export_enabled()==true);
     simulator.set_json_file_export_enable_flag(false);
@@ -124,9 +124,9 @@ void DYNAMICS_SIMULATOR_TEST::test_set_get_json_file_export_enable_flag()
 }
 
 /*
-void DYNAMICS_SIMULATOR_TEST::test_set_get_current_simulation_time()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_current_simulation_time()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
     simulator.set_current_simulation_time_in_s(2.0);
     TEST_ASSERT(fabs(simulator.get_current_simulation_time_in_s()-2.0)<FLOAT_EPSILON);
@@ -134,86 +134,86 @@ void DYNAMICS_SIMULATOR_TEST::test_set_get_current_simulation_time()
     TEST_ASSERT(fabs(simulator.get_current_simulation_time_in_s()-3.0)<FLOAT_EPSILON);
 }
 */
-void DYNAMICS_SIMULATOR_TEST::test_set_get_DELT()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_DELT()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_dynamic_simulation_time_step_in_s(0.1);
     TEST_ASSERT(fabs(simulator.get_dynamic_simulation_time_step_in_s()-0.1)<FLOAT_EPSILON);
     simulator.set_dynamic_simulation_time_step_in_s(0.2);
     TEST_ASSERT(fabs(simulator.get_dynamic_simulation_time_step_in_s()-0.2)<FLOAT_EPSILON);
 }
-void DYNAMICS_SIMULATOR_TEST::test_set_get_TIME()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_TIME()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_dynamic_simulation_time_in_s(0.1);
     TEST_ASSERT(fabs(simulator.get_dynamic_simulation_time_in_s()-0.1)<FLOAT_EPSILON);
     simulator.set_dynamic_simulation_time_in_s(0.3);
     TEST_ASSERT(fabs(simulator.get_dynamic_simulation_time_in_s()-0.3)<FLOAT_EPSILON);
 }
-void DYNAMICS_SIMULATOR_TEST::test_set_get_max_DAE_iteration()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_max_DAE_iteration()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_max_DAE_iteration(200);
     TEST_ASSERT(simulator.get_max_DAE_iteration()==200);
     simulator.set_max_DAE_iteration(100);
     TEST_ASSERT(simulator.get_max_DAE_iteration()==100);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_min_DAE_iteration()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_min_DAE_iteration()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_min_DAE_iteration(20);
     TEST_ASSERT(simulator.get_min_DAE_iteration()==20);
     simulator.set_min_DAE_iteration(100);
     TEST_ASSERT(simulator.get_min_DAE_iteration()==100);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_iteration()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_max_network_iteration()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_max_network_iteration(200);
     TEST_ASSERT(simulator.get_max_network_iteration()==200);
     simulator.set_max_network_iteration(100);
     TEST_ASSERT(simulator.get_max_network_iteration()==100);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_max_update_iteration()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_max_update_iteration()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_max_update_iteration(200);
     TEST_ASSERT(simulator.get_max_update_iteration()==200);
     simulator.set_max_update_iteration(100);
     TEST_ASSERT(simulator.get_max_update_iteration()==100);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_max_event_update_iteration()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_max_event_update_iteration()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_max_event_update_iteration(200);
     TEST_ASSERT(simulator.get_max_event_update_iteration()==200);
     simulator.set_max_event_update_iteration(100);
     TEST_ASSERT(simulator.get_max_event_update_iteration()==100);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_solution_divergent_threshold()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_max_network_solution_divergent_threshold()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_max_network_solution_divergent_threshold(2);
     TEST_ASSERT(simulator.get_max_network_solution_divergent_threshold()==2);
     simulator.set_max_network_solution_divergent_threshold(100);
@@ -222,29 +222,29 @@ void DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_solution_divergent_thresh
     TEST_ASSERT(simulator.get_max_network_solution_divergent_threshold()==1);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_allowed_max_power_imbalance_in_MVA()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_allowed_max_power_imbalance_in_MVA()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_allowed_max_power_imbalance_in_MVA(0.001);
     TEST_ASSERT(fabs(simulator.get_allowed_max_power_imbalance_in_MVA()-0.001)<FLOAT_EPSILON);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_iteration_accelerator()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_iteration_accelerator()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_iteration_accelerator(1.2);
     TEST_ASSERT(fabs(simulator.get_iteration_accelerator()-1.2)<FLOAT_EPSILON);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_surveillance_flag()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_rotor_angle_stability_surveillance_flag()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     TEST_ASSERT(simulator.get_rotor_angle_stability_surveillance_flag()==false);
     simulator.set_rotor_angle_stability_surveillance_flag(true);
     TEST_ASSERT(simulator.get_rotor_angle_stability_surveillance_flag()==true);
@@ -253,11 +253,11 @@ void DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_surveillance_fl
 }
 
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_threshold()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_rotor_angle_stability_threshold()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     TEST_ASSERT(fabs(simulator.get_rotor_angle_stability_threshold_in_deg()-360.0)<FLOAT_EPSILON);
     simulator.set_rotor_angle_stability_threshold_in_deg(180.0);
     TEST_ASSERT(fabs(simulator.get_rotor_angle_stability_threshold_in_deg()-180.0)<FLOAT_EPSILON);
@@ -265,11 +265,11 @@ void DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_threshold()
     TEST_ASSERT(fabs(simulator.get_rotor_angle_stability_threshold_in_deg()-170.0)<FLOAT_EPSILON);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_append_and_get_meter()
+void DYNAMIC_SIMULATOR_TEST::test_append_and_get_meter()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     prepare_IEEE_9_bus_model();
     prepare_IEEE_9_bus_model_classical_dynamic_model();
 
@@ -312,11 +312,11 @@ void DYNAMICS_SIMULATOR_TEST::test_append_and_get_meter()
     TEST_ASSERT(meter.get_meter_type()=="VOLTAGE IN PU");
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_get_meter_count()
+void DYNAMIC_SIMULATOR_TEST::test_get_meter_count()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
     prepare_IEEE_9_bus_model();
     prepare_IEEE_9_bus_model_classical_dynamic_model();
@@ -343,11 +343,11 @@ void DYNAMICS_SIMULATOR_TEST::test_get_meter_count()
     TEST_ASSERT(simulator.get_meter_count()==3);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_get_all_meters_value()
+void DYNAMIC_SIMULATOR_TEST::test_get_all_meters_value()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     prepare_IEEE_9_bus_model();
     prepare_IEEE_9_bus_model_classical_dynamic_model();
@@ -404,11 +404,11 @@ void DYNAMICS_SIMULATOR_TEST::test_get_all_meters_value()
     TEST_ASSERT(fabs(values[2]-0.9)<FLOAT_EPSILON);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_clear_meters()
+void DYNAMIC_SIMULATOR_TEST::test_clear_meters()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
     prepare_IEEE_9_bus_model();
     prepare_IEEE_9_bus_model_classical_dynamic_model();
@@ -434,21 +434,21 @@ void DYNAMICS_SIMULATOR_TEST::test_clear_meters()
     TEST_ASSERT(simulator.get_meter_count()==0);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_output_file()
+void DYNAMIC_SIMULATOR_TEST::test_set_get_output_file()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.set_output_file("steps out file 1");
     TEST_ASSERT(simulator.get_output_file()=="steps out file 1");
 }
 
 
-void DYNAMICS_SIMULATOR_TEST::test_run_single_machine_model()
+void DYNAMIC_SIMULATOR_TEST::test_run_single_machine_model()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
     string file = "test_log/";
     file += __FUNCTION__;
@@ -505,11 +505,11 @@ void DYNAMICS_SIMULATOR_TEST::test_run_single_machine_model()
 }
 
 
-void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_classical_model()
+void DYNAMIC_SIMULATOR_TEST::test_run_IEEE_9_bus_classical_model()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
     string file = "test_log/";
     file += __FUNCTION__;
@@ -565,11 +565,11 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_classical_model()
 
 
 
-void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model()
+void DYNAMIC_SIMULATOR_TEST::test_run_IEEE_39_bus_model()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
     ostringstream osstream;
     string file = "test_log/";
@@ -617,11 +617,11 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model()
     default_toolkit.close_log_file();
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_run_SD_133_bus_model()
+void DYNAMIC_SIMULATOR_TEST::test_run_SD_133_bus_model()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     string file = "test_log/";
@@ -684,11 +684,11 @@ void DYNAMICS_SIMULATOR_TEST::test_run_SD_133_bus_model()
 }
 
 
-void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind()
+void DYNAMIC_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
     ostringstream osstream;
     string file = "test_log/";
@@ -736,11 +736,11 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind()
     default_toolkit.close_log_file();
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T()
+void DYNAMIC_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     string file = "test_log/";
@@ -806,11 +806,11 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
 }
 
 
-void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
+void DYNAMIC_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     string file = "test_log/";
@@ -900,11 +900,11 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     default_toolkit.close_log_file();
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
+void DYNAMIC_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMIC_SIMULATOR_TEST");
 
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    DYNAMIC_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     string file = "test_log/";

@@ -1599,8 +1599,8 @@ complex<double> LCC_HVDC2T_MODEL::get_converter_ac_current_in_pu(CONVERTER_SIDE 
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
         STEPS& toolkit = get_toolkit();
-        DYNAMICS_SIMULATOR& dy = toolkit.get_dynamic_simulator();
-        if(not dy.is_hold_lcc_hvdc2t_current2network_flag_enabled())
+        DYNAMIC_SIMULATOR& simulator = toolkit.get_dynamic_simulator();
+        if(not simulator.is_hold_lcc_hvdc2t_current2network_flag_enabled())
         {
             double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
