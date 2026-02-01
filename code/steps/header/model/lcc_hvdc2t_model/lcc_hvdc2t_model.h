@@ -112,8 +112,8 @@ class LCC_HVDC2T_MODEL : public MODEL
         double get_converter_commutation_overlap_angle_in_deg(CONVERTER_SIDE converter) const;
         complex<double> get_converter_ac_complex_power_in_MVA(CONVERTER_SIDE converter) const;
         double get_converter_ac_power_factor_angle_in_deg(CONVERTER_SIDE converter) const;
-        complex<double> get_converter_ac_current_in_pu(CONVERTER_SIDE converter) const;
-        complex<double> get_converter_ac_current_in_kA(CONVERTER_SIDE converter) const;
+        complex<double> get_converter_ac_current_in_pu(CONVERTER_SIDE converter);
+        complex<double> get_converter_ac_current_in_kA(CONVERTER_SIDE converter);
         double get_converter_ac_voltage_in_pu(CONVERTER_SIDE converter) const;
         double get_converter_ac_voltage_in_kV(CONVERTER_SIDE converter) const;
         complex<double> get_converter_ac_complex_voltage_in_pu(CONVERTER_SIDE converter) const;
@@ -188,6 +188,8 @@ class LCC_HVDC2T_MODEL : public MODEL
 
         unsigned int successive_bypass_count;
         unsigned int max_count_of_successive_bypass_before_blocked;
+
+        complex<double> current2network[2];
 };
 
 #endif // LCC_HVDC2T_MODEL_H

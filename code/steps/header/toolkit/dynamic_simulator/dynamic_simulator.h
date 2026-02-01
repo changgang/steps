@@ -93,6 +93,8 @@ class DYNAMICS_SIMULATOR
         void set_network_matrix_update_as_required();
         bool is_network_matrix_update_required() const;
 
+        inline bool is_hold_lcc_hvdc2t_current2network_flag_enabled() const {return hold_lcc_hvdc2t_current2network_flag;}
+
         void install_meters(const vector<METER>& meters);
         void install_meter(const METER& meter);
         unsigned int get_meter_count() const;
@@ -244,6 +246,9 @@ class DYNAMICS_SIMULATOR
         void add_equivalent_devices_to_bus_current_mismatch();
         void check_abnormal_current_mismatch_after_calling_function(string f);
 
+        inline void enable_hold_lcc_hvdc2t_current2network_flag() {hold_lcc_hvdc2t_current2network_flag = true;}
+        inline void disable_hold_lcc_hvdc2t_current2network_flag() {hold_lcc_hvdc2t_current2network_flag = false;}
+
         complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const;
 
         bool is_converged();
@@ -375,6 +380,8 @@ class DYNAMICS_SIMULATOR
         double system_change_detection_rotor_speed_threshold;
         vector<CONTINUOUS_BUFFER*> buffer4buses_voltage_change_detection;
         vector<CONTINUOUS_BUFFER*> buffer4generators_rotor_speed_change_detection;
+
+        bool hold_lcc_hvdc2t_current2network_flag;
 };
 
 #endif // DYNAMICS_SIMULATOR_H

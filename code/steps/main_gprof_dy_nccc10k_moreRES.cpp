@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 
     default_toolkit.set_dynamic_model_database_size_in_bytes(1000000000);
 
-    string file = "log.txt";
+    string file = "nccc10_moreRES_log.txt";
     default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer(default_toolkit);
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
     for(unsigned int i=0; i!=n; ++i)
     {
         LCC_HVDC2T& hvdc = *(hvdcs[i]);
-        hvdc.turn_rectifier_constant_power_mode_into_constant_current_mode();
+        //hvdc.turn_rectifier_constant_power_mode_into_constant_current_mode();
     }
 
     POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
@@ -89,11 +89,13 @@ int main(int argc, char* argv[])
         simulator.install_meter(meter);
     }
 
-    simulator.set_output_file("bench_NCCC_10k_bus_model_dynamic_test");
+    simulator.set_output_file("bench_NCCC_10k_bus_model_moreRES_dynamic_test");
     simulator.set_allowed_max_power_imbalance_in_MVA(0.001);
+    simulator.set_min_DAE_iteration(3);
     simulator.set_max_DAE_iteration(3);
     simulator.set_max_network_iteration(100);
-    simulator.set_max_event_update_iteration(50);
+    //simulator.set_max_event_update_iteration(50);
+    simulator.set_max_update_iteration(3);
     //simulator.set_max_network_solution_divergent_threshold(4);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.002);
 

@@ -1594,24 +1594,29 @@ double LCC_HVDC2T_MODEL::get_converter_ac_power_factor_angle_in_deg(CONVERTER_SI
         return 0.0;
 }
 
-complex<double> LCC_HVDC2T_MODEL::get_converter_ac_current_in_pu(CONVERTER_SIDE converter) const
+complex<double> LCC_HVDC2T_MODEL::get_converter_ac_current_in_pu(CONVERTER_SIDE converter)
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {
         STEPS& toolkit = get_toolkit();
-        double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+        DYNAMICS_SIMULATOR& dy = toolkit.get_dynamic_simulator();
+        if(not dy.is_hold_lcc_hvdc2t_current2network_flag_enabled())
+        {
+            double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
-        complex<double> S = get_converter_ac_complex_power_in_MVA(converter)*one_over_sbase;
+            complex<double> S = get_converter_ac_complex_power_in_MVA(converter)*one_over_sbase;
 
-        complex<double> V = get_converter_ac_complex_voltage_in_pu(converter);
+            complex<double> V = get_converter_ac_complex_voltage_in_pu(converter);
 
-        return conj(S/V);
+            current2network[converter] = conj(S/V);
+        }
+        return current2network[converter];
     }
     else
         return 0.0;
 }
 
-complex<double> LCC_HVDC2T_MODEL::get_converter_ac_current_in_kA(CONVERTER_SIDE converter) const
+complex<double> LCC_HVDC2T_MODEL::get_converter_ac_current_in_kA(CONVERTER_SIDE converter)
 {
     if(not is_blocked() and (not is_bypassed() or converter==RECTIFIER))
     {

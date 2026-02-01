@@ -92,6 +92,8 @@ void DYNAMICS_SIMULATOR::clear()
         for(unsigned int i=0; i<n; ++i)
             delete buffer4generators_rotor_speed_change_detection[i];
     }
+
+    disable_hold_lcc_hvdc2t_current2network_flag();
 }
 
 void DYNAMICS_SIMULATOR::set_max_dynamic_simulation_time_step_in_s(double delt)
@@ -447,11 +449,11 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
             <<"Fast sin/cos/tan function: "<<(use_steps_fast_math?"Enabled":"Disabled")<<"\n"
             <<"Time step: "<<get_dynamic_simulation_time_step_in_s()<<" s\n"
             <<"Allowed maximum power imbalance: "<<get_allowed_max_power_imbalance_in_MVA()<<" MVA\n"
-            <<"Maximum iteration for DAE solution: "<<get_max_DAE_iteration()<<"\n"
-            <<"Minimum iteration for DAE solution: "<<get_min_DAE_iteration()<<"\n"
-            <<"Maximum iteration for network: "<<get_max_network_iteration()<<"\n"
+            <<"Maximum iteration for DAE integration: "<<get_max_DAE_iteration()<<"\n"
+            <<"Minimum iteration for DAE integration: "<<get_min_DAE_iteration()<<"\n"
             <<"Maximum iteration for updating: "<<get_max_update_iteration()<<"\n"
             <<"Maximum iteration for event updating: "<<get_max_event_update_iteration()<<"\n"
+            <<"Maximum iteration for network solution: "<<get_max_network_iteration()<<"\n"
             <<"Maximum network solution divergent threshold: "<<get_max_network_solution_divergent_threshold()<<"\n"
             <<"Maximum network solution voltage change threshold: "<<get_voltage_change_threshold_when_solving_network_in_pu()<<" pu\n"
             <<"Network solution accelerator: "<<get_iteration_accelerator()<<"\n"
@@ -1893,7 +1895,6 @@ bool DYNAMICS_SIMULATOR::solve_network()
             if(not hvdc.is_blocked() and hvdc.get_converter_operation_mode(RECTIFIER)==RECTIFIER_CONSTANT_POWER)
                 hvdcs_in_power_mode.push_back(hvdcs[i]);
         }
-
         n = hvdcs_in_power_mode.size();
         if(n>0)
         {
@@ -1911,18 +1912,21 @@ bool DYNAMICS_SIMULATOR::solve_network()
                 LCC_HVDC2T& hvdc = *(hvdcs_in_power_mode[i]);
                 hvdc.turn_rectifier_constant_current_mode_into_constant_power_mode();
             }
+        }
+        if(not converged)
+        {
+            enable_hold_lcc_hvdc2t_current2network_flag();
+
+            converged = solve_network_core();
+            total_network_iteration_count += network_iteration_count;
+
+            disable_hold_lcc_hvdc2t_current2network_flag();
 
             if(not converged)
             {
-                osstream<<"Warning. Stage 1 network solution failed to converge for DAE solution "<<ITER_DAE<<" at time "<<TIME<<" s.\n"
-                        <<"The following "<<n<<" LCC_HVDC2T links are turned from constant POWER mode to constant CURRENT mode for further solution:\n";
-                for(unsigned int i=0; i<n; ++i)
-                {
-                    LCC_HVDC2T& hvdc = *(hvdcs_in_power_mode[i]);
-                    osstream<<"("<<i+1<<") "<<hvdc.get_compound_device_name()<<"\n";
-                }
-                osstream<<"Stage 2 network solution failed to converge again\n"
-                        <<"The above LCC_HVDC2T links are recovered to constant POWER mode.";
+                osstream<<"Network solution failed to converge at time "<<TIME
+                        <<" s by converting LCC_HVDC2T links from constant POWER to CURRENT mode\n"
+                        <<"and holding LCC_HVDC2T links current to network.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -2061,6 +2065,8 @@ bool DYNAMICS_SIMULATOR::solve_network_core()
                         max_current_mismatch_pu = new_imax;
                         #endif // USE_DYNAMIC_CURRENT_MISMATCH_CONTROL
                         converged = false;
+                        osstream<<"At time "<<TIME<<" s, when calling DYNAMICS_SIMULATOR::solve_network() in iteration "<<network_iter_count<<", "<<network_solution_divergent_count<<" times of divergence is detected, and network solution failed.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                         break;
                     }
                 }
@@ -2160,22 +2166,25 @@ void DYNAMICS_SIMULATOR::tune_iteration_accelerator_based_on_maximum_current_mis
 
 void DYNAMICS_SIMULATOR::solve_lcc_hvdc2ts_without_integration()
 {
-    STEPS& toolkit = get_toolkit();
-    unsigned int n = hvdcs.size();
-    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        //set_openmp_number_of_threads(toolkit.get_lcc_hvdc2t_thread_number());
-        set_openmp_number_of_threads(toolkit.get_thread_number());
-        #pragma omp parallel for schedule(static)
-        //#pragma omp parallel for num_threads(2)
-    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(unsigned int i=0; i<n; ++i)
+    if(not is_hold_lcc_hvdc2t_current2network_flag_enabled())
     {
-        LCC_HVDC2T& hvdc = *(hvdcs[i]);
-        LCC_HVDC2T_MODEL* model_ptr = hvdc.get_lcc_hvdc2t_model();
-        if(model_ptr!=NULL)
+        STEPS& toolkit = get_toolkit();
+        unsigned int n = hvdcs.size();
+        #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+            //set_openmp_number_of_threads(toolkit.get_lcc_hvdc2t_thread_number());
+            set_openmp_number_of_threads(toolkit.get_thread_number());
+            #pragma omp parallel for schedule(static)
+            //#pragma omp parallel for num_threads(2)
+        #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        for(unsigned int i=0; i<n; ++i)
         {
-            LCC_HVDC2T_MODEL& model = *model_ptr;
-            model.solve_lcc_hvdc2t_model_without_integration();
+            LCC_HVDC2T& hvdc = *(hvdcs[i]);
+            LCC_HVDC2T_MODEL* model_ptr = hvdc.get_lcc_hvdc2t_model();
+            if(model_ptr!=NULL)
+            {
+                LCC_HVDC2T_MODEL& model = *model_ptr;
+                model.solve_lcc_hvdc2t_model_without_integration();
+            }
         }
     }
 }
