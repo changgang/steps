@@ -188,6 +188,10 @@ bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name, unsigned 
         return ds.get_non_divergent_solution_logic();
     if(PARAMETER_NAME=="AUTOMATIC ACCELERATOR TUNE LOGIC")
         return ds.get_automatic_iteration_accelerator_tune_logic();
+    if(PARAMETER_NAME=="LOAD VOLTAGE SENSOR LOGIC")
+        return ds.get_load_voltage_sensor_logic();
+    if(PARAMETER_NAME=="AUTOMATIC DEGRADE LCC HVDC2T MODEL LOGIC")
+        return ds.get_automatic_degrade_lcc_hvdc2t_model_logic();
     if(PARAMETER_NAME=="AUTOMATICALLY CHANGE TIME STEP LOGIC")
         return ds.get_change_time_step_adaptively_logic();
     if(PARAMETER_NAME=="BIN EXPORT LOGIC")
@@ -215,6 +219,10 @@ void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool valu
         return ds.set_non_divergent_solution_logic(value);
     if(PARAMETER_NAME=="AUTOMATIC ACCELERATOR TUNE LOGIC")
         return ds.set_automatic_iteration_accelerator_tune_logic(value);
+    if(PARAMETER_NAME=="LOAD VOLTAGE SENSOR LOGIC")
+        return ds.set_load_voltage_sensor_logic(value);
+    if(PARAMETER_NAME=="AUTOMATIC DEGRADE LCC HVDC2T MODEL LOGIC")
+        return ds.set_automatic_degrade_lcc_hvdc2t_model_logic(value);
     if(PARAMETER_NAME=="AUTOMATICALLY CHANGE TIME STEP LOGIC")
         return ds.set_change_time_step_adaptively_logic(value);
     if(PARAMETER_NAME=="BIN EXPORT LOGIC")

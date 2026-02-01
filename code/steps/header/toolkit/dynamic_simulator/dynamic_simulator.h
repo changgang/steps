@@ -51,6 +51,8 @@ class DYNAMIC_SIMULATOR
         void set_iteration_accelerator(double alpha);
         void set_non_divergent_solution_logic(bool logic);
         void set_automatic_iteration_accelerator_tune_logic(bool logic);
+        inline void set_load_voltage_sensor_logic(bool logic){load_voltage_sensor_enabled=logic;}
+        inline void set_automatic_degrade_lcc_hvdc2t_model_logic(bool logic){automatic_degrade_lcc_hvdc2t_model_enabled=logic;}
         void set_rotor_angle_stability_surveillance_flag(bool flag);
         void set_rotor_angle_stability_threshold_in_deg(double angle_th);
         void set_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s(double delt);
@@ -71,6 +73,8 @@ class DYNAMIC_SIMULATOR
         double get_iteration_accelerator() const;
         bool get_non_divergent_solution_logic() const;
         bool get_automatic_iteration_accelerator_tune_logic() const;
+        inline bool get_load_voltage_sensor_logic() const {return load_voltage_sensor_enabled;}
+        inline bool get_automatic_degrade_lcc_hvdc2t_model_logic() const {return automatic_degrade_lcc_hvdc2t_model_enabled;}
         bool get_rotor_angle_stability_surveillance_flag() const;
         double get_rotor_angle_stability_threshold_in_deg() const;
         double get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s() const;
@@ -214,8 +218,8 @@ class DYNAMIC_SIMULATOR
         void update_with_specific_mode(DYNAMIC_MODE mode);
         void check_relay_events();
         double get_system_max_angle_difference_in_deg();
-        void enable_bus_voltage_and_angle_sensor_of_dynamic_models();
-        void disable_bus_voltage_and_angle_sensor_of_dynamic_models();
+        void enable_bus_voltage_sensor_of_dynamic_models();
+        void disable_bus_voltage_sensor_of_dynamic_models();
 
         void open_meter_output_files();
         void close_meter_output_files();
@@ -320,6 +324,8 @@ class DYNAMIC_SIMULATOR
         double alpha;
         bool non_divergent_solution_enabled;
         bool automatic_iteration_accelerator_tune_enabled;
+        bool load_voltage_sensor_enabled;
+        bool automatic_degrade_lcc_hvdc2t_model_enabled;
         double time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled;
         double k_for_leading_part_of_bus_frequency_model;
 

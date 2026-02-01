@@ -66,6 +66,8 @@ void DYNAMIC_SIMULATOR::clear()
     set_iteration_accelerator(1.0);
     set_non_divergent_solution_logic(false);
     set_automatic_iteration_accelerator_tune_logic(false);
+    set_load_voltage_sensor_logic(false);
+    set_automatic_degrade_lcc_hvdc2t_model_logic(false);
     set_rotor_angle_stability_surveillance_flag(false);
     set_rotor_angle_stability_threshold_in_deg(360.0);
     generators_in_islands.clear();
@@ -457,6 +459,9 @@ void DYNAMIC_SIMULATOR::show_dynamic_simulator_configuration() const
             <<"Maximum network solution divergent threshold: "<<get_max_network_solution_divergent_threshold()<<"\n"
             <<"Maximum network solution voltage change threshold: "<<get_voltage_change_threshold_when_solving_network_in_pu()<<" pu\n"
             <<"Network solution accelerator: "<<get_iteration_accelerator()<<"\n"
+            <<"Automatically tune network solution accelerator: "<<(get_automatic_iteration_accelerator_tune_logic()?"Enabled":"Disabled")<<"\n"
+            <<"Enable load voltage sensor: "<<(get_load_voltage_sensor_logic()?"Enabled":"Disabled")<<"\n"
+            <<"Automatically degrade LCC HVDC2T model: "<<(get_automatic_degrade_lcc_hvdc2t_model_logic()?"Enabled":"Disabled")<<"\n"
             <<"Rotor angle stability surveillance: "<<(get_rotor_angle_stability_surveillance_flag()?"Enabled":"Disabled")<<"\n"
             <<"Rotor angle stability threshold: "<<get_rotor_angle_stability_threshold_in_deg()<<" deg\n"
             <<"Time step threshold when leading part of bus frequency model is enabled: "<<get_time_step_threshold_when_leading_part_of_bus_frequency_model_is_enabled_in_s()<<" s\n"
@@ -1209,7 +1214,7 @@ double DYNAMIC_SIMULATOR::get_system_max_angle_difference_in_deg()
     return max_angle-min_angle;
 }
 
-void DYNAMIC_SIMULATOR::enable_bus_voltage_and_angle_sensor_of_dynamic_models()
+void DYNAMIC_SIMULATOR::enable_bus_voltage_sensor_of_dynamic_models()
 {
     unsigned int nload = loads.size();
     for(unsigned int i=0; i<nload; ++i)
@@ -1234,7 +1239,7 @@ void DYNAMIC_SIMULATOR::enable_bus_voltage_and_angle_sensor_of_dynamic_models()
     */
 }
 
-void DYNAMIC_SIMULATOR::disable_bus_voltage_and_angle_sensor_of_dynamic_models()
+void DYNAMIC_SIMULATOR::disable_bus_voltage_sensor_of_dynamic_models()
 {
     unsigned int nload = loads.size();
     for(unsigned int i=0; i<nload; ++i)
@@ -1268,7 +1273,7 @@ void DYNAMIC_SIMULATOR::run_to(double time)
 
     network_matrix.build_dynamic_network_Y_matrix();
 
-    disable_bus_voltage_and_angle_sensor_of_dynamic_models();
+    disable_bus_voltage_sensor_of_dynamic_models();
     build_jacobian();
 
     build_vsc_hvdc_dynamic_dc_network_matrix();
@@ -1282,9 +1287,9 @@ void DYNAMIC_SIMULATOR::run_to(double time)
         if(step_count<3)
             build_jacobian();
 
-        if(step_count==3)
+        if(step_count==3 and get_load_voltage_sensor_logic()==true)
         {
-            enable_bus_voltage_and_angle_sensor_of_dynamic_models();
+            enable_bus_voltage_sensor_of_dynamic_models();
             build_jacobian();
         }
 
@@ -1882,7 +1887,7 @@ bool DYNAMIC_SIMULATOR::solve_network()
     converged = solve_network_core();
     total_network_iteration_count = network_iteration_count;
 
-    if(not converged)
+    if(not converged and get_automatic_degrade_lcc_hvdc2t_model_logic()==true)
     {
         STEPS& toolkit = get_toolkit();
         ostringstream osstream;
