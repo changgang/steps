@@ -312,10 +312,19 @@ complex<double> IEEL::get_additional_admittance_in_pu_based_on_SBASE()
 
 void IEEL::setup_block_toolkit_and_parameters()
 {
-    voltage_sensor.set_T_in_s(0.005);
+    STEPS& toolkit = get_toolkit();
+    double h = toolkit.get_dynamic_simulation_time_step_in_s();
+    voltage_sensor.set_T_in_s(h*2);
 
     angle_sensor.set_bus_pointer(get_bus_pointer());
-    angle_sensor.set_Kp(500);
+    if(h<1e-3)
+        angle_sensor.set_Kp(500);
+    else if(h<5e-3)
+        angle_sensor.set_Kp(250);
+    else if(h<10e-3)
+        angle_sensor.set_Kp(100);
+    else
+        angle_sensor.set_Kp(50);
     angle_sensor.set_Ki(0.5);
 }
 
