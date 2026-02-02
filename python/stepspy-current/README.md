@@ -19,9 +19,10 @@ stepspy is a Python module of Simulation Toolkit for Electrical Power Systems (S
 
 stepspy is a Python module of Simulation Toolkit for Electrical Power Systems (STEPS). It provides wrapper of APIs of STEPS in a dynamic library.
 
-STEPS is a simulation toolkit for powerflow, short circuit and dynamic simulation of large-scale power systems. It provides detailed models of bus, ac line, transformer, 2 terminal LCC HVDC, VSC-HVDC, generator, wind turbine generator, photovoltaic unit, load, and fixed shunt. For more information about STEPS, see (https://gitee.com/lichgang/steps/ or https://github.com/changgang/steps).
+STEPS is an open-source simulation toolkit for powerflow, short circuit and dynamic simulation of large-scale power systems. It provides detailed models of bus, ac line, transformer, 2 terminal LCC HVDC, VSC-HVDC, multi-terminal HVDC, generator, wind turbine generator, photovoltaic unit, energy storage, static var source, load, and fixed shunt. For more information about STEPS, see (https://gitee.com/lichgang/steps/ or https://github.com/changgang/steps).
 
 ## Release Note
+- 2.3.0. Feb. 1, 2026. Add APIs for SV_SOURCE and MT_HVDC. Add function to save network islands to file. Add APIs for copying devices. Add APIs for replacing GENERATOR with WT_GENERATOR, PV_UNIT, ENERGY_STORAGE, and SV_SOURCE. Add APIs to scale LINE and TRANSFORMER. Add more APIs for short-circuit analysis.
 - 2.2.1. Sep. 14, 2024. Update APIs for setting and getting parameters for GNERATOR, WT GENERATOR, PV UNIT, and ENERGY STORAGE with the same identifier at the same bus. Add APIs for setting monitored buses and generators for automatically changing dynamic simulation time step.
 - 2.2.0. March 24, 2024. Add API change_dynamic_simulation_time_step() for manually changing dynamic simulation time step.
 - 2.1.0. Nov. 2, 2023. Add API to check if NAN is detected in powerflow solution: is_nan_detected_in_powerflow_soulution, and get_powerflow_convergence_status
@@ -84,15 +85,15 @@ python -m pip install --upgrade stepspy
 
 If you want to manually install stepspy, follow the instructions:
 
-1. Go to https://github.com/changgang/steps to download or fork the latest version of STEPS.
-2. Go to python/ folder of STEPS, and copy the latest version of stepspy/ to PYTHONPATH/Lib/site-packages/.
+1. Go to https://gitee.com/lichgang/steps or https://github.com/changgang/steps to download or fork the latest version of STEPS.
+2. Go to python/ folder of STEPS, and copy the latest version of stepspy from steps/python/stepspy-current/stepspy to PYTHONPATH/Lib/site-packages/.
 
 ### Install dynamic library
 
-After install the stepspy, you still need to compile and install the dynamic library of STEPS.
+After install the stepspy, you need to compile and install the dynamic library of STEPS.
 
-1. Go to [steps](https://github.com/changgang/steps) to download or fork the latest version of STEPS. The latest version is usually the [work] branch.
-2. Compile STEPS into dynamic library following instructions of STEPS.
+1. Go to [steps@gitee](https://gitee.com/lichgang/steps) or [steps@github](https://github.com/changgang/steps) to download or fork the latest version of STEPS. The stable version is usually the [main] branch, and the latest version is usually the [dev] branch.
+2. Compile STEPS into dynamic library following instructions of STEPS using Code::Blocks or Cmake.
 3, Move the dynamic library of STEPS to stepspy/libsteps/ in the PYTHONPATH/Lib/site-packages/.
 4, If the VC runtime is missing, download and install Microsoft Visual C++ 2017 Redistributable of 32 or 64 bit version.
 5, If VC runtime or Mingw Runtime is missing, install vcredit or copy libwinpthread-1.dll from mingw compiler/bin/ to c:/windows/system32 and c:/windows/SysWOW64

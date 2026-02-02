@@ -5,17 +5,17 @@
 
 unsigned int api_get_api_major_version()
 {
-    return 1;
+    return 2;
 }
 
 unsigned int api_get_api_minor_version()
 {
-    return 5;
+    return 3;
 }
 
 unsigned int api_get_api_patch_version()
 {
-    return 2;
+    return 0;
 }
 
 unsigned int api_get_const_INDEX_NOT_EXIST()

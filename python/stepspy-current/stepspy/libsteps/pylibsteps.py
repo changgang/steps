@@ -46,9 +46,9 @@ def load_library(libsteps_file):
     minor_version = libsteps.api_get_api_minor_version()
     patch_version = libsteps.api_get_api_patch_version()
 
-    required_major_version = 1
-    required_minor_version = 5
-    required_patch_version = 2
+    required_major_version = 2
+    required_minor_version = 3
+    required_patch_version = 0
 
     valid_flag = major_version >= required_major_version
     if valid_flag==True and major_version==required_major_version:

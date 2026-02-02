@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="stepspy",
-    version="2.2.1",
+    version="2.3.0",
     author="Changgang Li",
     author_email="lichgang@sdu.edu.cn",
     description="Python module of Simulation Toolkit for Electrical Power Systems",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/changgang/steps",
+    url="https://gitee.com/lichgang/steps",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

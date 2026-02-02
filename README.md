@@ -7,22 +7,24 @@
 - Reminder of major repository:
   * The github repository may lag behind the gitee repository due to some GIT PUSH issues. So, use gitee repository first.
   * The 'dev' branch is constantly updating while the 'main' branch is updated when major functions are added. Use 'main' branch for stable applications, and try 'dev' branch for new features.
-- Date of Readme: March 24, 2024
+- Date of Readme: Feb 1, 2026
 
 # Reference
 Please cite STEPS with the following papers:  
-```[1] Changgang Li, Yue Wu, Hengxu Zhang, Hua Ye, Yutian Liu and Yilu Liu. "STEPS: A Portable Numerical Simulation Toolkit for Electrical Power System Dynamic Studies," in IEEE Transactions on Power Systems, vol. 36, no. 4, pp. 3216-3226, July 2021, doi: 10.1109/TPWRS.2020.3045102.```  
+```[1] Changgang Li, Yue Wu, Hengxu Zhang, Hua Ye, Yutian Liu, Yilu Liu. "STEPS: A Portable Numerical Simulation Toolkit for Electrical Power System Dynamic Studies," in IEEE Transactions on Power Systems, vol. 36, no. 4, pp. 3216-3226, July 2021, doi: 10.1109/TPWRS.2020.3045102.```  
 ```[2] Changgang Li, Yun Hang, Yutian Liu, Vladimir Terzija. "Uneven Internal Time-Step Adjustment for Fast Power System Dynamic Simulations based on Trapezoidal Integration of Elementary Transfer Function Blocks," in International Journal of Electrical Power & Energy Systems, vol. 155, Part A, 109509, January 2024, doi: 10.1016/j.ijepes.2023.109509```
-See: https://ieeexplore.ieee.org/document/9295409, https://www.sciencedirect.com/science/article/pii/S0142061523005665
+```[3] Jian Wang, Changgang Li, Junjun Yang, Hang Qi, Wen Hua, Wei Dong, Lin Ye, Vladimir Terzija. "Open-Source Short-Circuit Current Solver for Power Systems with Renewable Energy Sources and HVDC Links," in International Journal of Electrical Power & Energy Systems, vol. 167, 110651, June 2025, doi: 10.1016/j.ijepes.2025.110651```
+
+See: https://ieeexplore.ieee.org/document/9295409, https://www.sciencedirect.com/science/article/pii/S0142061523005665, https://www.sciencedirect.com/science/article/pii/S0142061525002029
 
 ## Major functions
 Simulation Toolkit for Electrical Power Systems (STEPS) is an open source power system simulator designed for balanced large-scale AC-DC hybrid power system analysis.  
-Currently, it supports powerflow solution, short circuit analysis, and dynamic simulation. In the future, eigenvalue analysis will be supported with no timetable.  
+Currently, it supports powerflow solution, short circuit analysis, and dynamic simulation.  
 The data format of STEPS is improved based on PSS/E raw, seq, and dyr data format. 
-Though BPA dat format is supported, it will be supported in the future version in stepspy and BPA data importer will be removed.[Sep. 13, 2020]
 You are encouraged to join us for further development.
 
 ## Major versions
+- v2.3.0. Significant changes are made in this version. Add new devices of SV_SOURCE and MT_HVDC. Add new grid-following and grid-forming models for WT_GENERATOR, PV_UNIT, and ENERGY_STORAGE. Update short-circuit solver. Add support of load voltage sensor and lcc_hvdc2t model degrading in dynamic simulation for better convergence. Reorganize interfaces for building meters. Optimize codes for higher powerflow and dynamic simulation performance. Add CMakeFiles.txt for compilation with CMake. stepspy is also updated and pushed to pypi.
 - v2.2.0. Add function to change dynamic simulation time step manually. stepspy is also updated however not pushed to pypi due to token issue. please use python/stepspy-current/stepspy.
 - v2.1.0. Add function to check if NAN is detected in powerflow solver. stepspy is also updated. Compile option '-ffast-math' is disabled. 
 - v2.0.0. Major version. (1) Short circuit functions added. Short circuit analysis with direct solution is supported. APIs are added to stepspy. Short circuit analysis with iterative solution is implemented in C++, and APIs will be added in later version.  (2) Two toolkit functions added: Correct Three Winding Transformer Impedance Logic and Blockwise Automatic Large Step Logic. If the 'Correct' logic is enabled, zero impedance winding of 3-winding transformer can be automatically fixed to avoid NaN error. If the 'Blockwise' logic is enabled, dynamic simulation time step can be increased for fast simulation (See Reference Paper [2]). The 'Blockwise' logic is implemented with changes of dynamic blocks of first order, differential, and lead-lag. (3) Option 'libsteps_file' is added to stepspy when creating STEPS() object when dynamic library with name different from 'libSTEPS' is used. (4) Some wind turbine model bugs are fixed. (5) stepspy module is also upgraded to v2.0.0.
